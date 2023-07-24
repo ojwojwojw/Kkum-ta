@@ -5,6 +5,6 @@ import timerReducer from '../features/timer/timerSlice';
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
-    timer: timerReducer
+    timer: timerReducer,
   },
 });

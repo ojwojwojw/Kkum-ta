@@ -1,21 +1,62 @@
-import React, {useState} from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  decrement,
+  increment,
+  incrementByAmount,
+  incrementAsync,
+  incrementIfOdd,
+  selectTimer,
+} from './timerSlice';
 
+export function Timer() {
+  const count = useSelector(selectTimer);
+  const dispatch = useDispatch();
+  const [incrementAmount, setIncrementAmount] = useState('2');
 
-// import { create } from "./timerSlice";  // 모듈이 없다고 에러가 뜸
-// import { selectTimer } from "./timerSlice"; // 모듈이없다고 에러가 뜸
+  const incrementValue = Number(incrementAmount) || 0;
 
-
-// export function CreateTimer() {
-//   const timerArray = useSelector(createTimer);
-//   const dispatch = useDispatch();
-//   const [createTimer, setCreateTimer] = useState([]);
-
-//   return(
-//     <div>
-//       <button onClick={()=> dispatch(create())}>
-//         CreateTimer
-//       </button>
-//     </div>
-//   )
-// }
+  return (
+    <div>
+      <div >
+        <button
+          
+          aria-label="Decrement value"
+          onClick={() => dispatch(decrement())}
+        >
+          -
+        </button>
+        <span >{count}</span>
+        <button
+          
+          aria-label="Increment value"
+          onClick={() => dispatch(increment())}
+        >
+          +
+        </button>
+      </div>
+      <div>
+        <input
+          aria-label="Set increment amount"
+          value={incrementAmount}
+          onChange={(e) => setIncrementAmount(e.target.value)}
+        />
+        <button
+          onClick={() => dispatch(incrementByAmount(incrementValue))}
+        >
+          Add Amount
+        </button>
+        <button
+          onClick={() => dispatch(incrementAsync(incrementValue))}
+        >
+          Add Async
+        </button>
+        <button
+          onClick={() => dispatch(incrementIfOdd(incrementValue))}
+        >
+          Add If Odd
+        </button>
+      </div>
+    </div>
+  );
+}
