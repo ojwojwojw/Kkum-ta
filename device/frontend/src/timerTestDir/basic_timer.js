@@ -1,11 +1,11 @@
 export default class BasicTimer {
   #counter;
-  constructor(name, setValue) {
+  constructor(name,setValue) {
     this.dt = 0;
     this.name = name;
     this.setValue = setValue;
     this.isRunning = 0;
-    console.log("constructor")
+    console.log("basic timer constructor")
   }
 
   #count(end) {
@@ -17,34 +17,31 @@ export default class BasicTimer {
         this.isRunning = false;
         this.dt = 0;
       }
-      this.setValue(`${this.name}: ${(this.dt / 1000).toFixed(3)} 초 남음`);
-      console.log(`${this.name}: ${(this.dt / 1000).toFixed(3)} 초 남음`);
-    }, 0);
+      this.setValue((this.dt / 1000).toFixed(2));
+      //console.log(`${this.name}: ${(this.dt / 1000).toFixed(3)} 초 남음`);
+    }, 10);
   }
 
   start() {
     if(this.isRunning === true) return;
     this.isRunning = true;
-    console.log(`reset: ${this.dt}`);
     const end = new Date().getTime() + this.dt;
     this.#count(end);
+    console.log(`start: ${this.dt}`);
   }
 
   pause() {
     clearInterval(this.#counter);
     this.isRunning = false;
+    console.log("paused");
   }
 
   reset(time) { // 밀리초 단위로 입력 받기
     this.pause();
     if(time != null) {
       this.dt = time;
-      this.setValue(this.dt);
+      this.setValue((this.dt / 1000).toFixed(2));
     }
     console.log(`reset: ${this.dt}`);
-  }
-
-  setStateSetter(setValue) {
-    this.setValue = setValue;
   }
 }

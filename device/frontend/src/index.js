@@ -5,17 +5,15 @@ import { store } from './app/store';
 import App from './App';
 import './index.css';
 import {BrowserRouter} from 'react-router-dom';
-import BasicTimer from "./timerTestDir/basic_timer";
 
 const container = document.getElementById('root');
 const root = createRoot(container);
-const t1 = new BasicTimer();
 
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <App timer={t1}/>
+        <App/>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>
