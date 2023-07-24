@@ -23,7 +23,7 @@ export const timerSlice = createSlice({
   initialState,
   reducers: {
     create: (state) => {
-      state.timerArray = [createTimerObject(),createTimerObject(),createTimerObject()]
+      state.timerArray.push(createTimerObject());
     },
   },
 });
