@@ -7,14 +7,10 @@ const TimerCreatePage = ({timer})=>{
 
     return(
         <div>
-            <button onClick={() => timer.start()}> {value} </button>
+            <button onClick={() => {timer.isRunning ? timer.pause() : timer.start()}}> {value} </button>
             <button onClick={() => timer.reset(3 * 1000)}> reset </button>
         </div>
     )
 }
 export default TimerCreatePage
-
-
-//
-
 

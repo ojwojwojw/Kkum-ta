@@ -1,9 +1,10 @@
 export default class BasicTimer {
   #counter;
   constructor(name, setValue) {
-    this.dt = 1000;
+    this.dt = 0;
     this.name = name;
     this.setValue = setValue;
+    this.isRunning = 0;
     console.log("constructor")
   }
 
@@ -13,6 +14,7 @@ export default class BasicTimer {
       this.dt = end - now;
       if (this.dt <= 0) {
         clearInterval(this.#counter);
+        this.isRunning = false;
         this.dt = 0;
       }
       this.setValue(`${this.name}: ${(this.dt / 1000).toFixed(3)} 초 남음`);
@@ -21,6 +23,8 @@ export default class BasicTimer {
   }
 
   start() {
+    if(this.isRunning === true) return;
+    this.isRunning = true;
     console.log(`reset: ${this.dt}`);
     const end = new Date().getTime() + this.dt;
     this.#count(end);
@@ -28,6 +32,7 @@ export default class BasicTimer {
 
   pause() {
     clearInterval(this.#counter);
+    this.isRunning = false;
   }
 
   reset(time) { // 밀리초 단위로 입력 받기
