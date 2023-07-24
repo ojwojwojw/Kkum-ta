@@ -1,9 +1,10 @@
 export default class BasicTimer {
   #counter;
   constructor(name, setValue) {
-    this.dt = 0;
+    this.dt = 1000;
     this.name = name;
     this.setValue = setValue;
+    console.log("constructor")
   }
 
   #count(end) {
@@ -20,6 +21,7 @@ export default class BasicTimer {
   }
 
   start() {
+    console.log(`reset: ${this.dt}`);
     const end = new Date().getTime() + this.dt;
     this.#count(end);
   }
@@ -34,6 +36,10 @@ export default class BasicTimer {
       this.dt = time;
       this.setValue(this.dt);
     }
-    return this;
+    console.log(`reset: ${this.dt}`);
+  }
+
+  setStateSetter(setValue) {
+    this.setValue = setValue;
   }
 }
