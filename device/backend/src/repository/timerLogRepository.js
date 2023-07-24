@@ -44,13 +44,12 @@ class TimerLogRepository{
     }
     async #do_operation(timer_id, operation){
         const conn = await this.pool.getConnection();
-        const sql = "INSERT INTO `timer`.`timer_log`(operation, timer_id) values( ? ), ? "
+        const sql = "INSERT INTO `timer`.`timer_log`(operation, timer_id) values(?,?)"
         const params = [operation, timer_id];
         try{
-            const [rows, fields] = await conn.execute(sql, params);
-            console.log(rows, fields);
+            await conn.execute(sql, params);
         }catch(e){
-            console.log("e");
+            throw "SQLError: Cannot insert into database, " + e;
         };
         conn.release();
     }
