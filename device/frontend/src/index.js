@@ -9,13 +9,18 @@ import BasicTimer from "./timerTestDir/basic_timer";
 
 const container = document.getElementById('root');
 const root = createRoot(container);
-const t1 = new BasicTimer();
+
+function createTimer() {
+  return new BasicTimer();
+}
+
+const timerList = [createTimer(), createTimer(), createTimer()];
 
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <App timer={t1}/>
+        <App timer = {timerList}/>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>
