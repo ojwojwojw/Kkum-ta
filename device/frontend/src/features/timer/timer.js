@@ -1,62 +1,38 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  create,
   decrement,
   increment,
-  incrementByAmount,
-  incrementAsync,
-  incrementIfOdd,
-  selectTimer,
+  selectArray,
 } from './timerSlice';
 
 export function Timer() {
-  const count = useSelector(selectTimer);
+  const timerArray = useSelector(selectArray);
   const dispatch = useDispatch();
-  const [incrementAmount, setIncrementAmount] = useState('2');
-
-  const incrementValue = Number(incrementAmount) || 0;
 
   return (
     <div>
       <div >
+        <hr/>
         <button
-          
-          aria-label="Decrement value"
-          onClick={() => dispatch(decrement())}
+          onClick={()=> dispatch(create())}
         >
-          -
+          createTimer
         </button>
-        <span >{count}</span>
-        <button
-          
-          aria-label="Increment value"
-          onClick={() => dispatch(increment())}
-        >
-          +
-        </button>
+
+        {timerArray.map((timerObj, index) => (
+        <div key={index}>
+          pk : {index}
+          | dt : {timerObj.dt}
+          | name : {timerObj.name}
+          | setValue : {timerObj.setValue}
+          | is Running : {timerObj.isRunning}
+        </div>
+        ))}
+        <hr/>
       </div>
-      <div>
-        <input
-          aria-label="Set increment amount"
-          value={incrementAmount}
-          onChange={(e) => setIncrementAmount(e.target.value)}
-        />
-        <button
-          onClick={() => dispatch(incrementByAmount(incrementValue))}
-        >
-          Add Amount
-        </button>
-        <button
-          onClick={() => dispatch(incrementAsync(incrementValue))}
-        >
-          Add Async
-        </button>
-        <button
-          onClick={() => dispatch(incrementIfOdd(incrementValue))}
-        >
-          Add If Odd
-        </button>
-      </div>
+      
     </div>
   );
 }

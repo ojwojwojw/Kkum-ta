@@ -5,7 +5,7 @@ const TimerCreatePage = ({timer})=>{
 
     const [value, setValue] = useState(0)
     timer[0].setStateSetter(setValue);
-    console.log(timer)
+    console.log(timer.dt)
     
 
     return(

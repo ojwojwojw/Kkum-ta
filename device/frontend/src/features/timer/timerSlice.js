@@ -1,10 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchTimer } from './timerAPI';
+import BasicTimer from '../../timerTestDir/basic_timer';
 
 const initialState = {
-  value: 0,
-  status: 'idle',
+  timerArray : [],
 };
+
+const createTimerObject = () => {
+  return new BasicTimer()
+}
 
 export const incrementAsync = createAsyncThunk(
   'timer/fetchTimer',
@@ -18,37 +22,14 @@ export const timerSlice = createSlice({
   name: 'timer',
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1;
+    create: (state) => {
+      state.timerArray = [createTimerObject(),createTimerObject(),createTimerObject()]
     },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload;
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(incrementAsync.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(incrementAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
-        state.value += action.payload;
-      });
   },
 });
 
-export const { increment, decrement, incrementByAmount } = timerSlice.actions;
+export const { create } = timerSlice.actions;
 
-export const selectTimer = (state) => state.timer.value;
-
-export const incrementIfOdd = (amount) => (dispatch, getState) => {
-  const currentValue = selectTimer(getState());
-  if (currentValue % 2 === 1) {
-    dispatch(incrementByAmount(amount));
-  }
-};
+export const selectArray = (state) => state.timer.timerArray;
 
 export default timerSlice.reducer;
