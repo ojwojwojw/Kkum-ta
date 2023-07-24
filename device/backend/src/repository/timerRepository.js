@@ -21,7 +21,7 @@ class TimerRepository {
     async findAll() {
         const query = await this.pool.query(`SELECT * FROM timer_table`);
 
-        console.log(query[0]);
+        return query;
     }
 
     async registTimer(start, end, name) {

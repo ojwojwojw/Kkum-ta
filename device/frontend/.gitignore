@@ -1,1 +1,5 @@
 node_modules
+/device/backend/node_modules
+/device/frontend/node_modules
+/device/frontend/client/node_modules
+/device/frontend/server/node_modules
