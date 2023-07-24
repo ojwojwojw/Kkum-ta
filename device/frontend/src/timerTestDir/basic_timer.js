@@ -1,8 +1,9 @@
 export default class BasicTimer {
   #counter;
-  constructor(name) {
+  constructor(name, setValue) {
     this.dt = 0;
     this.name = name;
+    this.setValue = setValue;
   }
 
   #count(end) {
@@ -13,6 +14,7 @@ export default class BasicTimer {
         clearInterval(this.#counter);
         this.dt = 0;
       }
+      this.setValue(`${this.name}: ${(this.dt / 1000).toFixed(3)} 초 남음`);
       console.log(`${this.name}: ${(this.dt / 1000).toFixed(3)} 초 남음`);
     }, 0);
   }
@@ -30,6 +32,7 @@ export default class BasicTimer {
     this.pause();
     if(time != null) {
       this.dt = time;
+      this.setValue(this.dt);
     }
     return this;
   }

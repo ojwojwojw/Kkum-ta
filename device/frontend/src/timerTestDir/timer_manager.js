@@ -5,8 +5,8 @@ export default class TimerManager {
     this.list = [];
   }
 
-  createBaiscTimer(name) {
-    const timer = new BasicTimer(name);
+  createBaiscTimer(name, setValue) {
+    const timer = new BasicTimer(name, setValue);
     this.list.push(timer);
     return timer;
   }
