@@ -2,21 +2,21 @@ const mysql = require("mysql2/promise");
 const options = require("../config/connection.js");
 
 class TimerRepository {
-    TimerRepository() {
+    constructor() {
         this.pool = mysql.createPool(options);
     }
     async beginTransaction() {
         const conn = await this.pool.getConnection();
-        conn.beginTransaction();
+        await conn.beginTransaction();
         return conn;
     }
-    rollback(conn) {
-        conn.rollback();
-        conn.endTransaction();
+    async rollback(conn) {
+        await conn.rollback();
+        await conn.release();
     }
-    commit(conn) {
-        conn.commit();
-        conn.endTransaction();
+    async commit(conn) {
+        await conn.commit();
+        await conn.endTransaction();
     }
     async findAll() {
         const query = await this.pool.query(`SELECT * FROM timer_table`);
