@@ -17,7 +17,7 @@ export default class BasicTimer {
         this.isRunning = false;
         this.dt = 0;
       }
-      this.setValue((this.dt / 1000).toFixed(2));
+      this.setValue(this.dt);
       //console.log(`${this.name}: ${(this.dt / 1000).toFixed(3)} 초 남음`);
     }, 10);
   }
@@ -40,7 +40,7 @@ export default class BasicTimer {
     this.pause();
     if(time != null) {
       this.dt = time;
-      this.setValue((this.dt / 1000).toFixed(2));
+      this.setValue(this.dt);
     }
     console.log(`reset: ${this.dt}`);
   }
