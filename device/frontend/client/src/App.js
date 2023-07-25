@@ -2,29 +2,19 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 function App() {
-    const [arr, updateArr] = useState([]);
-    const callApi = async () => {
-        await axios.get("/").then((res) => {
-            console.log(res);
-        });
-    };
-
-    const showTable = async () => {
-        await axios.get("/timer_table").then((res) => {
-            return res;
-        });
-    };
+    const [arr, updateArr] = useState();
 
     useEffect(() => {
-      console.log(showTable());
+      let completed = false;
+        const fetchDatas = async () => {
+            const result = await axios.get("/timer_table");
+            if(!completed) updateArr(result.data);
+        };
+        fetchDatas();
+        console.log(arr);
     }, []);
 
-    return (
-        <div>
-          
-            ...
-        </div>
-    );
+    return <div></div>;
 }
 
 export default App;
