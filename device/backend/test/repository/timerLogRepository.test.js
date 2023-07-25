@@ -19,14 +19,20 @@ describe("TimerLogRepository initialization", () => {
 });
 
 describe("database management", () => {
-  beforeEach(() => {
+  let trTransaction = null;
+  beforeEach(async () => {
     timerLogRepository = new TimerLogRepository();
     timerRepository = new TimerRepository();
+    trTransaction = await timerRepository.beginTransaction();
   });
 
   afterEach(async () => {
     await timerLogRepository.closeDB();
     timerLogRepository = null;
+    
+    await timerRepository.rollback(trTransaction);
+    trTransaction = null;
+
     await timerRepository.closeDB();
     timerRepository = null;
   });
@@ -48,19 +54,25 @@ describe("database management", () => {
 });
 
 describe("Security", ()=>{
-  beforeEach(()=>{
+  let trTransaction = null;
+  beforeEach(async ()=>{
     timerLogRepository = new TimerLogRepository();
     timerRepository = new TimerRepository();
+    trTransaction = await timerRepository.beginTransaction();
   })
   afterEach(async ()=>{
     await timerLogRepository.closeDB();
     timerLogRepository = null;
+
+    await timerRepository.rollback(trTransaction);
+    trTransaction = null;
+    
     await timerRepository.closeDB();
     timerRepository = null;
   })
   test("timerLogRepository is safe from SQL injection", async ()=>{
-    await timerRepository.registTimer("09:00:00", "18:00:00", "종일");
-    const [rows, fields] = await timerRepository.findAll();
+    await timerRepository.registTimer("09:00:00", "18:00:00", "종일", trTransaction);
+    const [rows, fields] = await timerRepository.findAll(trTransaction);
     expect(rows.length).toBeGreaterThanOrEqual(1);
     const pid = rows[0].timer_id;
     try{
