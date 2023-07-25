@@ -1,24 +1,35 @@
-import { createAsyncThunk ,createSlice} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { fetchTimer } from './timerAPI';
+import BasicTimer from '../../timerTestDir/basic_timer';
 
 const initialState = {
-    time : 0 , 
-    isRunning : false ,
+  timerArray : [],
+};
+
+const createTimerObject = () => {
+  return new BasicTimer()
 }
 
+export const incrementAsync = createAsyncThunk(
+  'timer/fetchTimer',
+  async (amount) => {
+    const response = await fetchTimer(amount);
+    return response.data;
+  }
+);
+
 export const timerSlice = createSlice({
-    name : 'timer',
-    initialState,
+  name: 'timer',
+  initialState,
+  reducers: {
+    create: (state) => {
+      state.timerArray.push(createTimerObject());
+    },
+  },
+});
 
-    reducers: {
-        start : (state) => {
-                
-        },
-        pause : (state) => {
+export const { create } = timerSlice.actions;
 
-        },
-        reset : (state) => {
-            
-        }
-    }
+export const selectArray = (state) => state.timer.timerArray;
 
-})
+export default timerSlice.reducer;
