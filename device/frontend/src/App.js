@@ -6,6 +6,7 @@ import { Link, Routes, Route } from "react-router-dom";
 
 import CreateTimerPage from "./pages/createTimerPage";
 import TimerContainer from "./pages/timerContaioner";
+import NumberPad from "./components/numberPad/numberPadComponent";
 
 //라우팅 페이지 관련
 import Page1 from "./pages/page1";
@@ -15,7 +16,13 @@ function App() {
   return (
     <div className="App">
       <CreateTimerPage />
-      <TimerContainer />
+      
+      <div>
+        <TimerContainer />
+        <NumberPad />
+      </div>
+
+
       <Link to="/page1">페이지1라우팅 |</Link>
       <Link to="/page2">페이지2라우팅</Link>
 
