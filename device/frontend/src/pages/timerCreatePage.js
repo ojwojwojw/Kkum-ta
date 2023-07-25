@@ -36,17 +36,6 @@ const TimerCreatePage = ({ timer }) => {
         }}
       ></input>
       <Timer />
-      <div>
-        <button
-          onClick={() => {
-            timer[0].isRunning ? timer[0].pause() : timer[0].start();
-          }}
-        >
-          {" "}
-          {value}{" "}
-        </button>
-        <button onClick={() => timer[0].reset(3 * 1000)}> reset </button>
-      </div>
     </div>
   );
 };
