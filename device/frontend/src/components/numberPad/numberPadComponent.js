@@ -26,7 +26,7 @@ const NumberPad = () => {
             </div>
             
             <div>
-                <button onClick={()=>{dispatch(deleteNumber('7'))}}>취소</button>
+                <button onClick={()=>{dispatch(deleteNumber())}}>취소</button>
                 <button onClick={()=>{dispatch(insertNumber('0'))}}> 0</button>
                 <button>입력</button>
             </div>

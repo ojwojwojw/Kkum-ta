@@ -21,7 +21,7 @@ export const numberPadSlice = createSlice({
     initialState,
     reducers : {
        insertNumber: (state, action) =>{
-            state.value += action.payload.number
+            state.value += action.payload
        },
        deleteNumber: (state, action) =>{
             state.value = state.value.slice(0,-1)
