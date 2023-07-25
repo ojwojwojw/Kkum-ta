@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   create,
-  decrement,
-  increment,
   selectArray,
+  reloadData
 } from './timerSlice';
 
 export function Timer() {
-  const timerArray = useSelector(selectArray);
+  let timerArray = useSelector( (state)=> {return state.timer.timerArray});
   const dispatch = useDispatch();
+  console.log(timerArray)
 
   return (
     <div>
@@ -20,6 +20,13 @@ export function Timer() {
         >
           createTimer
         </button>
+
+        <button
+          onClick={()=> dispatch(reloadData())}        
+        >
+          스테이트 변경감지
+        </button>
+        
 
         {timerArray.map((timerObj, index) => (
         <div key={index}>

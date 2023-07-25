@@ -6,5 +6,4 @@ const CreateTimerPage = () => {
         <Timer/>
     )
 }
-
 export default CreateTimerPage

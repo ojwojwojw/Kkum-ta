@@ -1,11 +1,15 @@
 import React, { useState, useRef } from "react";
+import { useDispatch } from "react-redux";
 import BasicTimer from "../timerTestDir/basic_timer";
+import { logPauseData } from "../features/timer/timerSlice";
 
-
-const BasicTimerComponent = ({ timer }) => {
+const BasicTimerComponent = (props) => {
+  const selectedIndex = props.index
   const [value, setValue] = useState(0);
   const refTimer = useRef(null);
   const refText = useRef(null);
+  const dispatch = useDispatch();
+  
 
   function resume() {
     if (refTimer.current === null) {
@@ -13,6 +17,9 @@ const BasicTimerComponent = ({ timer }) => {
     }
     const timer = refTimer.current;
     timer.isRunning ? timer.pause() : timer.start();
+
+    const payload = {dt: timer.dt , index:selectedIndex}
+    dispatch(logPauseData(payload))
   }
 
   function reset() {
@@ -21,6 +28,7 @@ const BasicTimerComponent = ({ timer }) => {
     }
     const timer = refTimer.current;
     timer.reset(refText.current * 1000);
+
   }
 
   return (

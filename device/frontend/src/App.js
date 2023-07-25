@@ -3,8 +3,9 @@ import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
 import { Link,  Routes , Route } from 'react-router-dom';
-import BasicTimerComponent from './pages/basicTimerComponent';
+
 import CreateTimerPage from './pages/createTimerPage';
+import TimerContainer from './pages/timerContaioner';
 
 //라우팅 페이지 관련
 import Page1 from './pages/page1';
@@ -14,10 +15,7 @@ function App() {
   return (
     <div className="App">
       <CreateTimerPage/>
-      <BasicTimerComponent/>
-      <BasicTimerComponent/>
-      <BasicTimerComponent/>
-      <BasicTimerComponent/>
+      <TimerContainer/>
       <Link to="/page1">페이지1라우팅 |</Link>
       <Link to="/page2">페이지2라우팅</Link>
       
