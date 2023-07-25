@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test":"jest --detectOpenHandles",
     "test:watch":"jest --detectOpenHandles --watch",
-    "start": "node index.js"
+    "start":"node index.js"
   },
   "author": "",
   "license": "ISC",
