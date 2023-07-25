@@ -16,34 +16,49 @@ class TimerRepository {
     }
     async commit(conn) {
         await conn.commit();
-        await conn.endTransaction();
+        await conn.release();
     }
-    async findAll() {
-        const query = await this.pool.query(`SELECT * FROM timer_table`);
-
+    async findAll(connection=null) {
+        const conn = connection ? connection : await this.pool.getConnection();
+        const sql = "SELECT * FROM timer_table";
+        const params = [];
+        const query = await conn.execute(sql, params);
+        if(!connection){
+            await conn.release();
+        }
         return query;
     }
 
-    async registTimer(start, end, name) {
-        const query = await this.pool.query(
-            `INSERT INTO timer_table VALUES(0, '${start}', '${end}', '${name}')`
-        );
-
+    async registTimer(start, end, name, connection=null) {
+        const conn = connection ? connection : await this.pool.getConnection();
+        const sql = "INSERT INTO timer_table VALUES(0, ?, ?, ?)"
+        const params = [start, end, name];
+        const query = await conn.execute(sql, params);
+        if(!connection){
+            await conn.release();
+        }
         return query;
     }
 
-    async deleteTimer(timer_id) {
-        const query = await this.pool.query(
-            `DELETE FROm timer_table WHERE timer_id = ${timer_id}`
-        );
-
+    async deleteTimer(timer_id, connection=null) {
+        const conn = connection ? connection : await this.pool.getConnection();
+        const sql = "DELETE FROM timer_table WHERE timer_id = ?";
+        const params = [timer_id];
+        const query = await conn.execute(sql, params);
+        if(!connection){
+            await conn.release();
+        }
         return query;
     }
 
-    async findTimerByName(timer_name) {
-        const query = await this.pool.query(
-            `SELECT timer_id FROM timer_table WHERE timer_name = '${timer_name}'`
-        );
+    async findTimerByName(timer_name, connection=null) {
+        const conn = connection ? connection : await this.pool.getConnection();
+        const sql = "SELECT timer_id FROM timer_table WHERE timer_name = ?";
+        const params = [timer_name];
+        const query = await conn.execute(sql, params);
+        if(!connection){
+            await conn.release();
+        }
 
         return query;
     }
