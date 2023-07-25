@@ -4,7 +4,7 @@ const options = require('../config/connection.js');
 class TimerLogRepository{
     TimerLogRepository(){
         this.pool = mysql.createPool(options);
-    };
+    }
     async beginTransaction(){
         const conn = await this.pool.getConnection();
         conn.beginTransaction(); 
