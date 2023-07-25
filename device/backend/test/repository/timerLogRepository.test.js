@@ -83,7 +83,5 @@ describe("Security", ()=>{
     catch(e){
       expect(e).toMatch(/^SQLError: Cannot insert into database,/);
     }
-    //const [logRow, logFields] = await timerLogRepository.findByTimerId(pid);
-    //expect(logRow.length).toBeGreaterThanOrEqual(1);
   });
 })

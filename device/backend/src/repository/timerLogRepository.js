@@ -9,7 +9,7 @@ class TimerLogRepository{
         await this.pool.end();
     }
     async beginTransaction(){
-        const conn = await this.pool.getConnection()
+        const conn = await this.pool.getConnection();
         await conn.beginTransaction();
         return conn;
     }   
