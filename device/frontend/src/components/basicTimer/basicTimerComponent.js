@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
 
 import React, { useState, useRef, useEffect } from "react";
-import BasicTimer from "../timerTestDir/basic_timer";
-import { logPauseData } from "../features/timer/timerSlice";
+import BasicTimer from "../../utility/basic_timer";
+import { logPauseData } from "../../features/timer/timerSlice";
 // mui
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";

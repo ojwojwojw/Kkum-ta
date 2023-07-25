@@ -1,5 +1,5 @@
 import React from "react";
-import BasicTimerComponent from "./basicTimerComponent";
+import BasicTimerComponent from "../components/basicTimer/basicTimerComponent";
 import {useSelector} from 'react-redux';
 
 const TimerContainer = () => {

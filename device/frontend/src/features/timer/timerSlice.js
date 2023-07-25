@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchTimer } from './timerAPI';
-import BasicTimer from '../../timerTestDir/basic_timer';
+import BasicTimer from '../../utility/basic_timer';
 
 const initialState = {
   timerArray : [],
