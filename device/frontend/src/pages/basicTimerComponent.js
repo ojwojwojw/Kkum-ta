@@ -1,9 +1,8 @@
 import React, { useState, useRef } from "react";
 import BasicTimer from "../timerTestDir/basic_timer";
 
-import { Timer } from "../features/timer/timer";
 
-const TimerCreatePage = ({ timer }) => {
+const BasicTimerComponent = ({ timer }) => {
   const [value, setValue] = useState(0);
   const refTimer = useRef(null);
   const refText = useRef(null);
@@ -35,8 +34,7 @@ const TimerCreatePage = ({ timer }) => {
           refText.current = arg.target.value;
         }}
       ></input>
-      <Timer />
     </div>
   );
 };
-export default TimerCreatePage;
+export default BasicTimerComponent;
