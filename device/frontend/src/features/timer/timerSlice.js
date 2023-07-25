@@ -7,7 +7,10 @@ const initialState = {
 };
 
 const createTimerObject = () => {
-  return new BasicTimer()
+  // return new BasicTimer()
+  return (
+    {}
+  );
 }
 
 export const incrementAsync = createAsyncThunk(
