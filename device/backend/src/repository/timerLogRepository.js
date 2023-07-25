@@ -5,7 +5,7 @@ class TimerLogRepository{
     constructor(){
         this.pool = mysql.createPool(options);
     };
-    async destroy(){
+    async closeDB(){
         await this.pool.end();
     }
     async beginTransaction(){
