@@ -7,7 +7,10 @@ const initialState = {
 };
 
 const createTimerObject = () => {
-  return new BasicTimer()
+  // return new BasicTimer()
+  return (
+    {}
+  );
 }
 
 export const incrementAsync = createAsyncThunk(
@@ -25,10 +28,19 @@ export const timerSlice = createSlice({
     create: (state) => {
       state.timerArray.push(createTimerObject());
     },
+    logPauseData: (state , action) => {
+      const dt = action.payload.dt
+      const index = action.payload.index
+      state.timerArray[index].dt = dt
+    },
+    reloadData: (state) =>{
+      state.timerArray.push(createTimerObject());
+      state.timerArray.pop(createTimerObject());
+    }
   },
 });
 
-export const { create } = timerSlice.actions;
+export const { create , logPauseData , reloadData} = timerSlice.actions;
 
 export const selectArray = (state) => state.timer.timerArray;
 

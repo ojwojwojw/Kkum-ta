@@ -1,10 +1,12 @@
-import React, { useState, useRef } from "react";
-import BasicTimer from "../timerTestDir/basic_timer";
-import "./basicTimer.css";
+import { useDispatch } from "react-redux";
 
+import React, { useState, useRef, useEffect } from "react";
+import BasicTimer from "../timerTestDir/basic_timer";
+import { logPauseData } from "../features/timer/timerSlice";
 // mui
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import "./basicTimer.css";
 
 function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
@@ -13,10 +15,13 @@ function useConstructor(callBack = () => {}) {
   flag.current = true;
 }
 
-const BasicTimerComponent = ({ timer }) => {
+function BasicTimerComponent(props) {
   const [value, setValue] = useState(0);
   const refTimer = useRef(null);
   const refText = useRef(null);
+
+  const dispatch = useDispatch();
+  const selectedIndex = props.index;
 
   useConstructor(() => {
     refTimer.current = new BasicTimer("", setValue);
@@ -25,6 +30,9 @@ const BasicTimerComponent = ({ timer }) => {
   function resume() {
     const timer = refTimer.current;
     timer.isRunning ? timer.pause() : timer.start();
+
+    const payload = { dt: timer.dt, index: selectedIndex };
+    dispatch(logPauseData(payload));
   }
 
   function reset() {
@@ -64,5 +72,5 @@ const BasicTimerComponent = ({ timer }) => {
       </Grid>
     </Box>
   );
-};
+}
 export default BasicTimerComponent;
