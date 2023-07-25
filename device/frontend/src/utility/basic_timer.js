@@ -1,10 +1,14 @@
 export default class BasicTimer {
   #counter;
+  #gap
+  #init
   constructor(name,setValue) {
     this.dt = 0;
+    this.#gap = 0;
+    this.#init = 0;
     this.name = name;
     this.setValue = setValue;
-    this.isRunning = 0;
+    this.isRunning = false;
     console.log("basic timer constructor")
   }
 
@@ -16,6 +20,7 @@ export default class BasicTimer {
         clearInterval(this.#counter);
         this.isRunning = false;
         this.dt = 0;
+        this.#gap = 0;
       }
       this.setValue(this.dt);
       //console.log(`${this.name}: ${(this.dt / 1000).toFixed(3)} 초 남음`);
@@ -25,23 +30,31 @@ export default class BasicTimer {
   start() {
     if(this.isRunning === true) return;
     this.isRunning = true;
-    const end = new Date().getTime() + this.dt;
+    const end = new Date().getTime() + this.#gap;
     this.#count(end);
-    console.log(`start: ${this.dt}`);
+    console.log(`start: ${this.#gap}`);
   }
 
   pause() {
     clearInterval(this.#counter);
     this.isRunning = false;
-    console.log("paused");
+    this.#gap = this.dt;
+    console.log(`pause: ${this.#gap}`);
   }
 
   reset(time) { // 밀리초 단위로 입력 받기
-    this.pause();
+    clearInterval(this.#counter);
+    this.isRunning = false;
     if(time != null) {
+      this.#init = time;
+      this.#gap = time;
       this.dt = time;
-      this.setValue(this.dt);
     }
-    console.log(`reset: ${this.dt}`);
+    else {
+      this.dt = this.#init;
+      this.#gap = this.#init;
+    }
+    this.setValue(this.dt);
+    console.log(`reset: ${this.#gap}`);
   }
 }
