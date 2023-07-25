@@ -28,12 +28,24 @@ class TimerRepository {
         const query = await this.pool.query(
             `INSERT INTO timer_table VALUES(0, '${start}', '${end}', '${name}')`
         );
+
+        return query;
     }
 
     async deleteTimer(timer_id) {
         const query = await this.pool.query(
-            `DELETE from timer_table WHERE timer_id = ${timer_id}`
+            `DELETE FROm timer_table WHERE timer_id = ${timer_id}`
         );
+
+        return query;
+    }
+
+    async findTimerByName(timer_name) {
+        const query = await this.pool.query(
+            `SELECT timer_id FROM timer_table WHERE timer_name = '${timer_name}'`
+        );
+
+        return query;
     }
 
     async closeDB() {
