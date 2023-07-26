@@ -5,23 +5,20 @@ class TimerLogRepository extends Repository{
         super();
     };
     async init(){
-        const sql = "\
-            CREATE TABLE IF NOT EXISTS `timer`.`timer_log` ( \
-            `timer_log_id` INT NOT NULL AUTO_INCREMENT, \
-            `timer_id` INT NOT NULL, \
-            `operation` CHAR(10) NOT NULL, \
-            `timer_log_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, \
-            PRIMARY KEY (`timer_log_id`), \
-            INDEX `fk_timer_id_idx` (`timer_id` ASC), \
-            CONSTRAINT `fk_timer_id` \
-              FOREIGN KEY (`timer_id`) \
-              REFERENCES `timer`.`timer_table` (`timer_id`) \
-              ON DELETE CASCADE\
-              ON UPDATE NO ACTION \
-            )\
-            ENGINE = InnoDB \
-            DEFAULT CHARACTER SET = utf8mb4\
-            COLLATE = utf8mb4_unicode_ci;"
+        const sql = "CREATE TABLE IF NOT EXISTS `timer_log` ("+
+        "    `timer_log_id` INT(11) NOT NULL AUTO_INCREMENT,"+
+        "    `timer_id` INT(11) NOT NULL,"+
+        "    `operation` CHAR(10) NOT NULL COLLATE 'utf8mb4_unicode_ci',"+
+        "    `timer_log_time` DATETIME NOT NULL DEFAULT current_timestamp(),"+
+        "    PRIMARY KEY (`timer_log_id`) USING BTREE,"+
+        "    INDEX `fk_timer_id_idx` (`timer_id`) USING BTREE,"+
+        "    CONSTRAINT `fk_timer_id` FOREIGN KEY (`timer_id`)"+
+        "    REFERENCES `timer_table` (`timer_id`)"+
+        "    ON UPDATE NO ACTION ON DELETE CASCADE"+
+        ")"+
+        "COLLATE='utf8mb4_unicode_ci'"+
+        "ENGINE=InnoDB"+
+        ";"
         await this.query(sql, []);
     }
     async #do_operation(timer_id, operation, timestamp=null){

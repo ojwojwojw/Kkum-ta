@@ -6,16 +6,17 @@ test("Getter, Setter Works", async ()=>{
     const timer = new TimerRepository();
 
     await repo.beginTransaction();
-    const [rows, fields] = await timer.registTimer("12:34:56", "12:34:56", "test:leftTimeRepositroy");
+    const [rows, fields] = await timer.registTimer(123456000, "test:leftTimeRepositroy");
     const r_id = rows.insertId;
-    await repo.set(r_id, "running", 3, 20, 15);
+    await repo.set(r_id, "running", 32015000);
     const [rrows, rfields] = await repo.get(r_id);
-    expect(rrows[0].left_time).toBe("03:20:15");
+    console.log(rrows[0]);
+    expect(rrows[0].left_time).toBe(32015000);
     await repo.rollback();
     await timer.deleteTimer(r_id);
 
-    repo.closeDB();
-    timer.closeDB();
+    await repo.closeDB();
+    await timer.closeDB();
 });
 
 test("INSERT ... ON DUPLICATE KEY UPDATE works ", async ()=>{
@@ -23,17 +24,17 @@ test("INSERT ... ON DUPLICATE KEY UPDATE works ", async ()=>{
     const timer = new TimerRepository();
 
     await repo.beginTransaction();
-    const [rows, fields] = await timer.registTimer("12:34:56", "12:34:56", "test:leftTimeRepositroy");
+    const [rows, fields] = await timer.registTimer(123456000, "test:leftTimeRepositroy");
     const r_id = rows.insertId;
-    await repo.set(r_id, "running", 3, 20, 15);
+    await repo.set(r_id, "running", 32015000);
     const [rrows, rfields] = await repo.get(r_id);
-    expect(rrows[0].left_time).toBe("03:20:15");
-    await repo.set(r_id, "running", 3, 23, 45);
+    expect(rrows[0].left_time).toBe(32015000);
+    await repo.set(r_id, "running", 32345000);
     const [r2rows, r2fields] = await repo.get(r_id);
-    expect(r2rows[0].left_time).toBe("03:23:45");
+    expect(r2rows[0].left_time).toBe(32345000);
     await repo.rollback();
     await timer.deleteTimer(r_id);
 
-    repo.closeDB();
-    timer.closeDB();
+    await repo.closeDB();
+    await timer.closeDB();
 });
