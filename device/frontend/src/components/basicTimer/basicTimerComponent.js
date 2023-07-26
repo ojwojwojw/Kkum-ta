@@ -1,14 +1,22 @@
 import { useDispatch } from "react-redux";
 
 import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import BasicTimer from "../../utility/basic_timer";
 import { logPauseData } from "../../features/timer/timerSlice";
 import { selectingTimer } from "../../features/numberpad/numberPadSlice";
+
 // mui
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import "./basicTimer.css";
-import NumberPad from "../numberPad/numberPadComponent";
+
+
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { Button } from "@mui/material";
 
 function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
@@ -21,7 +29,6 @@ function BasicTimerComponent(props) {
   const [input, setInput] = useState(0);
   const [value, setValue] = useState(0);
   const refTimer = useRef(null);
-  const refText = useRef(null);
   const dispatch = useDispatch();
   const selectedIndex = props.index;
 
@@ -31,8 +38,9 @@ function BasicTimerComponent(props) {
 
   function resume() {
     const timer = refTimer.current;
-    timer.isRunning ? timer.pause() : timer.start();
-    const payload = { dt: timer.dt, index: selectedIndex };
+    timer.isRunning() ? timer.pause() : timer.start();
+
+    const payload = { dt: timer.getTime(), index: selectedIndex };
     dispatch(logPauseData(payload));
   }
 
@@ -54,18 +62,26 @@ function BasicTimerComponent(props) {
           </span>
         </Grid>
         <Grid item xs={4} className="timerButton">
-          <button className="start" onClick={resume}>
-            {"▶"}
-          </button>
-          <button className="reset" onClick={()=>reset(input)}>
-            {value === 0 ? "set" : "reset"}
-          </button>
+          <Button className="start" onClick={resume}>
+            {1 ? (
+              <PlayArrowIcon fontSize="large" />
+            ) : (
+              <PauseIcon fontSize="large" />
+            )}
+          </Button>
+          <Button className="reset" color="warning" onClick={() => reset(input*1000)}>
+            {value === 0 ? (
+              <SettingsIcon fontSize="large" />
+            ) : (
+              <RestartAltIcon fontSize="large" />
+            )}
+          </Button>
         </Grid>
         
         <Grid>
           <div>
             <div>
-              {input}
+              {input} sec
             </div>
             <div>
               <button onClick={()=> setInput(Number(String(input) + '1'))}>1</button>
@@ -83,7 +99,7 @@ function BasicTimerComponent(props) {
             </div>
             <div>
               <button onClick={()=> setInput(Number(String(input).slice(0,-1)))}>취소</button>
-              <button onClick={() => reset(input)}>입력</button>
+              <button onClick={() => reset(input*1000)}>입력</button>
             </div>
           </div>
         </Grid>
