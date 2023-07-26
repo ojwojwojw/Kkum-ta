@@ -21,25 +21,9 @@ export function Timer() {
           createTimer
         </button>
 
-        <button
-          onClick={()=> dispatch(reloadData())}        
-        >
-          스테이트 변경감지
-        </button>
-        
-
-        {timerArray.map((timerObj, index) => (
-        <div key={index}>
-          pk : {index}
-          | dt : {timerObj.dt}
-          | name : {timerObj.name}
-          | setValue : {timerObj.setValue}
-          | is Running : {timerObj.isRunning}
-        </div>
-        ))}
         <hr/>
       </div>
-      
+
     </div>
   );
 }
