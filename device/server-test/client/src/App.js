@@ -6,10 +6,13 @@ function App() {
     const [logs, updateLog] = useState([]);
 
     useEffect(() => {
-        const fetchDatas = () => {
-            axios.get("/timer_table").then((res) => {
-                updateArr(res.data);
-            });
+        const fetchDatas = async () => {
+          try {
+            const res = await axios.get("/timer_table");
+            updateArr(res);
+          } catch(error) {
+            console.error('Error occrued during rendering data: ', error);
+          }
         };
         fetchDatas();
 
