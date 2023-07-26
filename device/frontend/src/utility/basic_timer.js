@@ -1,58 +1,62 @@
+import { logData } from "../features/timer/timerSlice";
+
 export default class BasicTimer {
   #counter;
-  #dt
-  #init
-  #isRunning
-  #name
-  constructor(name,setValue) {
-    this.#dt = 0;
-    this.#init = 0;
+  #data;
+  #isRunning;
+  constructor(index,setValue,dispatch) {
+    this.#data = {};
+    this.#data.dt = 0;
+    this.#data.init = 0;
+    this.#data.index = index;
     this.#isRunning = false;
-    this.#name = name;
     this.setValue = setValue;
+    this.dispatch = dispatch;
     console.log("basic timer constructor")
   }
 
   #count(end) {
     this.#counter = setInterval(() => {
       const now = new Date().getTime();
-      this.#dt = end - now;
-      if (this.#dt <= 0) {
+      this.#data.dt = end - now;
+      if (this.#data.dt <= 0) {
         clearInterval(this.#counter);
         this.#isRunning = false;
-        this.#dt = 0;
+        this.#data.dt = 0;
       }
-      this.setValue(this.#dt);
-      //console.log(`${this.#name}: ${(this.dt / 1000).toFixed(3)} 초 남음`);
+      this.setValue(this.#data.dt);
+      this.dispatch(logData({ data : JSON.stringify(this.#data), index : this.#data.index}));
+      //console.log(`${this.#id}: ${(this.dt / 1000).toFixed(3)} 초 남음`);
     }, 10);
   }
 
   start() {
-    if(this.#isRunning === true) return;
+    if(this.#isRunning) return;
     this.#isRunning = true;
-    const end = new Date().getTime() + this.#dt;
+    const end = new Date().getTime() + this.#data.dt;
     this.#count(end);
-    console.log(`start: ${this.#dt}`);
+    console.log(`start: ${this.#data.dt}`);
   }
 
   pause() {
     clearInterval(this.#counter);
     this.#isRunning = false;
-    console.log(`pause: ${this.#dt}`);
+    console.log(`pause: ${this.#data.dt}`);
   }
 
   reset(time) { // 밀리초 단위로 입력 받기
     clearInterval(this.#counter);
     this.#isRunning = false;
     if(time != null) {
-      this.#init = time;
-      this.#dt = time;
+      this.#data.init = time;
+      this.#data.dt = time;
     }
     else {
-      this.#dt = this.#init;
+      this.#data.dt = this.#data.init;
     }
-    this.setValue(this.#dt);
-    console.log(`reset: ${this.#dt}`);
+    this.setValue(this.#data.dt);
+    this.dispatch(logData({ data : JSON.stringify(this.#data), index : this.#data.index}));
+    console.log(`reset: ${this.#data.dt}`);
   }
 
   isRunning() {
@@ -60,10 +64,15 @@ export default class BasicTimer {
   }
 
   getTime() {
-    return this.#dt;
+    return this.#data.dt;
   }
 
-  setName(name) {
-    this.#name = name;
+  setID(id) {
+    this.#data.id = id;
+  }
+
+  importFromJSON(data) {
+    if(this.#isRunning) return;
+    this.#data = JSON.parse(data);
   }
 }

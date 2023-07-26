@@ -1,15 +1,10 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  create,
-  selectArray,
-  reloadData
-} from './timerSlice';
+import { useDispatch } from 'react-redux';
+import { create } from './timerSlice';
 
 export function Timer() {
-  let timerArray = useSelector( (state)=> {return state.timer.timerArray});
+
   const dispatch = useDispatch();
-  console.log(timerArray)
 
   return (
     <div>

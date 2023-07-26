@@ -5,13 +5,6 @@ const initialState = {
   timerArray : [],
 };
 
-const createTimerObject = () => {
-  // return new BasicTimer()
-  return (
-    {}
-  );
-}
-
 export const incrementAsync = createAsyncThunk(
   'timer/fetchTimer',
   async (amount) => {
@@ -25,16 +18,16 @@ export const timerSlice = createSlice({
   initialState,
   reducers: {
     create: (state) => {
-      state.timerArray.push(createTimerObject());
+      state.timerArray.push({});
     },
-    logPauseData: (state , action) => {
-      const dt = action.payload.dt
-      const index = action.payload.index
-      state.timerArray[index].dt = dt
+    logData: (state , action) => {
+      const data = action.payload.data;
+      const index = action.payload.index;
+      state.timerArray[index] = data;
     },
     reloadData: (state) =>{
-      state.timerArray.push(createTimerObject());
-      state.timerArray.pop(createTimerObject());
+      state.timerArray.push({});
+      state.timerArray.pop({});
     },
     setTimer: (state ,action) =>{
       state.timerArray[action.payload.key1].dt = action.payload.key2; 
@@ -42,7 +35,7 @@ export const timerSlice = createSlice({
   },
 });
 
-export const { create , logPauseData , reloadData , setTimer} = timerSlice.actions;
+export const { create , logData , reloadData , setTimer} = timerSlice.actions;
 
 export const selectArray = (state) => state.timer.timerArray;
 

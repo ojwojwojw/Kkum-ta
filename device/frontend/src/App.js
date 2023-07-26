@@ -18,10 +18,6 @@ function App() {
       <TimerContainer />
       {/* <Link to="/page1">페이지1라우팅 |</Link>
       <Link to="/page2">페이지2라우팅</Link> */}
-      
-      <div>
-        <TimerContainer />
-      </div>
 
 
       <Link to="/page1">페이지1라우팅 |</Link>
