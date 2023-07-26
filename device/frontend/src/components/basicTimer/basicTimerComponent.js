@@ -3,10 +3,16 @@ import { useDispatch } from "react-redux";
 import React, { useState, useRef } from "react";
 import BasicTimer from "../../utility/basic_timer";
 import { logPauseData } from "../../features/timer/timerSlice";
+
 // mui
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import "./basicTimer.css";
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { Button } from "@mui/material";
 
 function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
@@ -42,8 +48,8 @@ function BasicTimerComponent(props) {
 
   return (
     <Box className="timer">
-      <Grid container justifyContent={"center"} alignContent={"center"}>
-        <Grid item xs={6} className="time">
+      <Grid container justifyContent={"center"} alignSelf={"center"}>
+        <Grid item xs={6} className="time" onClick={resume}>
           {("00" + Math.floor(value / 1000 / 3600)).slice(-2)}:{" "}
           {("00" + Math.floor(value / 1000 / 60)).slice(-2)} :{" "}
           {("00" + Math.floor((value / 1000) % 60)).slice(-2)}
@@ -52,12 +58,20 @@ function BasicTimerComponent(props) {
           </span>
         </Grid>
         <Grid item xs={4} className="timerButton">
-          <button className="start" onClick={resume}>
-            {"▶"}
-          </button>
-          <button className="reset" onClick={reset}>
-            {value == 0 ? "set" : "reset"}
-          </button>
+          <Button className="start" onClick={resume}>
+            {1 ? (
+              <PlayArrowIcon fontSize="large" />
+            ) : (
+              <PauseIcon fontSize="large" />
+            )}
+          </Button>
+          <Button className="reset" color="warning" onClick={reset}>
+            {value === 0 ? (
+              <SettingsIcon fontSize="large" />
+            ) : (
+              <RestartAltIcon fontSize="large" />
+            )}
+          </Button>
         </Grid>
         <Grid item xs={12}>
           <input

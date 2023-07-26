@@ -16,20 +16,20 @@ function App() {
     <div className="App">
       <CreateTimerPage />
       <TimerContainer />
-      <Link to="/page1">페이지1라우팅 |</Link>
-      <Link to="/page2">페이지2라우팅</Link>
+      {/* <Link to="/page1">페이지1라우팅 |</Link>
+      <Link to="/page2">페이지2라우팅</Link> */}
 
-      <Routes>
+      {/* <Routes>
         <Route path="/page1" element={<Page1 />}>
           {" "}
         </Route>
         <Route path="/page2" element={<Page2 />}></Route>
-      </Routes>
+      </Routes> */}
 
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {/* <Counter /> */}
-      </header>
+      {/* <header className="App-header"> */}
+      {/* <img src={logo} className="App-logo" alt="logo" /> */}
+      {/* <Counter /> */}
+      {/* </header> */}
     </div>
   );
 }
