@@ -1,0 +1,5 @@
+node_modules
+/device/backend/node_modules
+/device/server/node_modules
+/device/server/client/node_modules
+/device/server/server/node_modules
