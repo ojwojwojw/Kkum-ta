@@ -15,8 +15,13 @@ timerRouter.post("/", (req, res) => {
 });
 
 timerRouter.get("/Log/All", async (req, res) => {
-	const q = await timLog.findAll();
-	res.status(200).send(q[0]);
-})
+    const q = await timLog.findAll();
+    res.status(200).send(q[0]);
+});
+
+timerRouter.get("/Timer/All", async (req, res) => {
+    const q = await tim.findAll();
+    res.status(200).send(q[0]);
+});
 
 module.exports = timerRouter;
