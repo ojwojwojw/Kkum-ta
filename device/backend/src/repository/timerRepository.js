@@ -5,17 +5,15 @@ class TimerRepository extends Repository{
         super();
     }
     async init(){
-        const sql = "CREATE TABLE `timer_table` (\
-            `timer_id` INT(11) NOT NULL AUTO_INCREMENT,\
-            `time` TIME NULL DEFAULT NULL,\
-            `timer_name` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8_general_ci',\
-            PRIMARY KEY (`timer_id`) USING BTREE\
-        )\
-        COLLATE='utf8_general_ci'\
-        ENGINE=InnoDB\
-        AUTO_INCREMENT=146\
-        ;\
-        ";
+        const sql = "CREATE TABLE `timer_table` ("+
+        "    `timer_id` INT(11) NOT NULL AUTO_INCREMENT,"+
+        "    `time` INT(10) UNSIGNED NULL DEFAULT NULL,"+
+        "    `timer_name` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8_general_ci',"+
+        "    PRIMARY KEY (`timer_id`) USING BTREE"+
+        ")"+
+        "COLLATE='utf8_general_ci'"+
+        "ENGINE=InnoDB"+
+        ";"
         const params = [];
         return await this.query(sql, params);
     }
