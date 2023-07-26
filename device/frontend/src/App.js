@@ -6,7 +6,6 @@ import { Link, Routes, Route } from "react-router-dom";
 
 import CreateTimerPage from "./pages/createTimerPage";
 import TimerContainer from "./pages/timerContaioner";
-import NumberPad from "./components/numberPad/numberPadComponent";
 
 //라우팅 페이지 관련
 import Page1 from "./pages/page1";
@@ -19,7 +18,6 @@ function App() {
       
       <div>
         <TimerContainer />
-        <NumberPad />
       </div>
 
 

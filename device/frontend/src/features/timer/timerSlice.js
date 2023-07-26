@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchTimer } from './timerAPI';
-import BasicTimer from '../../utility/basic_timer';
 
 const initialState = {
   timerArray : [],
@@ -36,11 +35,14 @@ export const timerSlice = createSlice({
     reloadData: (state) =>{
       state.timerArray.push(createTimerObject());
       state.timerArray.pop(createTimerObject());
+    },
+    setTimer: (state ,action) =>{
+      state.timerArray[action.payload.key1].dt = action.payload.key2; 
     }
   },
 });
 
-export const { create , logPauseData , reloadData} = timerSlice.actions;
+export const { create , logPauseData , reloadData , setTimer} = timerSlice.actions;
 
 export const selectArray = (state) => state.timer.timerArray;
 

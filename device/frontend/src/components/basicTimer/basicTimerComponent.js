@@ -1,12 +1,14 @@
 import { useDispatch } from "react-redux";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef} from "react";
 import BasicTimer from "../../utility/basic_timer";
 import { logPauseData } from "../../features/timer/timerSlice";
+import { selectingTimer } from "../../features/numberpad/numberPadSlice";
 // mui
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import "./basicTimer.css";
+import NumberPad from "../numberPad/numberPadComponent";
 
 function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
@@ -16,10 +18,10 @@ function useConstructor(callBack = () => {}) {
 }
 
 function BasicTimerComponent(props) {
+  const [input, setInput] = useState(0);
   const [value, setValue] = useState(0);
   const refTimer = useRef(null);
   const refText = useRef(null);
-
   const dispatch = useDispatch();
   const selectedIndex = props.index;
 
@@ -30,18 +32,18 @@ function BasicTimerComponent(props) {
   function resume() {
     const timer = refTimer.current;
     timer.isRunning ? timer.pause() : timer.start();
-
     const payload = { dt: timer.dt, index: selectedIndex };
     dispatch(logPauseData(payload));
   }
 
-  function reset() {
+  function reset(time = null) {
+    console.log(time)
     const timer = refTimer.current;
-    timer.reset(refText.current * 1000);
+    timer.reset(time);
   }
 
-  return (
-    <Box className="timer">
+  return ( 
+    <Box className="timer" onClick = {()=>{dispatch(selectingTimer(selectedIndex))}}>   
       <Grid container justifyContent={"center"} alignContent={"center"}>
         <Grid item xs={6} className="time">
           {("00" + Math.floor(value / 1000 / 3600)).slice(-2)}:{" "}
@@ -55,21 +57,45 @@ function BasicTimerComponent(props) {
           <button className="start" onClick={resume}>
             {"▶"}
           </button>
-          <button className="reset" onClick={reset}>
-            {value == 0 ? "set" : "reset"}
+          <button className="reset" onClick={()=>reset(input)}>
+            {value === 0 ? "set" : "reset"}
           </button>
         </Grid>
-        <Grid item xs={12}>
-          <input
-            className="inputTime"
-            type="text"
-            placeholder="타이머 시간 설정"
-            onChange={(arg) => {
-              refText.current = arg.target.value;
-            }}
-          ></input>
+        
+        <Grid>
+          <div>
+            <div>
+              {input}
+            </div>
+            <div>
+              <button onClick={()=> setInput(Number(String(input) + '1'))}>1</button>
+              <button onClick={()=> setInput(Number(String(input) + '2'))}>2</button>
+              <button onClick={()=> setInput(Number(String(input) + '3'))}>3</button>
+              <button onClick={()=> setInput(Number(String(input) + '4'))}>4</button>
+              <button onClick={()=> setInput(Number(String(input) + '5'))}>5</button>
+            </div>
+            <div>
+              <button onClick={()=> setInput(Number(String(input) + '6'))}>6</button>
+              <button onClick={()=> setInput(Number(String(input) + '7'))}>7</button>
+              <button onClick={()=> setInput(Number(String(input) + '8'))}>8</button>
+              <button onClick={()=> setInput(Number(String(input) + '9'))}>9</button>
+              <button onClick={()=> setInput(Number(String(input) + '0'))}>0</button>
+            </div>
+            <div>
+              <button onClick={()=> setInput(Number(String(input).slice(0,-1)))}>취소</button>
+              <button onClick={() => reset(input)}>입력</button>
+            </div>
+          </div>
         </Grid>
+
+        <Grid item xs={12}>
+          
+          
+        </Grid>
+          
       </Grid>
+       
+      
     </Box>
   );
 }

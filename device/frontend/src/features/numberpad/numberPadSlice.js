@@ -26,9 +26,12 @@ export const numberPadSlice = createSlice({
        deleteNumber: (state, action) =>{
             state.value = state.value.slice(0,-1)
        },
+       selectingTimer: (state, action) =>{
+            state.selectingTimer = action.payload
+       },
     }
 });
 
-export const {insertNumber , deleteNumber} = numberPadSlice.actions
+export const {insertNumber , deleteNumber , selectingTimer } = numberPadSlice.actions
 
 export default numberPadSlice.reducer
