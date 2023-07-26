@@ -1,6 +1,7 @@
-test(async ()=>{
-    const timer = require("../src/repository/timerRepository");
+const timer = require("../../src/repository/timerRepository");
+test("?", async ()=>{
 
     const tim = new timer();
-    console.log(await tim.findAll());
+    await tim.findAll();
+    tim.closeDB();
 });
