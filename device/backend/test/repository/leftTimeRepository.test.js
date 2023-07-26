@@ -6,7 +6,7 @@ test("Getter, Setter Works", async ()=>{
     const timer = new TimerRepository();
 
     await repo.beginTransaction();
-    const [rows, fields] = await timer.registTimer("12:34:56", "test:leftTimeRepositroy");
+    const [rows, fields] = await timer.registTimer("12:34:56", "12:34:56", "test:leftTimeRepositroy");
     const r_id = rows.insertId;
     await repo.set(r_id, "running", 3, 20, 15);
     const [rrows, rfields] = await repo.get(r_id);
@@ -23,7 +23,7 @@ test("INSERT ... ON DUPLICATE KEY UPDATE works ", async ()=>{
     const timer = new TimerRepository();
 
     await repo.beginTransaction();
-    const [rows, fields] = await timer.registTimer("12:34:56", "test:leftTimeRepositroy");
+    const [rows, fields] = await timer.registTimer("12:34:56", "12:34:56", "test:leftTimeRepositroy");
     const r_id = rows.insertId;
     await repo.set(r_id, "running", 3, 20, 15);
     const [rrows, rfields] = await repo.get(r_id);

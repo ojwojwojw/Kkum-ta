@@ -5,7 +5,7 @@ class LeftTimeRepository extends Repository{
         super();
     };
     async init(){
-        const sql = "CREATE TABLE IF NOT EXISTS `left_time` (\
+        const sql = "CREATE TABLE `left_time` (\
             `timer_id` INT(11) NOT NULL,\
             `state` CHAR(6) NOT NULL COLLATE 'utf8mb4_general_ci',\
             `time` TIME NOT NULL,\
@@ -36,11 +36,6 @@ class LeftTimeRepository extends Repository{
         if(state !== "running" && state !== "stop"){
             throw `state can have value of "running" or "stop" only.`;
         }
-        return await this.query(sql, params);
-    }
-    async findAll(){
-        const sql = "SELECT * FROM timer_table NATURAL JOIN left_time;";
-        const params = [];
         return await this.query(sql, params);
     }
 }
