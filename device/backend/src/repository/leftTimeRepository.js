@@ -24,11 +24,7 @@ class LeftTimeRepository extends Repository{
         const params = [timer_id];
         return await this.query(sql, params);
     }
-    async set(timer_id, state, hour, minute, second){
-        const left_time = `${hour}:${minute}:${second}`;
-        if(hour < 0 || minute < 0 || second < 0){
-            throw `Invalid Time (${left_time})`;
-        }
+    async set(timer_id, state, left_time){
         const sql = "INSERT INTO left_time(timer_id, state, left_time)\
         VALUES (?, ?, ?)\
         ON DUPLICATE KEY UPDATE left_time=?"
@@ -41,6 +37,11 @@ class LeftTimeRepository extends Repository{
     async findAll(){
         const sql = "SELECT * FROM timer_table NATURAL JOIN left_time;";
         const params = [];
+        return await this.query(sql, params);
+    }
+    async findTimerByName(name){
+        const sql = "SELECT * FROM timer_table NATURAL JOIN left_time WHERE timer_name=?"
+        const params = [name];
         return await this.query(sql, params);
     }
 }

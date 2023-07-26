@@ -14,7 +14,7 @@ class TimerService{
         const [timer, timerFields] = await this.timerRepo.findTimerById(id);
         const [leftTime, leftFields] = await this.leftTimeRepo.get(id);
         if(timer.length == 0){
-            return {};
+            return null;
         }
         let state, left_time;
         if(leftTime.length == 0){
@@ -36,17 +36,33 @@ class TimerService{
         return result;
     }
     async getTimerByName(name){
-        const [rows, _] = await this.timerRepo.findTimerByName(name);
-        console.log(rows);
+        const [rows] = await this.leftTimeRepo.findTimerByName(name);
+        const result = rows.map((item)=>{
+            return {
+                timer_id: item.timer_id,
+                name: item.timer_name,
+                total_time: item.time,
+                state: item.state,
+                left_time: item.left_time
+            }
+        })
+        return result;
     }
     async createTimer(name, total_time){
-
+        const [rows] = await this.timerRepo.registTimer(total_time, name);
+        return {result:"ok", timer_id:rows.insertId};
     }
-    async putTimer(id, name, total_time){
-
+    async putTimer(id, total_time){
+        if(!id || !total_time){
+            return {"status":"invalid parameter"};
+        }
+        await this.timerRepo.putTimer(id, total_time);
+        await this.leftTimeRepo.set(id, "stop", total_time);
+        return {result:"ok"};
     }
     async deleteTimer(id){
-
+        await this.timerRepo.deleteTimer(id);
+        return {result:"ok"};
     }
 }
 module.exports = TimerService;

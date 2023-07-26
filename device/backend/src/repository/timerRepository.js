@@ -26,8 +26,13 @@ class TimerRepository extends Repository{
     }
 
     async registTimer(time, name) {
-        const sql = "INSERT INTO timer_table VALUES(0, ?, ?)"
+        const sql = "INSERT INTO timer_table VALUES(0, ?, ?)";
         const params = [time, name];
+        return await this.query(sql, params);
+    }
+    async putTimer(id, time){
+        const sql = "UPDATE timer_table SET time= ? WHERE timer_id = ?";
+        const params = [time, id];
         return await this.query(sql, params);
     }
 
