@@ -1,4 +1,4 @@
-const Repository = require('./Repository.js');
+const Repository = require('./repository.js');
 
 class TimerRepository extends Repository{
     constructor() {

@@ -28,8 +28,9 @@ describe("database management", () => {
   afterEach(async () => {
     await timerLogRepository.closeDB();
     timerLogRepository = null;
-    
-    await timerRepository.rollback();
+    try{
+      await timerRepository.rollback();
+    } catch(e){}
     await timerRepository.closeDB();
     timerRepository = null;
   });
@@ -56,7 +57,9 @@ describe("Security", ()=>{
     await timerLogRepository.closeDB();
     timerLogRepository = null;
 
-    await timerRepository.rollback();
+    try{
+      await timerRepository.rollback();
+    } catch(e){}
     await timerRepository.closeDB();
     timerRepository = null;
   })
