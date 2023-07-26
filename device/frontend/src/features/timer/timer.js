@@ -9,7 +9,7 @@ import {
 export function Timer() {
   let timerArray = useSelector( (state)=> {return state.timer.timerArray});
   const dispatch = useDispatch();
-  console.log(timerArray)
+  console.log(timerArray);
 
   return (
     <div>
