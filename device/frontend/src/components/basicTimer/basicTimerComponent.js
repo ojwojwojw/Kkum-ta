@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import BasicTimer from "../../utility/basic_timer";
 import { logPauseData } from "../../features/timer/timerSlice";
 // mui
@@ -29,9 +29,9 @@ function BasicTimerComponent(props) {
 
   function resume() {
     const timer = refTimer.current;
-    timer.isRunning ? timer.pause() : timer.start();
+    timer.isRunning() ? timer.pause() : timer.start();
 
-    const payload = { dt: timer.dt, index: selectedIndex };
+    const payload = { dt: timer.getTime(), index: selectedIndex };
     dispatch(logPauseData(payload));
   }
 
