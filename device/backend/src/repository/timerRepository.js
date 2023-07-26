@@ -27,7 +27,6 @@ class TimerRepository extends Repository{
         const params = [timer_name];
         return await this.query(sql, params);
     }
-
 }
 
 module.exports = TimerRepository;
