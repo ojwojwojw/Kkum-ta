@@ -1,11 +1,7 @@
 const express = require("express");
 const timerRouter = express.Router();
-const timer = require("../repository/timerRepository");
-const timerLog = require("../repository/timerLogRepository");
 const TimerService = require('../service/timerService');
 
-const tim = new timer();
-const timLog = new timerLog();
 const timerService = new TimerService();
 
 timerRouter.get("/", (req, res) => {
@@ -14,16 +10,6 @@ timerRouter.get("/", (req, res) => {
 
 timerRouter.post("/", (req, res) => {
     res.status(200).send("POST timerRouter /");
-});
-
-timerRouter.get("/Log/All", async (req, res) => {
-    const q = await timLog.findAll();
-    res.status(200).send(q[0]);
-});
-
-timerRouter.get("/Timer/All", async (req, res) => {
-    const q = await tim.findAll();
-    res.status(200).send(q[0]);
 });
 
 timerRouter.get('/', async (req, res)=>{
