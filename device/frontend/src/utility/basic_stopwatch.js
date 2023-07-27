@@ -52,17 +52,11 @@ export default class BasicStopwatch {
     console.log(`pause: ${this.#time}`);
   }
 
-  reset(time) { // 밀리초 단위로 입력 받기
+  reset() { // 밀리초 단위로 입력 받기
     clearInterval(this.#counter);
     this.#isRunning = false;
     if (this.setIsRunning != null)
       this.setIsRunning(false);
-    if (time != null && time > 0) {
-      this.#upperbd = time;
-    }
-    else {
-      this.#upperbd = 360000;
-    }
     this.#time = 0;
     this.#sum = 0;
     this.#begin = 0;

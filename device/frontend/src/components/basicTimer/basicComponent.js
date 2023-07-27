@@ -34,8 +34,8 @@ export default function BasicTimerComponent({ timer, idx }) {
     isRunning ? timer.pause() : timer.start();
   }
 
-  function reset(time) {
-    timer.reset(time);
+  function reset() {
+    timer.reset(input * 1000);
   }
 
   return (
@@ -87,7 +87,6 @@ export default function BasicTimerComponent({ timer, idx }) {
           </div>
           <div>
             <button onClick={() => setInput(Number(String(input).slice(0, -1)))}>취소</button>
-            <button onClick={() => reset(input * 1000)}>입력</button>
           </div>
         </Grid>
       </Grid>
