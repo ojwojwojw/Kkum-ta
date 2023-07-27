@@ -50,11 +50,11 @@ class TimerService{
         const [rows] = await this.timerRepo.createTimer(total_time, name);
         return {status:"ok", timer_id:rows.insertId};
     }
-    async putTimer(id, total_time){
-        if(!id || !total_time){
+    async putTimer(id, name, total_time){
+        if(!id || !name || !total_time){
             return {"status":"invalid parameter"};
         }
-        await this.timerRepo.putTimer(id, total_time);
+        await this.timerRepo.putTimer(id, name, total_time);
         await this.leftTimeRepo.set(id, "stop", total_time);
         return {status:"ok"};
     }

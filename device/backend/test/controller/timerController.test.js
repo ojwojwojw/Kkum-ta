@@ -69,11 +69,50 @@ describe("app API for timer", () => {
     }
   });
 
-  test("User can fix the remaining time of the timer", async () => {
+  test("User can fix the total time of the timer", async () => {
     const result = await axios.post("timer/", {
       name: "test",
       total_time: "30000000",
     });
     const id = result.data.timer_id;
+
+    await axios.put(`/timer/${id}`, {name:"testFixed", total_time:"123454321"});
+    const fixedResult = await axios.get(`timer/${id}`);
+    expect(fixedResult.data.timer_id).toBe(id);
+    expect([fixedResult.data.name, fixedResult.data.total_time]).toStrictEqual(["testFixed", 123454321]);
+    expect(fixedResult.data.state).toBe("stop");
+    expect(fixedResult.data.left_time).toBe(123454321);
+
+    await axios.delete(`timer/${id}`);
+  });
+  test("User can get timers by name of the timer", async () => {
+    const name = Math.random().toString(36).slice(2, 10);
+    const result = await axios.post("timer/", {
+      name,
+      total_time: "30000000",
+    });
+    const id = result.data.timer_id;
+    const getByName = await axios.get(`timer/name/${name}`)
+    expect(getByName.status).toBe(200);
+    const cmp = (obj1, obj2) =>{
+      const key1 = Object.keys(obj1);
+      const key2 = Object.keys(obj2);
+      if(key1.length != key2.length) return false;
+      for(let key in key1){
+        if(obj1[key] != obj2[key]) return false;
+      } 
+      return true;
+    }
+    const find = (obj1) =>{
+      return cmp(obj1, {
+        timer_id: id,
+        name: name,
+        total_time: 30000000,
+        state: "stop",
+        left_time: 30000000
+      })
+    }
+    expect(getByName.data.some(find)).toBe(true);
+    await axios.delete(`timer/${id}`);
   });
 });

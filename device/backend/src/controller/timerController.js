@@ -39,12 +39,13 @@ timerRouter.post('/', async (req, res)=>{
 
 timerRouter.put('/:id', async (req, res)=>{
 	const id = req.params.id;
+	const name = req.body.name;
 	const total_time = req.body.total_time;
 	if(!total_time){
 		res.status(400).json({status:"invalid parameter"});
 	}
 	else{
-		const result = await timerService.putTimer(id, total_time);
+		const result = await timerService.putTimer(id, name, total_time);
 		res.status(200).json(result);
 	}
 })
