@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles",
-    "test:watch": "jest --detectOpenHandles --watch",
+    "test": "jest --no-cache --detectOpenHandles --forceExit",
+    "test:watch": "jest --no-cache --detectOpenHandles --watchAll",
     "start": "node index.js"
   },
   "author": "",
