@@ -15,41 +15,41 @@ class TimerRepository extends Repository{
         "ENGINE=InnoDB"+
         ";"
         const params = [];
-        return await this.query(sql, params);
+        return this.query(sql, params);
     }
     async findAll() {
         const sql = "SELECT * FROM timer_table";
         const params = [];
-        return await this.query(sql, params);
+        return this.query(sql, params);
     }
 
     async createTimer(time, name) {
         const sql = "INSERT INTO timer_table VALUES(0, ?, ?)";
         const params = [time, name];
-        return await this.query(sql, params);
+        return this.query(sql, params);
     }
     async putTimer(id, time){
         const sql = "UPDATE timer_table SET time= ? WHERE timer_id = ?";
         const params = [time, id];
-        return await this.query(sql, params);
+        return this.query(sql, params);
     }
 
     async deleteTimer(timer_id) {
         const sql = "DELETE FROM timer_table WHERE timer_id = ?";
         const params = [timer_id];
-        return await this.query(sql, params);
+        return this.query(sql, params);
     }
 
     async findTimerById(timer_id){
         const sql = "SELECT * FROM timer_table WHERE timer_id = ?";
         const params = [timer_id];
-        return await this.query(sql, params);
+        return this.query(sql, params);
     }
 
-    async findTimerByName(timer_name) {
+    async getTimerByName(timer_name) {
         const sql = "SELECT * FROM timer_table WHERE timer_name = ?";
         const params = [timer_name];
-        return await this.query(sql, params);
+        return this.query(sql, params);
     }
 
 }

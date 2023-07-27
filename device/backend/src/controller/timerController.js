@@ -4,14 +4,6 @@ const TimerService = require('../service/timerService');
 
 const timerService = new TimerService();
 
-timerRouter.get("/", (req, res) => {
-    res.status(200).send("GET timerRouter /");
-});
-
-timerRouter.post("/", (req, res) => {
-    res.status(200).send("POST timerRouter /");
-});
-
 timerRouter.get('/', async (req, res)=>{
 	res.status(200).json(await timerService.getAllTimer());
 });
@@ -25,6 +17,12 @@ timerRouter.get('/:id', async(req, res)=>{
 	else{
 		res.status(200).json(result);
 	}
+});
+
+timerRouter.get('/name/:name', async(req, res)=>{
+	const name = req.params.name;
+	const result = await timerService.getTimerByName(name);
+	res.status(200).json(result);
 });
 
 timerRouter.post('/', async (req, res)=>{
@@ -51,10 +49,10 @@ timerRouter.put('/:id', async (req, res)=>{
 	}
 })
 
-timerRouter.get('/name/:name', async(req, res)=>{
-	const name = req.params.name;
-	const result = await timerService.getTimerByName(name);
-	res.status(200).json(result);
+timerRouter.delete('/:id', async (req, res)=>{
+	const id = req.params.id;
+	const result = await timerService.deleteTimre(id);
+	return res.status(200).json(result);
 })
 
 module.exports = timerRouter;
