@@ -8,6 +8,7 @@ export default class BasicTimer {
     this.#init = 0;
     this.#isRunning = false;
     this.setTime = null;
+    this.setIsRunning = null;
     console.log("basic timer constructor")
   }
 
@@ -18,15 +19,20 @@ export default class BasicTimer {
       if (this.#time <= 0) {
         clearInterval(this.#counter);
         this.#isRunning = false;
+        if (this.setIsRunning != null)
+          this.setIsRunning(false);
         this.#time = 0;
       }
-      this.setTime(this.#time);
+      if (this.setTime != null)
+        this.setTime(this.#time);
     }, 10);
   }
 
   start() {
-    if(this.#isRunning) return;
+    if (this.#isRunning) return;
     this.#isRunning = true;
+    if (this.setIsRunning != null)
+      this.setIsRunning(true);
     const end = new Date().getTime() + this.#time;
     this.#count(end);
     console.log(`start: ${this.#time}`);
@@ -35,20 +41,25 @@ export default class BasicTimer {
   pause() {
     clearInterval(this.#counter);
     this.#isRunning = false;
+    if (this.setIsRunning != null)
+      this.setIsRunning(false);
     console.log(`pause: ${this.#time}`);
   }
 
   reset(time) { // 밀리초 단위로 입력 받기
     clearInterval(this.#counter);
     this.#isRunning = false;
-    if(time != null) {
+    if (this.setIsRunning != null)
+      this.setIsRunning(false);
+    if (time != null) {
       this.#init = time;
       this.#time = time;
     }
     else {
       this.#time = this.#init;
     }
-    this.setTime(this.#time);
+    if (this.setTime != null)
+      this.setTime(this.#time);
     console.log(`reset: ${this.#time}`);
   }
 }
