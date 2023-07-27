@@ -14,12 +14,7 @@ import Page2 from "./pages/page2";
 function App() {
   return (
     <div className="App">
-      <CreateTimerPage />
-      <TimerContainer />
-      {/* <Link to="/page1">페이지1라우팅 |</Link>
-      <Link to="/page2">페이지2라우팅</Link> */}
-
-
+    
       <Link to="/page1">페이지1라우팅 |</Link>
       <Link to="/page2">페이지2라우팅</Link>
 
