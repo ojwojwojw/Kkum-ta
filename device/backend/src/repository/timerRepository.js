@@ -23,7 +23,7 @@ class TimerRepository extends Repository{
         return await this.query(sql, params);
     }
 
-    async registTimer(time, name) {
+    async createTimer(time, name) {
         const sql = "INSERT INTO timer_table VALUES(0, ?, ?)";
         const params = [time, name];
         return await this.query(sql, params);
@@ -46,7 +46,7 @@ class TimerRepository extends Repository{
         return await this.query(sql, params);
     }
 
-    async findTimerByName(timer_name) {
+    async getTimerByName(timer_name) {
         const sql = "SELECT * FROM timer_table WHERE timer_name = ?";
         const params = [timer_name];
         return await this.query(sql, params);
