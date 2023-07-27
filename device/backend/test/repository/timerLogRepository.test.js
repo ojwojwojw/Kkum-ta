@@ -22,15 +22,11 @@ describe("database management", () => {
   beforeEach(async () => {
     timerLogRepository = new TimerLogRepository();
     timerRepository = new TimerRepository();
-    timerRepository.beginTransaction();
   });
 
   afterEach(async () => {
     await timerLogRepository.closeDB();
     timerLogRepository = null;
-    try{
-      await timerRepository.rollback();
-    } catch(e){}
     await timerRepository.closeDB();
     timerRepository = null;
   });
@@ -39,33 +35,16 @@ describe("database management", () => {
     const promise = timerLogRepository.start(-1);
     await promise
       .then(() => {
-        throw "do_operation did not throw anything.";
+        throw new Error("do_operation did not throw anything.");
       })
       .catch((e) => {
-        expect(e).toMatch(/^SQLError:/);
+        expect(e.message).toMatch(/^SQLError:/);
       });
   });
-});
-
-describe("Security", ()=>{
-  beforeEach(async ()=>{
-    timerLogRepository = new TimerLogRepository();
-    timerRepository = new TimerRepository();
-    await timerRepository.beginTransaction();
-  })
-  afterEach(async ()=>{
-    await timerLogRepository.closeDB();
-    timerLogRepository = null;
-
-    try{
-      await timerRepository.rollback();
-    } catch(e){}
-    await timerRepository.closeDB();
-    timerRepository = null;
-  })
   test("timerLogRepository is safe from SQL injection", async ()=>{
+    await timerRepository.beginTransaction();
     await timerRepository.createTimer(180000000, "라면 타이머");
-    const [rows, fields] = await timerRepository.findAll();
+    const [rows] = await timerRepository.findAll();
     expect(rows.length).toBeGreaterThanOrEqual(1);
     const pid = rows[0].timer_id;
     try{
@@ -74,7 +53,10 @@ describe("Security", ()=>{
       );
     }
     catch(e){
-      expect(e).toMatch(/^SQLError: Cannot insert into database,/);
+      expect(e.message).toMatch(/^SQLError: Cannot insert into database,/);
+    }
+    finally{
+      await timerRepository.rollback();
     }
   });
-})
+});

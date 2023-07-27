@@ -26,14 +26,14 @@ class Repository {
   }
   async beginTransaction() {
     if (this.conn) {
-      throw "Transaction already begun";
+      throw new Error("Transaction already begun");
     }
     this.conn = await this.pool.getConnection();
     this.conn.beginTransaction();
   }
   async rollback() {
     if (!this.conn) {
-      throw "No transaction were running";
+      throw new Error("No transaction were running");
     }
     await this.conn.rollback();
     await this.conn.release();
@@ -41,7 +41,7 @@ class Repository {
   }
   async commit() {
     if (!this.conn) {
-      throw "No transaction were running";
+      throw new Error("No transaction were running");
     }
     await this.conn.commit();
     await this.conn.release();
