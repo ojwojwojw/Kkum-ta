@@ -1,7 +1,6 @@
 import { useDispatch } from "react-redux";
 
 import React, { useState, useRef} from "react";
-import React, { useState, useRef } from "react";
 import BasicTimer from "../../utility/basic_timer";
 import { logPauseData } from "../../features/timer/timerSlice";
 import { selectingTimer } from "../../features/numberpad/numberPadSlice";

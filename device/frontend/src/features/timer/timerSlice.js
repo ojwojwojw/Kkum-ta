@@ -38,11 +38,14 @@ export const timerSlice = createSlice({
     },
     setTimer: (state ,action) =>{
       state.timerArray[action.payload.key1].dt = action.payload.key2; 
+    },
+    fetData: (state, action) =>{
+      state.timerArray = action.payload;
     }
   },
 });
 
-export const { create , logPauseData , reloadData , setTimer} = timerSlice.actions;
+export const { create , logPauseData , reloadData , setTimer ,fetData} = timerSlice.actions;
 
 export const selectArray = (state) => state.timer.timerArray;
 
