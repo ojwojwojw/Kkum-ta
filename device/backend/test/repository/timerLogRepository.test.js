@@ -64,7 +64,7 @@ describe("Security", ()=>{
     timerRepository = null;
   })
   test("timerLogRepository is safe from SQL injection", async ()=>{
-    await timerRepository.registTimer(180000000, "라면 타이머");
+    await timerRepository.createTimer(180000000, "라면 타이머");
     const [rows, fields] = await timerRepository.findAll();
     expect(rows.length).toBeGreaterThanOrEqual(1);
     const pid = rows[0].timer_id;

@@ -1,11 +1,7 @@
 const express = require("express");
 const timerRouter = express.Router();
-const timer = require("../repository/timerRepository");
-const timerLog = require("../repository/timerLogRepository");
 const TimerService = require('../service/timerService');
 
-const tim = new timer();
-const timLog = new timerLog();
 const timerService = new TimerService();
 
 timerRouter.get("/", (req, res) => {

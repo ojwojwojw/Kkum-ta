@@ -49,7 +49,7 @@ class TimerService{
         return result;
     }
     async createTimer(name, total_time){
-        const [rows] = await this.timerRepo.registTimer(total_time, name);
+        const [rows] = await this.timerRepo.createTimer(total_time, name);
         return {result:"ok", timer_id:rows.insertId};
     }
     async putTimer(id, total_time){
