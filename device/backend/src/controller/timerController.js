@@ -51,7 +51,7 @@ timerRouter.put('/:id', async (req, res)=>{
 
 timerRouter.delete('/:id', async (req, res)=>{
 	const id = req.params.id;
-	const result = await timerService.deleteTimre(id);
+	const result = await timerService.deleteTimer(id);
 	return res.status(200).json(result);
 })
 
