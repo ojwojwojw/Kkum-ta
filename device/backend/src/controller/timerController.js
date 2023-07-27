@@ -1,22 +1,27 @@
-const express = require('express');
-const TimerService = require('../service/timerService');
-
+const express = require("express");
 const timerRouter = express.Router();
-const timerService = new TimerService();
+const timer = require("../repository/timerRepository");
+const timerLog = require("../repository/timerLogRepository");
 
-timerRouter.get('/', async (req, res)=>{
-	res.status(200).json(await timerService.getAllTimer());
+const tim = new timer();
+const timLog = new timerLog();
+
+timerRouter.get("/", (req, res) => {
+    res.status(200).send("GET timerRouter /");
 });
 
-timerRouter.get('/:id', async(req, res)=>{
-	const id = req.params.id;
-	const result = await timerService.getTimerById(id);
-	if(!result){
-		res.status(404).json({status:"not found"});
-	}
-	else{
-		res.status(200).json(result);
-	}
+timerRouter.post("/", (req, res) => {
+    res.status(200).send("POST timerRouter /");
+});
+
+timerRouter.get("/Log/All", async (req, res) => {
+    const q = await timLog.findAll();
+    res.status(200).send(q[0]);
+});
+
+timerRouter.get("/Timer/All", async (req, res) => {
+    const q = await tim.findAll();
+    res.status(200).send(q[0]);
 });
 timerRouter.get('/name/:name', async(req, res)=>{
 	const name = req.params.name;
