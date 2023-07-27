@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import BasicTimer from "../../utility/basic_timer";
-import BasicTimerComponent from "./basicTimerComponent";
+import BasicStopwatch from "../../utility/basic_stopwatch";
+import BasicTimerComponent from "./basicComponent";
 
 import axios from "axios";
 
-import './timerContainer.css'
+import './basicContainer.css'
 
 export default function TimerContainer() {
 
@@ -24,6 +25,16 @@ export default function TimerContainer() {
     if (timerList.length >= 30) return;
     setTimerList(prevTimerList => {
       const obj = { id: Date.now(), timer: new BasicTimer() }; // 식별자 필수!!
+      const newList = [...prevTimerList];
+      newList.splice(idx, 0, obj);
+      return newList;
+    });
+  }
+
+  function createBasicStopwatch(idx) {
+    if (timerList.length >= 30) return;
+    setTimerList(prevTimerList => {
+      const obj = { id: Date.now(), timer: new BasicStopwatch() }; // 식별자 필수!!
       const newList = [...prevTimerList];
       newList.splice(idx, 0, obj);
       return newList;
@@ -63,10 +74,13 @@ export default function TimerContainer() {
     <>
       <span style={{margin : "10px"}}>
         <button onClick={() => createBasicTimer(input.current)}>
-          create basic timer
+          create timer
+        </button>
+        <button onClick={() => createBasicStopwatch(input.current)}>
+          create stopwatch
         </button>
         <button onClick={() => removeTimer(input.current)}>
-          remove timer
+          remove
         </button>
         <input type="text"
           onChange={(obj) => { input.current = obj.target.value }}
@@ -76,10 +90,10 @@ export default function TimerContainer() {
       </span>
       <span style={{margin : "10px"}}>
         <button onClick={() => loadTimer()}>
-          load timer
+          load
         </button>
         <button onClick={() => loadTimer()}>
-          save timer
+          save
         </button>
       </span>
       <span style={{margin : "10px"}}>

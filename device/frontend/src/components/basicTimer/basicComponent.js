@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 // mui
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import "./basicTimer.css";
+import "./basicComponent.css";
 
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";

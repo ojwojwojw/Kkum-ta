@@ -1,12 +1,12 @@
 import React from "react";
 import "./App.css";
 
-import TimerContainer from "./components/basicTimer/timerContainer";
+import BasicContainer from "./components/basicTimer/basicContainer";
 
 function App() {
   return (
     <div className="App">
-      <TimerContainer />
+      <BasicContainer />
     </div>
   );
 }
