@@ -7,12 +7,12 @@ class TimerService{
         this.timerRepo = new TimerRepository();
     }
     async getAllTimer(){
-        const [rows, _] = await this.leftTimeRepo.findAll();
+        const [rows] = await this.leftTimeRepo.findAll();
         return rows;
     }
     async getTimerById(id){
-        const [timer, timerFields] = await this.timerRepo.findTimerById(id);
-        const [leftTime, leftFields] = await this.leftTimeRepo.get(id);
+        const [timer] = await this.timerRepo.findTimerById(id);
+        const [leftTime] = await this.leftTimeRepo.get(id);
         if(timer.length == 0){
             return null;
         }
@@ -26,18 +26,17 @@ class TimerService{
             state = leftTime[0].state;
             left_time = leftTime[0].left_time;
         }
-        const result = {
+        return {
             timer_id: timer[0].timer_id,
             name: timer[0].timer_name,
             total_time: timer[0].time,
             state,
             left_time
         };
-        return result;
     }
     async getTimerByName(name){
         const [rows] = await this.leftTimeRepo.findTimerByName(name);
-        const result = rows.map((item)=>{
+        return rows.map((item)=>{
             return {
                 timer_id: item.timer_id,
                 name: item.timer_name,
@@ -45,11 +44,10 @@ class TimerService{
                 state: item.state,
                 left_time: item.left_time
             }
-        })
-        return result;
+        });
     }
     async createTimer(name, total_time){
-        const [rows] = await this.timerRepo.registTimer(total_time, name);
+        const [rows] = await this.timerRepo.createTimer(total_time, name);
         return {result:"ok", timer_id:rows.insertId};
     }
     async putTimer(id, total_time){
