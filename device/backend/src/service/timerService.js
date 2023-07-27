@@ -19,6 +19,7 @@ class TimerService{
         });
     }
     async getTimerById(id){
+        if(Object.is(parseInt(id), NaN)) return null;
         const [timer] = await this.timerRepo.findTimerById(id);
         const [leftTime] = await this.leftTimeRepo.get(id);
         if(timer.length == 0){
@@ -55,6 +56,9 @@ class TimerService{
         });
     }
     async createTimer(name, total_time){
+        if(Object.is(parseInt(total_time), NaN)){
+            return {status:"invalid parameter"};
+        }
         const [rows] = await this.timerRepo.createTimer(total_time, name);
         return {status:"ok", timer_id:rows.insertId};
     }

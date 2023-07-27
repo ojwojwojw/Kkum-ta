@@ -32,7 +32,7 @@ describe("app API for timer", () => {
     expect(result.status).toBe(200);
   });
 
-  test("client can create and remove timer", async () => {
+  test("User can create and remove timer", async () => {
     const result = await axios.post("timer/", {
       name: "test",
       total_time: "30000000",
@@ -60,7 +60,7 @@ describe("app API for timer", () => {
 
     let afterDelResult;
     try {
-      afterDelResult = await axios.get(`timer/${rData.time_id}`);
+      afterDelResult = await axios.get(`timer/${rData.timer_id}`);
     } catch (e) {
       expect(e instanceof axios.AxiosError).toBe(true);
       expect(e.response.status).toBe(404);
@@ -68,6 +68,18 @@ describe("app API for timer", () => {
       expect(afterDelResult).toBeFalsy();
     }
   });
+
+  test("User can get all timers", async ()=>{
+    const result = await axios.get("timer/");
+    expect(result.status).toBe(200);
+    expect(result.data).toBeTruthy();
+    expect(result.data[0]).toBeTruthy();
+    expect(result.data[0].timer_id).toBeTruthy();
+    expect(result.data[0].name).toBeTruthy();
+    expect(result.data[0].total_time).toBeTruthy();
+    expect(result.data[0].state).toBeTruthy();
+    expect(result.data[0].left_time).toBeTruthy();
+  })
 
   test("User can fix the total time of the timer", async () => {
     const result = await axios.post("timer/", {
@@ -116,3 +128,56 @@ describe("app API for timer", () => {
     await axios.delete(`timer/${id}`);
   });
 });
+
+describe("Wrong parameter test", () => {
+  const PORT = 8088;
+  axios.defaults.baseURL = `http://localhost:${PORT}`;
+  let server = null;
+  const closeServer = async () => {
+    if (server) {
+      await server.close();
+      server = null;
+    }
+  };
+  beforeEach(async () => {
+    try {
+      server = await app.listen(PORT);
+    } catch (e) {
+      console.error("Failed to open server: ", error);
+    }
+  });
+  afterEach(async () => {
+    await closeServer();
+  });
+  afterAll(async () => {
+    await closeServer();
+  });
+  test("GET /timer/NOTNUMBER should throw 400", async ()=>{
+    let response;
+    try{
+      await axios.get("/timer/NOTNUMBER");
+    } catch(e){
+      expect(e instanceof axios.AxiosError).toBe(true);
+      expect(e.response.status).toBe(400);
+    }
+  });
+  test("POST /timer with total_time=NOTANUMBER should throw 400 invalid parameter", async () => {
+    try{
+      await axios.post("/timer", {name:"timerTest", total_time:"NOTANUMBER"});
+    } catch(e){
+      expect(e instanceof axios.AxiosError).toBe(true);
+      expect(e.response.status).toBe(400);
+    }
+  });
+  test("PUT /timer with total_time=NOTANUMBER should throw 400 invalid parameter", async ()=>{
+    const response = await axios.post("/timer", {name:"timerTest", total_time:37485});
+    const id = response.data.timer_id;
+    try{
+      await axios.put(`/timer/${id}`, {name:"timerTest", total_time:"NOTANUMBER"});
+    } catch(e){
+      expect(e instanceof axios.AxiosError).toBe(true);
+      expect(e.response.status).toBe(400);
+    }
+    await axios.delete(`/timer/${id}`);
+  });
+})
