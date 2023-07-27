@@ -43,7 +43,7 @@ export default function TimerContainer() {
       <div>
         {
           timerList.map((obj, idx) => {
-            console.log(`timer ${idx}, time ${obj.timer.getTime()}`)
+            console.log(`timer ${idx}`)
             return (<BasicTimerComponent key={obj.id} timer={obj.timer} idx={idx}></BasicTimerComponent>);
           })
         }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 // mui
 import Grid from "@mui/material/Grid";
@@ -10,23 +10,33 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Button } from "@mui/material";
 
+function useConstructor(callBack = () => {}) {
+  const flag = useRef(false);
+  if (flag.current) return;
+  callBack();
+  flag.current = true;
+}
+
 function BasicTimerComponent({ timer, idx }) {
 
-  const [value, setTime] = useState(0);
+  const [time, setTime] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
 
-  useEffect(() => {
-    console.log("basic timer componenet constructor");
+  useConstructor(() => {
     timer.setTime = setTime;
     timer.reset(idx * 10 * 1000);
+    console.log("basic timer componenet constructor");
+  });
 
-    return (() => {
+  function toggle() {
+    if(isRunning) {
       timer.pause();
-      console.log("basic timer componenet destructor");
-    });
-  }, []);
-
-  function resume() {
-    timer.isRunning() ? timer.pause() : timer.start();
+      setIsRunning(false);
+    }
+    else {
+      timer.start();
+      setIsRunning(true);
+    }
   }
 
   function reset(time) {
@@ -37,23 +47,23 @@ function BasicTimerComponent({ timer, idx }) {
     <Grid container justifyContent={"center"} alignContent={"center"}>
       {idx}
       <Grid item xs={6} className="time">
-        {("00" + Math.floor(value / 1000 / 3600)).slice(-2)}:{" "}
-        {("00" + Math.floor(value / 1000 / 60)).slice(-2)} :{" "}
-        {("00" + Math.floor((value / 1000) % 60)).slice(-2)}
+        {("00" + Math.floor(time / 1000 / 3600)).slice(-2)}:{" "}
+        {("00" + Math.floor((time / 1000) % 3600 / 60)).slice(-2)} :{" "}
+        {("00" + Math.floor((time / 1000) % 60)).slice(-2)}
         <span className="micro">
-          {("00" + Math.floor(((value / 1000) % 1) * 100)).slice(-2)}
+          {("00" + Math.floor(((time / 1000) % 1) * 100)).slice(-2)}
         </span>
       </Grid>
       <Grid item xs={4} className="timerButton">
-        <Button className="start" onClick={() => resume()}>
-          {1 ? (
+        <Button className="start" onClick={() => toggle()}>
+          {isRunning ? (
             <PlayArrowIcon fontSize="large" />
           ) : (
             <PauseIcon fontSize="large" />
           )}
         </Button>
         <Button className="reset" color="warning" onClick={() => reset()}>
-            {value === 0 ? (
+            {time === 0 ? (
               <SettingsIcon fontSize="large" />
             ) : (
               <RestartAltIcon fontSize="large" />
