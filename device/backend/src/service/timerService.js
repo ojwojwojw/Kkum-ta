@@ -8,7 +8,15 @@ class TimerService{
     }
     async getAllTimer(){
         const [rows] = await this.leftTimeRepo.findAll();
-        return rows;
+        return rows.map((item)=>{
+            return {
+                timer_id: item.timer_id,
+                name: item.timer_name,
+                total_time: item.time,
+                state: item.state,
+                left_time: item.left_time
+            }
+        });
     }
     async getTimerById(id){
         const [timer] = await this.timerRepo.findTimerById(id);
