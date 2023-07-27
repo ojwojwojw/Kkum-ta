@@ -37,15 +37,27 @@ class LeftTimeRepository extends Repository {
     return this.query(sql, params);
   }
   async findAll() {
-    const sql = "SELECT * FROM timer_table NATURAL JOIN left_time;";
+    const sql = 'INSERT INTO left_time (timer_id, state, left_time)\n'+
+                'SELECT t.timer_id AS timer_id, "stop", t.time AS left_time\n'+
+                'FROM timer_table t LEFT JOIN left_time l\n'+
+                'ON t.timer_id = l.timer_id\n'+
+                'WHERE l.timer_id IS NULL;'
     const params = [];
-    return this.query(sql, params);
+    await this.query(sql, params);
+    const sql2 = 'SELECT * FROM timer_table NATURAL JOIN left_time;';
+    return this.query(sql2, params);
   }
   async findTimerByName(name) {
-    const sql =
+    const sql = 'INSERT INTO left_time (timer_id, state, left_time)\n'+
+                'SELECT t.timer_id AS timer_id, "stop", t.time AS left_time\n'+
+                'FROM timer_table t LEFT JOIN left_time l\n'+
+                'ON t.timer_id = l.timer_id\n'+
+                'WHERE l.timer_id IS NULL;'
+    await this.query(sql, []);
+    const sql2 =
       "SELECT * FROM timer_table NATURAL JOIN left_time WHERE timer_name=?";
     const params = [name];
-    return this.query(sql, params);
+    return this.query(sql2, params);
   }
 }
 
