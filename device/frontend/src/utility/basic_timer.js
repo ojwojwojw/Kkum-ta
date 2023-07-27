@@ -51,7 +51,7 @@ export default class BasicTimer {
     this.#isRunning = false;
     if (this.setIsRunning != null)
       this.setIsRunning(false);
-    if (time != null) {
+    if (time != null && time > 0) {
       this.#init = time;
       this.#time = time;
     }
