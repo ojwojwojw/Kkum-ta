@@ -5,7 +5,7 @@ class TimerRepository extends Repository {
     super();
   }
   async init() {
-    const sql = "CREATE TABLE `timer_table` ("+
+    const sql = "CREATE TABLE IF NOT EXISTS `timer_table` ("+
     "    `timer_id` INT(11) NOT NULL AUTO_INCREMENT,"+
     "    `name` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',"+
     "    `total_time` INT(10) UNSIGNED NOT NULL,"+
