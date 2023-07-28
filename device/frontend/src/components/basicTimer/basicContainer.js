@@ -41,7 +41,7 @@ export default function TimerContainer() {
     });
   }
 
-  function removeTimer(idx) {
+  function remove(idx) {
     if (timerList.length == 0) return;
     setTimerList(prevTimerList => {
       const newList = [...prevTimerList];
@@ -50,12 +50,21 @@ export default function TimerContainer() {
     });
   }
 
-  function loadTimer() {
-
+  function load() {
+    // time, init
+    console.log("load");
   }
 
-  function saveTimer() {
-
+  function save() {
+    // time, init 
+    const arr = [];
+    timerList.forEach(obj => {
+      const timer = obj.timer;
+      const data = timer.save();
+      data.type = obj.type;
+      arr.push(data);
+    })
+    console.log(arr);
   }
 
   function allStart() {
@@ -79,7 +88,7 @@ export default function TimerContainer() {
         <button onClick={() => createBasicStopwatch(input.current)}>
           create stopwatch
         </button>
-        <button onClick={() => removeTimer(input.current)}>
+        <button onClick={() => remove(input.current)}>
           remove
         </button>
         <input type="text"
@@ -89,10 +98,10 @@ export default function TimerContainer() {
         </input>
       </span>
       <span style={{margin : "10px"}}>
-        <button onClick={() => loadTimer()}>
+        <button onClick={() => load()}>
           load
         </button>
-        <button onClick={() => loadTimer()}>
+        <button onClick={() => save()}>
           save
         </button>
       </span>

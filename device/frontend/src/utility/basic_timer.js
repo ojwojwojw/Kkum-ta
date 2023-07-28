@@ -62,4 +62,21 @@ export default class BasicTimer {
       this.setTime(this.#time);
     console.log(`reset: ${this.#time}`);
   }
+
+  load(obj) {
+    clearInterval(this.#counter);
+    this.#isRunning = false;
+    if (this.setIsRunning != null)
+      this.setIsRunning(false);
+    this.#time = obj.time;
+    this.setTime(this.#time);
+    this.#init = obj.init;
+  }
+
+  save() {
+    return {
+      time : this.#time,
+      init : this.#init,
+    }
+  }
 }
