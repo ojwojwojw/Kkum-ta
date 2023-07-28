@@ -18,7 +18,7 @@ function useConstructor(callBack = () => { }) {
   flag.current = true;
 }
 
-export default function BasicTimerComponent({ timer, idx }) {
+export default function BasicTimerComponent({ timer, idx, type }) {
 
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -39,7 +39,7 @@ export default function BasicTimerComponent({ timer, idx }) {
   }
 
   return (
-    <Box className="timer">
+    <Box className={type=="timer"?"watch timer":"watch stopWatch"}>
       <Grid container xs={100} justifyContent={"center"} alignContent={"center"}>
         <h3>{idx}</h3>
         <Grid item xs={6} className="time">

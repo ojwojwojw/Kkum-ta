@@ -34,7 +34,7 @@ export default function TimerContainer() {
   function createBasicStopwatch(idx) {
     if (timerList.length >= 30) return;
     setTimerList(prevTimerList => {
-      const obj = { id: Date.now(), timer: new BasicStopwatch() }; // 식별자 필수!!
+      const obj = { id: Date.now(), type: "stopWatch", timer: new BasicStopwatch() }; // 식별자 필수!!
       const newList = [...prevTimerList];
       newList.splice(idx, 0, obj);
       return newList;
@@ -121,7 +121,7 @@ export default function TimerContainer() {
         {
           timerList.map((obj, idx) => {
             console.log(`timer ${idx}`)
-            return (<BasicTimerComponent key={obj.id} timer={obj.timer} idx={idx}></BasicTimerComponent>);
+            return (<BasicTimerComponent key={obj.id} timer={obj.timer} idx={idx} type={obj.type}></BasicTimerComponent>);
           })
         }
       </div>
