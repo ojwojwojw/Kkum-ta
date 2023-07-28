@@ -1,64 +1,84 @@
 export default class BasicStopwatch {
   #counter
-  #dt
-  #sum
+  #time
+  #init
   #begin
   #isRunning
-  #name
-  constructor(name,setValue) {
-    this.#dt = 0;
-    this.#sum = 0;
+  #upperbd;
+  constructor() {
+    this.#time = 0;
+    this.#init = 0;
     this.#begin = 0;
     this.#isRunning = false;
-    this.#name = name;
-    this.setValue = setValue;
+    this.#upperbd = 360000 * 1000;
+    this.setTime = null;
+    this.setIsRunning = null;
     console.log("basic stopwatch constructor")
   }
 
   #count() {
     this.#counter = setInterval(() => {
       const now = new Date().getTime();
-      this.#dt = now - this.#begin + this.#sum;
-      this.setValue(this.#dt);
-      //console.log(`${this.#name}: ${(this.#dt / 1000).toFixed(3)} 초 지남`);
+      this.#time = now - this.#begin + this.#init;
+      if (this.#upperbd <= this.#time) {
+        clearInterval(this.#counter);
+        this.#isRunning = false;
+        if (this.setIsRunning != null)
+          this.setIsRunning(false);
+        this.#time = this.#upperbd;
+      }
+      if (this.setTime != null)
+        this.setTime(this.#time);
     }, 10);
   }
 
   start() {
-    if(this.#isRunning === true) return;
+    if (this.#isRunning === true) return;
     this.#isRunning = true;
+    if (this.setIsRunning != null)
+      this.setIsRunning(true);
     this.#begin = new Date().getTime();
     this.#count();
-    console.log(`start: ${this.#dt}`);
+    console.log(`start: ${this.#time}`);
   }
 
   pause() {
     clearInterval(this.#counter);
     this.#isRunning = false;
+    if (this.setIsRunning != null)
+      this.setIsRunning(false);
     const now = new Date().getTime();
-    this.#sum += now - this.#begin;
-    console.log(`pause: ${this.#dt}`);
+    this.#init += now - this.#begin;
+    console.log(`pause: ${this.#time}`);
   }
 
   reset() { // 밀리초 단위로 입력 받기
     clearInterval(this.#counter);
     this.#isRunning = false;
-    this.#dt = 0;
-    this.#sum = 0;
+    if (this.setIsRunning != null)
+      this.setIsRunning(false);
+    this.#time = 0;
+    this.#init = 0;
     this.#begin = 0;
-    this.setValue(this.#dt);
-    console.log(`reset: ${this.#dt}`);
+    if (this.setTime != null)
+      this.setTime(this.#time);
+    console.log(`reset: ${this.#time}`);
   }
 
-  isRunning() {
-    return this.#isRunning;
+  load(obj) {
+    clearInterval(this.#counter);
+    this.#isRunning = false;
+    if (this.setIsRunning != null)
+      this.setIsRunning(false);
+    this.#time = obj.time;
+    this.setTime(this.#time);
+    this.#init = obj.init;
   }
 
-  getTime() {
-    return this.#dt;
-  }
-
-  setName(name) {
-    this.#name = name;
+  save() {
+    return {
+      time : this.#time,
+      init : this.#init,
+    }
   }
 }
