@@ -34,7 +34,7 @@ export default function TimerContainer() {
   function createBasicStopwatch(idx) {
     if (timerList.length >= 30) return;
     setTimerList(prevTimerList => {
-      const obj = { id: Date.now(), type: "stopwatch", timer: new BasicStopwatch() }; // 식별자 필수!!
+      const obj = { id: Date.now(), timer: new BasicStopwatch() }; // 식별자 필수!!
       const newList = [...prevTimerList];
       newList.splice(idx, 0, obj);
       return newList;
@@ -53,6 +53,7 @@ export default function TimerContainer() {
   function load() {
     // time, init
     console.log("load");
+    // const res = await axios.get("timer/");
   }
 
   function save() {

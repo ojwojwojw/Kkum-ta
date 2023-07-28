@@ -3,9 +3,11 @@ export default class BasicTimer {
   #isRunning;
   #time;
   #init;
+  #idx;
   constructor() {
     this.#time = 0;
-    this.#init = 0;
+    this.#init = 0
+    this.#idx = 0;
     this.#isRunning = false;
     this.setTime = null;
     this.setIsRunning = null;
