@@ -29,7 +29,7 @@ export default class BasicStopwatch {
       }
       if (this.setTime != null)
         this.setTime(this.#time);
-    }, 10);
+    }, 31);
   }
 
   start() {

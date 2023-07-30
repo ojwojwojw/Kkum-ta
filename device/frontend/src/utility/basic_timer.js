@@ -8,7 +8,7 @@ export default class BasicTimer {
   #maxIter;
   #iter;
   constructor() {
-    this.#initTime = [3000, 4000, 5000];
+    this.#initTime = [10 * 1000, 15 * 1000, 12 * 1000];
     this.#tagTime = this.#initTime;
     this.#time = this.#initTime[0];
     this.#idx = 0;
@@ -21,7 +21,7 @@ export default class BasicTimer {
     console.log("basic timer constructor")
   }
 
-  #terminate() {
+  #determine() {
     if (this.#idx + 1 < this.#initTime.length) {
       this.#time = this.#initTime[++this.#idx];
       this.start();
@@ -30,7 +30,7 @@ export default class BasicTimer {
     if (this.#maxIter == 0 || this.#iter + 1 < this.#maxIter) {
       this.#time = this.#initTime[0];
       this.#idx = 0;
-      this.#iter++;
+      if(this.#maxIter > 0) this.#iter++;
       this.start();
       return;
     }
@@ -45,11 +45,11 @@ export default class BasicTimer {
         clearInterval(this.#counter);
         this.#isRunning = false;
         if (this.setIsRunning != null) this.setIsRunning(false);
-        this.#terminate();
+        this.#determine();
       }
       if (this.setTime != null) this.setTime(this.#time);
-      if (this.setProgress != null) this.setProgress((1 - this.#time / this.#initTime[this.#idx]).toFixed(2));
-    }, 10);
+      if (this.setProgress != null) this.setProgress(1 - this.#time / this.#initTime[this.#idx]);
+    }, 31);
   }
 
   start() {

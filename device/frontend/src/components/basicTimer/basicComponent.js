@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 // mui
 import Box from "@mui/material/Box";
@@ -32,6 +32,13 @@ export default function BasicTimerComponent({ timer, idx }) {
     console.log("basic timer componenet constructor");
   });
 
+  useEffect(() => {
+    return (() => {
+      timer.pause();
+      console.log("basic timer componenet destructor");
+    })
+  }, [])
+
   function toggle() {
     isRunning ? timer.pause() : timer.start();
   }
@@ -39,7 +46,7 @@ export default function BasicTimerComponent({ timer, idx }) {
   return (
     <Box className="timer">
       <Grid container xs={100} justifyContent={"center"} alignContent={"center"}>
-        <h3>{idx}: {progress}</h3>
+        <h3>{idx}: {progress.toFixed(2)}</h3>
         <Grid item xs={6} className="time">
           {("00" + Math.floor(time / 1000 / 3600)).slice(-2)}:{" "}
           {("00" + Math.floor((time / 1000) % 3600 / 60)).slice(-2)} :{" "}
