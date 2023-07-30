@@ -32,24 +32,3 @@
   border-radius: 50%;
   text-align : center;
 }
-
-.background_e {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: red;
-  opacity: 1; 
-  z-index: -1; 
-  transition: opacity 1s linear;
-}
-
-.background_n {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  
-}
