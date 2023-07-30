@@ -22,11 +22,13 @@ export default function BasicTimerComponent({ timer, idx }) {
 
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [input, setInput] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [input, setInput] = useState(null);
 
   useConstructor(() => {
     timer.setTime = setTime;
     timer.setIsRunning = setIsRunning;
+    timer.setProgress = setProgress;
     console.log("basic timer componenet constructor");
   });
 
@@ -34,14 +36,10 @@ export default function BasicTimerComponent({ timer, idx }) {
     isRunning ? timer.pause() : timer.start();
   }
 
-  function reset() {
-    timer.reset(input * 1000);
-  }
-
   return (
     <Box className="timer">
       <Grid container xs={100} justifyContent={"center"} alignContent={"center"}>
-        <h3>{idx}</h3>
+        <h3>{idx}: {progress}</h3>
         <Grid item xs={6} className="time">
           {("00" + Math.floor(time / 1000 / 3600)).slice(-2)}:{" "}
           {("00" + Math.floor((time / 1000) % 3600 / 60)).slice(-2)} :{" "}
@@ -58,7 +56,7 @@ export default function BasicTimerComponent({ timer, idx }) {
               <PlayArrowIcon fontSize="large" />
             )}
           </Button>
-          <Button className="reset" color="warning" onClick={() => reset()}>
+          <Button className="reset" color="warning" onClick={() => timer.reset()}>
             {time === 0 ? (
               <SettingsIcon fontSize="large" />
             ) : (
