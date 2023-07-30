@@ -1,84 +1,102 @@
 export default class BasicTimer {
   #counter;
   #isRunning;
+  #target;
   #time;
-  #init;
+  #initTime;
+  #tagTime;
   #idx;
+  #maxIter;
+  #iter;
   constructor() {
-    this.#time = 0;
-    this.#init = 0
+    this.#initTime = [1 * 1000, 5 * 1000, 2 * 1000];
+    this.#tagTime = this.#initTime;
+    this.#target = 0;
+    this.#time = this.#initTime[0];
     this.#idx = 0;
     this.#isRunning = false;
+    this.#iter = 0;
+    this.#maxIter = 2;
     this.setTime = null;
     this.setIsRunning = null;
+    this.setProgress = null;
     console.log("basic timer constructor")
   }
 
-  #count(end) {
+  #determine() {
+    if (this.#idx + 1 < this.#initTime.length) {
+      this.#time = this.#initTime[++this.#idx];
+      this.#target = new Date().getTime() + this.#time;
+      return;
+    }
+    if (this.#maxIter == 0 || this.#iter + 1 < this.#maxIter) {
+      this.#time = this.#initTime[0];
+      this.#idx = 0;
+      if (this.#maxIter > 0) this.#iter++;
+      this.#target = new Date().getTime() + this.#time;
+      return;
+    }
+    clearInterval(this.#counter);
+    this.#isRunning = false;
+    if (this.setIsRunning != null) this.setIsRunning(false);
+    this.#time = 0;
+  }
+
+  #count() {
     this.#counter = setInterval(() => {
       const now = new Date().getTime();
-      this.#time = end - now;
-      if (this.#time <= 0) {
-        clearInterval(this.#counter);
-        this.#isRunning = false;
-        if (this.setIsRunning != null)
-          this.setIsRunning(false);
-        this.#time = 0;
-      }
-      if (this.setTime != null)
-        this.setTime(this.#time);
-    }, 10);
+      this.#time = this.#target - now;
+      if (this.#time <= 0) this.#determine();
+      if (this.setTime != null) this.setTime(this.#time);
+      if (this.setProgress != null) this.setProgress(1 - this.#time / this.#initTime[this.#idx]);
+    }, 31);
   }
 
   start() {
     if (this.#isRunning) return;
     this.#isRunning = true;
-    if (this.setIsRunning != null)
-      this.setIsRunning(true);
-    const end = new Date().getTime() + this.#time;
-    this.#count(end);
+    if (this.setIsRunning != null) this.setIsRunning(true);
+    this.#target = new Date().getTime() + this.#time;
+    this.#count();
     console.log(`start: ${this.#time}`);
   }
 
   pause() {
     clearInterval(this.#counter);
     this.#isRunning = false;
-    if (this.setIsRunning != null)
-      this.setIsRunning(false);
+    if (this.setIsRunning != null) this.setIsRunning(false);
     console.log(`pause: ${this.#time}`);
   }
 
-  reset(time) { // 밀리초 단위로 입력 받기
+  reset(initTime, maxIter) { // 밀리초 단위 배열로 입력 받기
     clearInterval(this.#counter);
     this.#isRunning = false;
-    if (this.setIsRunning != null)
-      this.setIsRunning(false);
-    if (time != null && time > 0) {
-      this.#init = time;
-      this.#time = time;
-    }
-    else {
-      this.#time = this.#init;
-    }
-    if (this.setTime != null)
-      this.setTime(this.#time);
+    if (this.setIsRunning != null) this.setIsRunning(false);
+    if (initTime != null) this.#initTime = initTime;
+    if (maxIter != null) this.#maxIter = maxIter;
+    this.#tagTime = initTime;
+    this.#time = this.#initTime[0];
+    this.#iter = 0;
+    this.#idx = 0;
+    if (this.setTime != null) this.setTime(this.#time);
+    if (this.setProgress != null) this.setProgress(0);
     console.log(`reset: ${this.#time}`);
   }
 
   load(obj) {
     clearInterval(this.#counter);
     this.#isRunning = false;
-    if (this.setIsRunning != null)
-      this.setIsRunning(false);
+    if (this.setIsRunning != null) this.setIsRunning(false);
     this.#time = obj.time;
     this.setTime(this.#time);
-    this.#init = obj.init;
+    if (this.setProgress != null) this.setProgress(0);
+    this.#initTime = obj.initTime;
   }
 
   save() {
     return {
-      time : this.#time,
-      init : this.#init,
+      time: this.#time,
+      initTime: this.#initTime,
     }
   }
 }

@@ -22,7 +22,7 @@ export default function TimerContainer() {
   }, []);
 
   function createBasicTimer(idx) {
-    if (timerList.length >= 30) return;
+    if (timerList.length >= 5) return;
     setTimerList(prevTimerList => {
       const obj = { id: Date.now(), type: "timer", timer: new BasicTimer() }; // 식별자 필수!!
       const newList = [...prevTimerList];
@@ -32,7 +32,7 @@ export default function TimerContainer() {
   }
 
   function createBasicStopwatch(idx) {
-    if (timerList.length >= 30) return;
+    if (timerList.length >= 5) return;
     setTimerList(prevTimerList => {
       const obj = { id: Date.now(), timer: new BasicStopwatch() }; // 식별자 필수!!
       const newList = [...prevTimerList];
