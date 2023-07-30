@@ -34,7 +34,7 @@ export default function BasicTimerComponent({ timer, idx }) {
 
   useEffect(() => {
     return (() => {
-      timer.pause();
+      timer.reset();
       console.log("basic timer componenet destructor");
     })
   }, [])
