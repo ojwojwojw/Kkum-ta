@@ -98,10 +98,11 @@ export default function BasicTimerComponent({
 
 
   return (
-    <Box
+    <StyledTimerContainer
       container
       className={type == "timer" ? "watch timer" : "watch stopWatch"}
     >
+      <StyledTimerBackground className="progress-bar" progress={progress} />
       <Grid
         container
         xs={100}
@@ -183,6 +184,6 @@ export default function BasicTimerComponent({
     
 
       </Grid> */}
-    </Box>
+    </StyledTimerContainer>
   );
 }
