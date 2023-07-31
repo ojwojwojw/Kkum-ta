@@ -4,26 +4,39 @@ import React, { useState, useRef, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import "./basicComponent.css";
+import CloseIcon from "@mui/icons-material/Close";
 
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
+import Numpad from "./numpad";
 
-function useConstructor(callBack = () => { }) {
+function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
   if (flag.current) return;
   callBack();
   flag.current = true;
 }
 
-export default function BasicTimerComponent({ timer, idx }) {
-
+export default function BasicTimerComponent({
+  timer,
+  idx,
+  type,
+  removeTimer,
+  WatchId,
+}) {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [input, setInput] = useState(null);
+
+  useEffect(() => {
+    if (WatchId) {
+      // console.log("New timer Id:", WatchId);
+    }
+  }, [WatchId]);
 
   useConstructor(() => {
     timer.setTime = setTime;
@@ -33,23 +46,42 @@ export default function BasicTimerComponent({ timer, idx }) {
   });
 
   useEffect(() => {
-    return (() => {
+    return () => {
       timer.reset();
       console.log("basic timer componenet destructor");
-    })
-  }, [])
+    };
+  }, []);
 
   function toggle() {
     isRunning ? timer.pause() : timer.start();
   }
 
+  function reset() {
+    // console.log(timer);
+    timer.reset(input * 1000);
+  }
+
+  function remove() {
+    removeTimer(WatchId);
+  }
+
   return (
-    <Box className="timer">
-      <Grid container xs={100} justifyContent={"center"} alignContent={"center"}>
-        <h3>{idx}: {progress.toFixed(2)}</h3>
+    <Box
+      container
+      className={type == "timer" ? "watch timer" : "watch stopWatch"}
+    >
+      <Grid
+        container
+        xs={100}
+        justifyContent={"center"}
+        alignContent={"center"}
+      >
+        <Grid xs={1}>
+          <h2>{idx + 1}</h2>
+        </Grid>
         <Grid item xs={6} className="time">
           {("00" + Math.floor(time / 1000 / 3600)).slice(-2)}:{" "}
-          {("00" + Math.floor((time / 1000) % 3600 / 60)).slice(-2)} :{" "}
+          {("00" + Math.floor(((time / 1000) % 3600) / 60)).slice(-2)} :{" "}
           {("00" + Math.floor((time / 1000) % 60)).slice(-2)}
           <span className="micro">
             {("00" + Math.floor(((time / 1000) % 1) * 100)).slice(-2)}
@@ -63,7 +95,11 @@ export default function BasicTimerComponent({ timer, idx }) {
               <PlayArrowIcon fontSize="large" />
             )}
           </Button>
-          <Button className="reset" color="warning" onClick={() => timer.reset()}>
+          <Button
+            className="reset"
+            color="warning"
+            onClick={() => timer.reset()}
+          >
             {time === 0 ? (
               <SettingsIcon fontSize="large" />
             ) : (
@@ -71,8 +107,23 @@ export default function BasicTimerComponent({ timer, idx }) {
             )}
           </Button>
         </Grid>
+        <Grid>
+          <IconButton
+            ton
+            aria-label="delete"
+            variant="text"
+            color="error"
+            size="large"
+            onClick={remove}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Grid>
       </Grid>
 
+      {/* 넘패드 컴포넌트로 분리 */}
+      <Numpad input={input} setInput={setInput} WatchId={WatchId} />
+      {/*
       <Grid container xs={20} justifyContent={"center"} alignContent={"center"}>
         <Grid item xs={20}>
           <span> {input} sec </span>
@@ -94,8 +145,7 @@ export default function BasicTimerComponent({ timer, idx }) {
             <button onClick={() => setInput(Number(String(input).slice(0, -1)))}>취소</button>
           </div>
         </Grid>
-      </Grid>
-
-    </Box >
+      </Grid> */}
+    </Box>
   );
 }
