@@ -38,26 +38,6 @@ export default function TimerContainer() {
     return newWatch.id;
   }
 
-  // function createBasicTimer(idx) {
-  //   if (timerList.length >= 30) return;
-  //   setTimerList(prevTimerList => {
-  //     const obj = { id: Date.now(), type: "timer", timer: new BasicTimer() }; // 식별자 필수!!
-  //     const newList = [...prevTimerList];
-  //     newList.splice(idx, 0, obj);
-  //     return newList;
-  //   });
-  // }
-
-  // function createBasicStopwatch(idx) {
-  //   if (timerList.length >= 30) return;
-  //   setTimerList(prevTimerList => {
-  //     const obj = { id: Date.now(), type: "stopWatch", timer: new BasicStopwatch() }; // 식별자 필수!!
-  //     const newList = [...prevTimerList];
-  //     newList.splice(idx, 0, obj);
-  //     return newList;
-  //   });
-  // }
-
   function remove(id) {
     if (timerList.length == 0) return;
     let deleteIdx = 0;

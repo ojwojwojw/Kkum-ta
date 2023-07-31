@@ -27,7 +27,7 @@ export default function BasicTimerComponent({
   removeTimer,
   WatchId,
 }) {
-  const [time, setTime] = useState(0);
+  const [remainTime, setRemainTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [input, setInput] = useState(null);
@@ -39,7 +39,7 @@ export default function BasicTimerComponent({
   }, [WatchId]);
 
   useConstructor(() => {
-    timer.setTime = setTime;
+    timer.setTime = setRemainTime;
     timer.setIsRunning = setIsRunning;
     timer.setProgress = setProgress;
     console.log("basic timer componenet constructor");
@@ -80,11 +80,11 @@ export default function BasicTimerComponent({
           <h2>{idx + 1}</h2>
         </Grid>
         <Grid item xs={6} className="time">
-          {("00" + Math.floor(time / 1000 / 3600)).slice(-2)}:{" "}
-          {("00" + Math.floor(((time / 1000) % 3600) / 60)).slice(-2)} :{" "}
-          {("00" + Math.floor((time / 1000) % 60)).slice(-2)}
+          {("00" + Math.floor(remainTime / 1000 / 3600)).slice(-2)}:{" "}
+          {("00" + Math.floor(((remainTime / 1000) % 3600) / 60)).slice(-2)} :{" "}
+          {("00" + Math.floor((remainTime / 1000) % 60)).slice(-2)}
           <span className="micro">
-            {("00" + Math.floor(((time / 1000) % 1) * 100)).slice(-2)}
+            {("00" + Math.floor(((remainTime / 1000) % 1) * 100)).slice(-2)}
           </span>
         </Grid>
         <Grid item xs={4} className="timerButton">
@@ -100,7 +100,7 @@ export default function BasicTimerComponent({
             color="warning"
             onClick={() => timer.reset()}
           >
-            {time === 0 ? (
+            {remainTime === 0 ? (
               <SettingsIcon fontSize="large" />
             ) : (
               <RestartAltIcon fontSize="large" />
