@@ -1,6 +1,5 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 import BasicContainer from "./components/basicTimer/basicContainer";
 import Page2 from "./pages/page2";

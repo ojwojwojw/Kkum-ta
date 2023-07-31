@@ -14,7 +14,7 @@ export default class BasicTimer {
     this.#remainTime = this.#initTime[0];            // 현재 남은 시간
     this.#isRunning = false;                         // 현재 타이머 동작 여부
     this.#curIter = 0;                               // 현재 반복 횟수, current iteration
-    this.#maxIter = 2;                               // 총 반복 횟수 (0: 무한번), maximum iteration
+    this.#maxIter = 1;                               // 총 반복 횟수 (0: 무한번), maximum iteration
 
     // state setter
     this.setTime = null;                             // 남은 시간 state setter
@@ -48,7 +48,7 @@ export default class BasicTimer {
     if (this.setIsRunning != null) this.setIsRunning(false);
   }
 
-  // 탕
+  // 타이머 카운터 시작시키는 함수
   #startCounter() {
     this.#counter = setInterval(() => {
       const now = new Date().getTime();
