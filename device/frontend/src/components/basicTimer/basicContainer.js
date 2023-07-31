@@ -146,6 +146,7 @@ export default function TimerContainer() {
               type={obj.type}
               removeTimer={remove}
               WatchId={obj.id}
+              initTime={obj.initTime}
             />
           );
         })}

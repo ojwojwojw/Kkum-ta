@@ -40,21 +40,23 @@ const StyledTimerBackground = styled(Box)`
   border-radius: 15px;
 `;
 
-
-
 export default function BasicTimerComponent({
   timer,
   idx,
   type,
   removeTimer,
   WatchId,
+  initTime,
 }) {
   const [remainTime, setRemainTime] = useState(0);
   const [time, setTime] = useState(0);
 
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [input, setInput] = useState(null);
+  const [input, setInput] = useState(0);
+
+  // 현재 공부중인지를 검사하는 변수
+  const [isStudy, setIsStudy] = useState(0);
 
   useEffect(() => {
     if (WatchId) {
@@ -69,7 +71,7 @@ export default function BasicTimerComponent({
     console.log("basic timer componenet constructor");
   });
 
-  useEffect(() => {
+  useEffect(() => { 
     return () => {
       timer.reset();
       console.log("basic timer componenet destructor");
@@ -80,16 +82,13 @@ export default function BasicTimerComponent({
     isRunning ? timer.pause() : timer.start();
   }
 
-
-  function reset() {
-    // console.log(timer);
-    timer.reset(input * 1000);
-  }
-
   function remove() {
     removeTimer(WatchId);
   }
 
+  function resetInitTime(initTime, study, maxIter) {
+    timer.reset(initTime*1000, study, maxIter);
+  }
 
 
   useEffect(() => {
@@ -117,9 +116,10 @@ export default function BasicTimerComponent({
           {("00" + Math.floor(remainTime / 1000 / 3600)).slice(-2)}:{" "}
           {("00" + Math.floor(((remainTime / 1000) % 3600) / 60)).slice(-2)} :{" "}
           {("00" + Math.floor((remainTime / 1000) % 60)).slice(-2)}
+          {type==="stopWatch"&&
           <span className="micro">
             {("00" + Math.floor(((remainTime / 1000) % 1) * 100)).slice(-2)}
-          </span>
+          </span>}
         </Grid>
         <Grid item xs={4} className="timerButton">
           <Button className="start" onClick={() => toggle()}>
@@ -132,7 +132,8 @@ export default function BasicTimerComponent({
           <Button
             className="reset"
             color="warning"
-            onClick={() => timer.reset()}
+            // 최대값이 99:59:59가 되도록 제한
+            onClick={() => resetInitTime(input>35500?359499:input,isStudy,0)}
           >
             {remainTime === 0 ? (
               <SettingsIcon fontSize="large" />
@@ -156,34 +157,9 @@ export default function BasicTimerComponent({
       </Grid>
 
       {/* 넘패드 컴포넌트로 분리 */}
-      <Numpad input={input} setInput={setInput} WatchId={WatchId} />
-      {/*
-      <Grid container xs={20} justifyContent={"center"} alignContent={"center"}>
-        <Grid item xs={20}>
-          <span> {input} sec </span>
-          <div >
-            <button onClick={() => setInput(Number(String(input) + '1'))}>1</button>
-            <button onClick={() => setInput(Number(String(input) + '2'))}>2</button>
-            <button onClick={() => setInput(Number(String(input) + '3'))}>3</button>
-            <button onClick={() => setInput(Number(String(input) + '4'))}>4</button>
-            <button onClick={() => setInput(Number(String(input) + '5'))}>5</button>
-          </div>
-          <div>
-            <button onClick={() => setInput(Number(String(input) + '6'))}>6</button>
-            <button onClick={() => setInput(Number(String(input) + '7'))}>7</button>
-            <button onClick={() => setInput(Number(String(input) + '8'))}>8</button>
-            <button onClick={() => setInput(Number(String(input) + '9'))}>9</button>
-            <button onClick={() => setInput(Number(String(input) + '0'))}>0</button>
-          </div>
-          <div>
-            <button onClick={() => setInput(Number(String(input).slice(0, -1)))}>취소</button>
-          </div>
-        </Grid>
-      </Grid>
-                
-    
+      {type==="timer"&&
+      <Numpad input={input} setInput={setInput} WatchId={WatchId} />}
 
-      </Grid> */}
     </StyledTimerContainer>
   );
 }

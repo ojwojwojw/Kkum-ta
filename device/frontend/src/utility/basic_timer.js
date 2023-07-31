@@ -8,16 +8,16 @@ export default class BasicTimer {
   #maxIter;
   #curIter;
   constructor() {
-    this.#initTime = [1 * 1000, 5 * 1000, 2 * 1000]; // 타이머 초기 시간 시퀸스
+    this.#initTime = [0, 0]; // 타이머 초기 시간 시퀸스
     this.#initTimeIndex = 0;                         // 현재 진행 시퀸스 인덱스
     this.#targetTime = 0;                            // 목표 시각 (내부적으로만 사용, 외부에서 사용할 일 없음)
     this.#remainTime = this.#initTime[0];            // 현재 남은 시간
     this.#isRunning = false;                         // 현재 타이머 동작 여부
     this.#curIter = 0;                               // 현재 반복 횟수, current iteration
-    this.#maxIter = 2;                               // 총 반복 횟수 (0: 무한번), maximum iteration
+    this.#maxIter = 1;                               // 총 반복 횟수 (0: 무한번), maximum iteration
 
     // state setter
-    this.setTime = null;                             // 남은 시간 state setter
+    this.setTime = 0;                             // 남은 시간 state setter
     this.setIsRunning = null;                        // 동작 여부 state setter
     this.setProgress = null;                         // progress state setter
     console.log("basic timer constructor")
@@ -56,7 +56,7 @@ export default class BasicTimer {
       // state setter 
       if (this.setTime != null) this.setTime(this.#remainTime);
       if (this.setProgress != null) this.setProgress(1 - this.#remainTime / this.#initTime[this.#initTimeIndex]);
-    }, 31);
+    }, 10);
   }
 
   // 타이머 시작하는 함수
@@ -82,9 +82,10 @@ export default class BasicTimer {
   }
 
   // 타이머를 초기화하는 함수
-  reset(initTime, maxIter) {
+  // initTime list에 0:공부 1:휴식으로 나누어 입력
+  reset(initTime,study, maxIter) {
     clearInterval(this.#counter);
-    if (initTime != null) this.#initTime = initTime;
+    if (initTime != null) this.#initTime[study] = initTime;
     if (maxIter != null) this.#maxIter = maxIter;
     this.#isRunning = false;
     this.#remainTime = this.#initTime[0];
