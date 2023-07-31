@@ -10,8 +10,10 @@ import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
+import styled from "@emotion/styled";
 import { Button, IconButton } from "@mui/material";
 import Numpad from "./numpad";
+
 
 function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
@@ -19,6 +21,26 @@ function useConstructor(callBack = () => {}) {
   callBack();
   flag.current = true;
 }
+
+
+
+const StyledTimerContainer = styled(Box)`
+  position: relative;
+`;
+
+// Styled 컴포넌트를 생성하여 배경색과 너비를 동적으로 변경
+const StyledTimerBackground = styled(Box)`
+  background-color: ${props => `rgba(253, 92, 92, ${props.progress*0.8})`};
+  width: ${props => `${props.progress * 100}%`};
+  height: 100%; /* Container의 높이만큼 배경화면 크기 설정 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index : -1;
+  border-radius: 15px;
+`;
+
+
 
 export default function BasicTimerComponent({
   timer,
@@ -28,6 +50,8 @@ export default function BasicTimerComponent({
   WatchId,
 }) {
   const [remainTime, setRemainTime] = useState(0);
+  const [time, setTime] = useState(0);
+
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [input, setInput] = useState(null);
@@ -56,6 +80,7 @@ export default function BasicTimerComponent({
     isRunning ? timer.pause() : timer.start();
   }
 
+
   function reset() {
     // console.log(timer);
     timer.reset(input * 1000);
@@ -65,11 +90,19 @@ export default function BasicTimerComponent({
     removeTimer(WatchId);
   }
 
+
+
+  useEffect(() => {
+    console.log("progress:", progress);
+  }, [progress]);
+
+
   return (
-    <Box
+    <StyledTimerContainer
       container
       className={type == "timer" ? "watch timer" : "watch stopWatch"}
     >
+      <StyledTimerBackground className="progress-bar" progress={progress} />
       <Grid
         container
         xs={100}
@@ -79,6 +112,7 @@ export default function BasicTimerComponent({
         <Grid xs={1}>
           <h2>{idx + 1}</h2>
         </Grid>
+
         <Grid item xs={6} className="time">
           {("00" + Math.floor(remainTime / 1000 / 3600)).slice(-2)}:{" "}
           {("00" + Math.floor(((remainTime / 1000) % 3600) / 60)).slice(-2)} :{" "}
@@ -145,7 +179,11 @@ export default function BasicTimerComponent({
             <button onClick={() => setInput(Number(String(input).slice(0, -1)))}>취소</button>
           </div>
         </Grid>
+      </Grid>
+                
+    
+
       </Grid> */}
-    </Box>
+    </StyledTimerContainer>
   );
 }

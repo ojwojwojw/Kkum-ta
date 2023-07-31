@@ -102,7 +102,6 @@ export default class BasicTimer {
 
   load(obj) {
     clearInterval(this.#counter);
-
     this.#initTime = obj.initTime;
     this.#initTimeIndex = obj.initTimeIndex;
     this.#remainTime = obj.remainTime;

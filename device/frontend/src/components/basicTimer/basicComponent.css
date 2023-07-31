@@ -31,4 +31,9 @@
   box-shadow: 0px 0px 10px gray;
   border-radius: 50%;
   text-align : center;
+  background-color: white;
+}
+
+.timerButton::hover {
+  background-color: gray;
 }

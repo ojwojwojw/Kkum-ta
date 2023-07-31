@@ -54,11 +54,7 @@ export default function TimerContainer() {
     });
   }
 
-  function load() {
-    // time, init
-    console.log("load");
-    // const res = await axios.get("timer/");
-  }
+
 
   function save() {
     // time, init
@@ -83,6 +79,25 @@ export default function TimerContainer() {
   function allReset() {
     timerList.forEach(({ timer }) => timer.reset());
   }
+
+  //API 요청관련
+
+  const load = async () => {
+    try {
+        const res = await axios.get("timer/");
+        console.log("load");
+        console.log(res.data);
+        console.log(timerList)
+        setTimerList(res.data.map((item, idx)=>{ 
+          console.log(`${idx} : ${item}`);
+          const timer = new BasicTimer();
+          timer.load(item);
+          return { id: Date.now(), type: "timer", timer: timer };
+        }));
+    } catch(error) {
+      console.log("Error Occured During Fetch: ", error);
+    }
+  }; 
 
   return (
     <>
