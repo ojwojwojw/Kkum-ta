@@ -1,11 +1,13 @@
 import React from "react";
 import "./App.css";
+import { BrowserRouter, Routes, Route, Link, RouterProvider } from 'react-router-dom';
 
-import BasicContainer from "./components/basicTimer/basicContainer";
+import GroupComponent from "./components/basicTimer/groupComponent";
+
 function App() {
   return (
     <div className="App">
-      <BasicContainer />
+      <GroupComponent />
     </div>
   );
 }

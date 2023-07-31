@@ -49,11 +49,9 @@ export default function BasicTimerComponent({
   removeTimer,
   WatchId,
 }) {
-  const [remainTime, setRemainTime] = useState(0);
-  const [time, setTime] = useState(0);
-
-  const [isRunning, setIsRunning] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [remainTime, setRemainTime] = useState(timer.getRemainTime());
+  const [isRunning, setIsRunning] = useState(timer.getIsRunning());
+  const [progress, setProgress] = useState(timer.getProgress());
   const [input, setInput] = useState(null);
 
   useEffect(() => {
@@ -63,7 +61,7 @@ export default function BasicTimerComponent({
   }, [WatchId]);
 
   useConstructor(() => {
-    timer.setTime = setRemainTime;
+    timer.setRemainTime = setRemainTime;
     timer.setIsRunning = setIsRunning;
     timer.setProgress = setProgress;
     console.log("basic timer componenet constructor");
@@ -71,7 +69,6 @@ export default function BasicTimerComponent({
 
   useEffect(() => {
     return () => {
-      timer.reset();
       console.log("basic timer componenet destructor");
     };
   }, []);
@@ -90,11 +87,9 @@ export default function BasicTimerComponent({
     removeTimer(WatchId);
   }
 
-
-
-  useEffect(() => {
-    console.log("progress:", progress);
-  }, [progress]);
+  // useEffect(() => {
+  //   console.log("progress:", progress);
+  // }, [progress]);
 
 
   return (
@@ -155,35 +150,7 @@ export default function BasicTimerComponent({
         </Grid>
       </Grid>
 
-      {/* 넘패드 컴포넌트로 분리 */}
       <Numpad input={input} setInput={setInput} WatchId={WatchId} />
-      {/*
-      <Grid container xs={20} justifyContent={"center"} alignContent={"center"}>
-        <Grid item xs={20}>
-          <span> {input} sec </span>
-          <div >
-            <button onClick={() => setInput(Number(String(input) + '1'))}>1</button>
-            <button onClick={() => setInput(Number(String(input) + '2'))}>2</button>
-            <button onClick={() => setInput(Number(String(input) + '3'))}>3</button>
-            <button onClick={() => setInput(Number(String(input) + '4'))}>4</button>
-            <button onClick={() => setInput(Number(String(input) + '5'))}>5</button>
-          </div>
-          <div>
-            <button onClick={() => setInput(Number(String(input) + '6'))}>6</button>
-            <button onClick={() => setInput(Number(String(input) + '7'))}>7</button>
-            <button onClick={() => setInput(Number(String(input) + '8'))}>8</button>
-            <button onClick={() => setInput(Number(String(input) + '9'))}>9</button>
-            <button onClick={() => setInput(Number(String(input) + '0'))}>0</button>
-          </div>
-          <div>
-            <button onClick={() => setInput(Number(String(input).slice(0, -1)))}>취소</button>
-          </div>
-        </Grid>
-      </Grid>
-                
-    
-
-      </Grid> */}
     </StyledTimerContainer>
   );
 }
