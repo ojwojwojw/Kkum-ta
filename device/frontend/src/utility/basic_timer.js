@@ -17,7 +17,7 @@ export default class BasicTimer {
     this.#maxIter = 1;                               // 총 반복 횟수 (0: 무한번), maximum iteration
 
     // state setter
-    this.setTime = null;                             // 남은 시간 state setter
+    this.setRemainTime = null;                             // 남은 시간 state setter
     this.setIsRunning = null;                        // 동작 여부 state setter
     this.setProgress = null;                         // progress state setter
     console.log("basic timer constructor")
@@ -33,8 +33,7 @@ export default class BasicTimer {
     }
     // 반복 횟수가 남아 있는 경우
     if (this.#maxIter == 0 || this.#curIter + 1 < this.#maxIter) {
-      this.#remainTime = this.#initTime[0];
-      this.#initTimeIndex = 0;
+      this.#remainTime = this.#initTime[this.#initTimeIndex = 0];
       if (this.#maxIter > 0) this.#curIter++;
       this.#targetTime = new Date().getTime() + this.#remainTime;
       return;
@@ -56,14 +55,14 @@ export default class BasicTimer {
       if (this.#remainTime <= 0) this.#determineKillCounter();
 
       // state setter 
-      if (this.setTime != null) this.setTime(this.#remainTime);
-      if (this.setProgress != null) this.setProgress(1 - this.#remainTime / this.#initTime[this.#initTimeIndex]);
+      if (this.setRemainTime != null) this.setRemainTime(this.#remainTime);
+      if (this.setProgress != null) this.setProgress(this.getProgress());
     }, 31);
   }
 
   // 타이머 시작하는 함수
   start() {
-    if (this.#isRunning) return;                                     // 이미 시작 중이면 리턴
+    if (this.#isRunning) return;                                     // 이미 동작 중이면 리턴
     this.#isRunning = true;
     this.#targetTime = new Date().getTime() + this.#remainTime;      // 목표 시각 설정
     this.#startCounter();                                            // 이벤트 루프 시작
@@ -95,7 +94,7 @@ export default class BasicTimer {
 
     // state setter 
     if (this.setIsRunning != null) this.setIsRunning(false);
-    if (this.setTime != null) this.setTime(this.#remainTime);
+    if (this.setRemainTime != null) this.setRemainTime(this.#remainTime);
     if (this.setProgress != null) this.setProgress(0);
     console.log(`reset: ${this.#remainTime}`);
   }
@@ -112,9 +111,9 @@ export default class BasicTimer {
     if(this.#isRunning) this.start();
 
     // state setter 
-    if (this.setTime != null) this.setTime(this.#remainTime);
+    if (this.setRemainTime != null) this.setRemainTime(this.#remainTime);
     if (this.setIsRunning != null) this.setIsRunning(this.#isRunning);
-    if (this.setProgress != null) this.setProgress(1 - this.#remainTime / this.#initTime[this.#initTimeIndex]);
+    if (this.setProgress != null) this.setProgress(this.getProgress());
   }
 
   save() {
@@ -126,5 +125,16 @@ export default class BasicTimer {
       curIter: this.#curIter,
       maxIter: this.#maxIter,
     }
+  }
+
+  // getter
+  getIsRunning() {
+    return this.#isRunning;
+  }
+  getRemainTime() {
+    return this.#remainTime;
+  }
+  getProgress() {
+    return 1 - this.#remainTime / this.#initTime[this.#initTimeIndex];
   }
 }
