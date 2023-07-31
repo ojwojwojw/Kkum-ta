@@ -4,13 +4,13 @@ export default class BasicStopwatch {
   #init
   #begin
   #isRunning
-  #upperbd;
+  #limit;
   constructor() {
     this.#time = 0;
     this.#init = 0;
     this.#begin = 0;
     this.#isRunning = false;
-    this.#upperbd = 360000 * 1000;
+    this.#limit = 360000 * 1000 - 1;
     this.setTime = null;
     this.setIsRunning = null;
     console.log("basic stopwatch constructor")
@@ -20,23 +20,20 @@ export default class BasicStopwatch {
     this.#counter = setInterval(() => {
       const now = new Date().getTime();
       this.#time = now - this.#begin + this.#init;
-      if (this.#upperbd <= this.#time) {
+      if (this.#limit <= this.#time) {
         clearInterval(this.#counter);
         this.#isRunning = false;
-        if (this.setIsRunning != null)
-          this.setIsRunning(false);
-        this.#time = this.#upperbd;
+        if (this.setIsRunning != null) this.setIsRunning(false);
+        this.#time = this.#limit;
       }
-      if (this.setTime != null)
-        this.setTime(this.#time);
-    }, 10);
+      if (this.setTime != null) this.setTime(this.#time);
+    }, 31);
   }
 
   start() {
     if (this.#isRunning === true) return;
     this.#isRunning = true;
-    if (this.setIsRunning != null)
-      this.setIsRunning(true);
+    if (this.setIsRunning != null) this.setIsRunning(true);
     this.#begin = new Date().getTime();
     this.#count();
     console.log(`start: ${this.#time}`);

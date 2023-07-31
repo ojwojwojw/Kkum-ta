@@ -29,7 +29,8 @@ export default function BasicTimerComponent({
 }) {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [input, setInput] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [input, setInput] = useState(null);
 
   useEffect(() => {
     if (WatchId) {
@@ -40,8 +41,16 @@ export default function BasicTimerComponent({
   useConstructor(() => {
     timer.setTime = setTime;
     timer.setIsRunning = setIsRunning;
+    timer.setProgress = setProgress;
     console.log("basic timer componenet constructor");
   });
+
+  useEffect(() => {
+    return () => {
+      timer.reset();
+      console.log("basic timer componenet destructor");
+    };
+  }, []);
 
   function toggle() {
     isRunning ? timer.pause() : timer.start();
@@ -86,7 +95,11 @@ export default function BasicTimerComponent({
               <PlayArrowIcon fontSize="large" />
             )}
           </Button>
-          <Button className="reset" color="warning" onClick={() => reset()}>
+          <Button
+            className="reset"
+            color="warning"
+            onClick={() => timer.reset()}
+          >
             {time === 0 ? (
               <SettingsIcon fontSize="large" />
             ) : (
