@@ -10,6 +10,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Button } from "@mui/material";
+import styled from "@emotion/styled";
 
 function useConstructor(callBack = () => { }) {
   const flag = useRef(false);
@@ -18,8 +19,26 @@ function useConstructor(callBack = () => { }) {
   flag.current = true;
 }
 
-export default function BasicTimerComponent({ timer, idx }) {
 
+const StyledTimerContainer = styled(Box)`
+  position: relative;
+`;
+
+// Styled 컴포넌트를 생성하여 배경색과 너비를 동적으로 변경
+const StyledTimerBackground = styled(Box)`
+  background-color: ${props => `rgba(253, 92, 92, ${props.progress*0.8})`};
+  width: ${props => `${props.progress * 100}%`};
+  height: 100%; /* Container의 높이만큼 배경화면 크기 설정 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index : -1;
+  border-radius: 15px;
+`;
+
+
+
+export default function BasicTimerComponent({ timer, idx }) {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -43,8 +62,17 @@ export default function BasicTimerComponent({ timer, idx }) {
     isRunning ? timer.pause() : timer.start();
   }
 
+  
+
+  useEffect(() => {
+    console.log("progress:", progress);
+  }, [progress]);
+
+
   return (
-    <Box className="timer">
+    <StyledTimerContainer className="timer" >
+      <StyledTimerBackground className="progress-bar" progress={progress} />
+
       <Grid container xs={100} justifyContent={"center"} alignContent={"center"}>
         <h3>{idx}: {progress.toFixed(2)}</h3>
         <Grid item xs={6} className="time">
@@ -95,7 +123,7 @@ export default function BasicTimerComponent({ timer, idx }) {
           </div>
         </Grid>
       </Grid>
-
-    </Box >
+                
+    </StyledTimerContainer >
   );
 }

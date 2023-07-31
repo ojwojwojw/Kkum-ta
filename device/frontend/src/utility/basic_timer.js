@@ -87,10 +87,14 @@ export default class BasicTimer {
     clearInterval(this.#counter);
     this.#isRunning = false;
     if (this.setIsRunning != null) this.setIsRunning(false);
-    this.#time = obj.time;
-    this.setTime(this.#time);
+    this.#initTime = [obj.total_time];
+    this.#tagTime = this.#initTime;
+    this.#time = obj.left_time;
+    if (this.setTime != null) this.setTime(this.#time);
+    this.#idx = 0;
+    this.#iter = 0;
+    this.#maxIter = 1;
     if (this.setProgress != null) this.setProgress(0);
-    this.#initTime = obj.initTime;
   }
 
   save() {
