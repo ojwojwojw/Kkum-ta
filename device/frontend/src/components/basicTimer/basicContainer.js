@@ -1,7 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import Page1 from "../../pages/page1";
-import Page2 from "../../pages/page2";
 
 import BasicTimer from "../../utility/basic_timer";
 import BasicStopwatch from "../../utility/basic_stopwatch";
