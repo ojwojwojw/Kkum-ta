@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Page1 from "../../pages/page1";
+import Page2 from "../../pages/page2";
 
 import BasicTimer from "../../utility/basic_timer";
 import BasicStopwatch from "../../utility/basic_stopwatch";
@@ -82,7 +85,13 @@ export default function TimerContainer() {
 
   return (
     <>
-      <span style={{margin : "10px"}}>
+      <Routes>
+        <Route path="/1" element={<Page1 />}></Route>
+        <Route path="/2" element={<Page2 />}></Route>
+      </Routes>
+      <Link to="/"><li>1111111111111</li></Link>
+      <Link to="/2"><li>22222222222222</li></Link>
+      <span style={{ margin: "10px" }}>
         <button onClick={() => createBasicTimer(input.current)}>
           create timer
         </button>
@@ -98,7 +107,7 @@ export default function TimerContainer() {
           placeholder="인덱스 입력">
         </input>
       </span>
-      <span style={{margin : "10px"}}>
+      <span style={{ margin: "10px" }}>
         <button onClick={() => load()}>
           load
         </button>
@@ -106,7 +115,7 @@ export default function TimerContainer() {
           save
         </button>
       </span>
-      <span style={{margin : "10px"}}>
+      <span style={{ margin: "10px" }}>
         <button onClick={() => allStart()}>
           all start
         </button>
