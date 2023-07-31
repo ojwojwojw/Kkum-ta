@@ -4,20 +4,24 @@ import React, { useState, useRef, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import "./basicComponent.css";
+import CloseIcon from "@mui/icons-material/Close";
 
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Button } from "@mui/material";
 import styled from "@emotion/styled";
+import { Button, IconButton } from "@mui/material";
+import Numpad from "./numpad";
 
-function useConstructor(callBack = () => { }) {
+
+function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
   if (flag.current) return;
   callBack();
   flag.current = true;
 }
+
 
 
 const StyledTimerContainer = styled(Box)`
@@ -38,31 +42,55 @@ const StyledTimerBackground = styled(Box)`
 
 
 
-export default function BasicTimerComponent({ timer, idx }) {
+export default function BasicTimerComponent({
+  timer,
+  idx,
+  type,
+  removeTimer,
+  WatchId,
+}) {
+  const [remainTime, setRemainTime] = useState(0);
   const [time, setTime] = useState(0);
+
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [input, setInput] = useState(null);
 
+  useEffect(() => {
+    if (WatchId) {
+      // console.log("New timer Id:", WatchId);
+    }
+  }, [WatchId]);
+
   useConstructor(() => {
-    timer.setTime = setTime;
+    timer.setTime = setRemainTime;
     timer.setIsRunning = setIsRunning;
     timer.setProgress = setProgress;
     console.log("basic timer componenet constructor");
   });
 
   useEffect(() => {
-    return (() => {
+    return () => {
       timer.reset();
       console.log("basic timer componenet destructor");
-    })
-  }, [])
+    };
+  }, []);
 
   function toggle() {
     isRunning ? timer.pause() : timer.start();
   }
 
-  
+
+  function reset() {
+    // console.log(timer);
+    timer.reset(input * 1000);
+  }
+
+  function remove() {
+    removeTimer(WatchId);
+  }
+
+
 
   useEffect(() => {
     console.log("progress:", progress);
@@ -70,17 +98,26 @@ export default function BasicTimerComponent({ timer, idx }) {
 
 
   return (
-    <StyledTimerContainer className="timer" >
-      <StyledTimerBackground className="progress-bar" progress={progress} />
+    <Box
+      container
+      className={type == "timer" ? "watch timer" : "watch stopWatch"}
+    >
+      <Grid
+        container
+        xs={100}
+        justifyContent={"center"}
+        alignContent={"center"}
+      >
+        <Grid xs={1}>
+          <h2>{idx + 1}</h2>
+        </Grid>
 
-      <Grid container xs={100} justifyContent={"center"} alignContent={"center"}>
-        <h3>{idx}: {progress.toFixed(2)}</h3>
         <Grid item xs={6} className="time">
-          {("00" + Math.floor(time / 1000 / 3600)).slice(-2)}:{" "}
-          {("00" + Math.floor((time / 1000) % 3600 / 60)).slice(-2)} :{" "}
-          {("00" + Math.floor((time / 1000) % 60)).slice(-2)}
+          {("00" + Math.floor(remainTime / 1000 / 3600)).slice(-2)}:{" "}
+          {("00" + Math.floor(((remainTime / 1000) % 3600) / 60)).slice(-2)} :{" "}
+          {("00" + Math.floor((remainTime / 1000) % 60)).slice(-2)}
           <span className="micro">
-            {("00" + Math.floor(((time / 1000) % 1) * 100)).slice(-2)}
+            {("00" + Math.floor(((remainTime / 1000) % 1) * 100)).slice(-2)}
           </span>
         </Grid>
         <Grid item xs={4} className="timerButton">
@@ -91,16 +128,35 @@ export default function BasicTimerComponent({ timer, idx }) {
               <PlayArrowIcon fontSize="large" />
             )}
           </Button>
-          <Button className="reset" color="warning" onClick={() => timer.reset()}>
-            {time === 0 ? (
+          <Button
+            className="reset"
+            color="warning"
+            onClick={() => timer.reset()}
+          >
+            {remainTime === 0 ? (
               <SettingsIcon fontSize="large" />
             ) : (
               <RestartAltIcon fontSize="large" />
             )}
           </Button>
         </Grid>
+        <Grid>
+          <IconButton
+            ton
+            aria-label="delete"
+            variant="text"
+            color="error"
+            size="large"
+            onClick={remove}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Grid>
       </Grid>
 
+      {/* 넘패드 컴포넌트로 분리 */}
+      <Numpad input={input} setInput={setInput} WatchId={WatchId} />
+      {/*
       <Grid container xs={20} justifyContent={"center"} alignContent={"center"}>
         <Grid item xs={20}>
           <span> {input} sec </span>
@@ -124,6 +180,9 @@ export default function BasicTimerComponent({ timer, idx }) {
         </Grid>
       </Grid>
                 
-    </StyledTimerContainer >
+    
+
+      </Grid> */}
+    </Box>
   );
 }
