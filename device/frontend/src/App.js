@@ -1,11 +1,12 @@
 import React from "react";
 import "./App.css";
 
-import BasicContainer from "./components/basicTimer/basicContainer";
+import GroupComponent from "./components/basicTimer/groupComponent";
+
 function App() {
   return (
     <div className="App">
-      <BasicContainer />
+      <GroupComponent />
     </div>
   );
 }

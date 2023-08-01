@@ -37,3 +37,23 @@
     transform: translateY(0px);
   }
 }
+
+.custom-tabs {
+  font-family: "Nanum Gothic";
+  font-weight: 900;
+}
+
+.custom-tabs a {
+  margin: 2px;
+  padding: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  list-style-type: none;
+  text-decoration: none;
+}
+
+.custom-tabs a:hover {
+  background-color: #c8c5e7;
+}
