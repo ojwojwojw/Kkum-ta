@@ -14,7 +14,6 @@ import styled from "@emotion/styled";
 import { Button, IconButton } from "@mui/material";
 import Numpad from "./numpad";
 
-
 function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
   if (flag.current) return;
@@ -22,21 +21,19 @@ function useConstructor(callBack = () => {}) {
   flag.current = true;
 }
 
-
-
 const StyledTimerContainer = styled(Box)`
   position: relative;
 `;
 
 // Styled 컴포넌트를 생성하여 배경색과 너비를 동적으로 변경
 const StyledTimerBackground = styled(Box)`
-  background-color: ${props => `rgba(253, 92, 92, ${props.progress*0.8})`};
-  width: ${props => `${props.progress * 100}%`};
+  background-color: ${(props) => `rgba(253, 92, 92, ${props.progress * 0.8})`};
+  width: ${(props) => `${props.progress * 100}%`};
   height: 100%; /* Container의 높이만큼 배경화면 크기 설정 */
   position: absolute;
   top: 0;
   left: 0;
-  z-index : -1;
+  z-index: -1;
   border-radius: 15px;
 `;
 
@@ -49,7 +46,6 @@ export default function BasicTimerComponent({
   initTime,
 }) {
   const [remainTime, setRemainTime] = useState(0);
-  const [time, setTime] = useState(0);
 
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -71,7 +67,7 @@ export default function BasicTimerComponent({
     console.log("basic timer componenet constructor");
   });
 
-  useEffect(() => { 
+  useEffect(() => {
     return () => {
       timer.reset();
       console.log("basic timer componenet destructor");
@@ -87,14 +83,12 @@ export default function BasicTimerComponent({
   }
 
   function resetInitTime(initTime, study, maxIter) {
-    timer.reset(initTime*1000, study, maxIter);
+    timer.reset(initTime * 1000, study, maxIter);
   }
-
 
   useEffect(() => {
     console.log("progress:", progress);
   }, [progress]);
-
 
   return (
     <StyledTimerContainer
@@ -113,13 +107,14 @@ export default function BasicTimerComponent({
         </Grid>
 
         <Grid item xs={6} className="time">
-          {("00" + Math.floor(remainTime / 1000 / 3600)).slice(-2)}:{" "}
-          {("00" + Math.floor(((remainTime / 1000) % 3600) / 60)).slice(-2)} :{" "}
+          {("00" + Math.floor(remainTime / 1000 / 3600)).slice(-2)}:
+          {("00" + Math.floor(((remainTime / 1000) % 3600) / 60)).slice(-2)}:
           {("00" + Math.floor((remainTime / 1000) % 60)).slice(-2)}
-          {type==="stopWatch"&&
-          <span className="micro">
-            {("00" + Math.floor(((remainTime / 1000) % 1) * 100)).slice(-2)}
-          </span>}
+          {type === "stopWatch" && (
+            <span className="micro">
+              {("00" + Math.floor(((remainTime / 1000) % 1) * 100)).slice(-2)}
+            </span>
+          )}
         </Grid>
         <Grid item xs={4} className="timerButton">
           <Button className="start" onClick={() => toggle()}>
@@ -133,7 +128,9 @@ export default function BasicTimerComponent({
             className="reset"
             color="warning"
             // 최대값이 99:59:59가 되도록 제한
-            onClick={() => resetInitTime(input>35500?359499:input,isStudy,0)}
+            onClick={() =>
+              resetInitTime(input > 359999 ? 359999 : input, isStudy, 0)
+            }
           >
             {remainTime === 0 ? (
               <SettingsIcon fontSize="large" />
@@ -157,9 +154,9 @@ export default function BasicTimerComponent({
       </Grid>
 
       {/* 넘패드 컴포넌트로 분리 */}
-      {type==="timer"&&
-      <Numpad input={input} setInput={setInput} WatchId={WatchId} />}
-
+      {type === "timer" && (
+        <Numpad input={input} setInput={setInput} WatchId={WatchId} />
+      )}
     </StyledTimerContainer>
   );
 }
