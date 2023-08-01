@@ -43,7 +43,6 @@ moduleRouter.post("/", async (req, res) => {
 moduleRouter.post("/operation/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const operation = req.body.operation;
-  console.log(id, typeof(id), operation);
   if(operation === "tag"){
     const { next } = moduleService.tag(id);
     return res.json({ status: "ok", next });
