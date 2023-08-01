@@ -14,7 +14,6 @@ import styled from "@emotion/styled";
 import { Button, IconButton } from "@mui/material";
 import Numpad from "./numpad";
 
-
 function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
   if (flag.current) return;
@@ -22,25 +21,21 @@ function useConstructor(callBack = () => {}) {
   flag.current = true;
 }
 
-
-
 const StyledTimerContainer = styled(Box)`
   position: relative;
 `;
 
 // Styled 컴포넌트를 생성하여 배경색과 너비를 동적으로 변경
 const StyledTimerBackground = styled(Box)`
-  background-color: ${props => `rgba(253, 92, 92, ${props.progress*0.8})`};
-  width: ${props => `${props.progress * 100}%`};
+  background-color: ${(props) => `rgba(253, 92, 92, ${props.progress * 0.8})`};
+  width: ${(props) => `${props.progress * 100}%`};
   height: 100%; /* Container의 높이만큼 배경화면 크기 설정 */
   position: absolute;
   top: 0;
   left: 0;
-  z-index : -1;
+  z-index: -1;
   border-radius: 15px;
 `;
-
-
 
 export default function BasicTimerComponent({
   timer,
@@ -48,11 +43,15 @@ export default function BasicTimerComponent({
   type,
   removeTimer,
   WatchId,
+  initTime,
 }) {
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
   const [progress, setProgress] = useState(timer.getProgress());
-  const [input, setInput] = useState(null);
+  const [input, setInput] = useState(0);
+
+  // 현재 공부중인지를 검사하는 변수
+  const [isStudy, setIsStudy] = useState(0);
 
   useEffect(() => {
     if (WatchId) {
@@ -77,25 +76,22 @@ export default function BasicTimerComponent({
     isRunning ? timer.pause() : timer.start();
   }
 
-
-  function reset() {
-    // console.log(timer);
-    timer.reset(input * 1000);
-  }
-
   function remove() {
     removeTimer(WatchId);
+  }
+
+  function resetInitTime(initTime, study, maxIter) {
+    timer.reset(initTime * 1000, study, maxIter);
   }
 
   // useEffect(() => {
   //   console.log("progress:", progress);
   // }, [progress]);
 
-
   return (
     <StyledTimerContainer
       container
-      className={type == "timer" ? "watch timer" : "watch stopWatch"}
+      className={type === "timer" ? "watch timer" : "watch stopWatch"}
     >
       <StyledTimerBackground className="progress-bar" progress={progress} />
       <Grid
@@ -109,12 +105,14 @@ export default function BasicTimerComponent({
         </Grid>
 
         <Grid item xs={6} className="time">
-          {("00" + Math.floor(remainTime / 1000 / 3600)).slice(-2)}:{" "}
-          {("00" + Math.floor(((remainTime / 1000) % 3600) / 60)).slice(-2)} :{" "}
+          {("00" + Math.floor(remainTime / 1000 / 3600)).slice(-2)}:
+          {("00" + Math.floor(((remainTime / 1000) % 3600) / 60)).slice(-2)}:
           {("00" + Math.floor((remainTime / 1000) % 60)).slice(-2)}
-          <span className="micro">
-            {("00" + Math.floor(((remainTime / 1000) % 1) * 100)).slice(-2)}
-          </span>
+          {type === "stopWatch" && (
+            <span className="micro">
+              {("00" + Math.floor(((remainTime / 1000) % 1) * 100)).slice(-2)}
+            </span>
+          )}
         </Grid>
         <Grid item xs={4} className="timerButton">
           <Button className="start" onClick={() => toggle()}>
@@ -127,7 +125,10 @@ export default function BasicTimerComponent({
           <Button
             className="reset"
             color="warning"
-            onClick={() => timer.reset()}
+            // 최대값이 99:59:59가 되도록 제한
+            onClick={() =>
+              resetInitTime(input > 359999 ? 359999 : input, isStudy, 0)
+            }
           >
             {remainTime === 0 ? (
               <SettingsIcon fontSize="large" />
@@ -150,7 +151,10 @@ export default function BasicTimerComponent({
         </Grid>
       </Grid>
 
-      <Numpad input={input} setInput={setInput} WatchId={WatchId} />
+      {/* 넘패드 컴포넌트로 분리 */}
+      {type === "timer" && (
+        <Numpad input={input} setInput={setInput} WatchId={WatchId} />
+      )}
     </StyledTimerContainer>
   );
 }
