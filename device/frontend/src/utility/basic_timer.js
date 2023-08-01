@@ -9,22 +9,22 @@ export default class BasicTimer {
   #curIter;
   constructor() {
     this.#initTime = [0, 0]; // 타이머 초기 시간 시퀸스
-    this.#initTimeIndex = 0;                         // 현재 진행 시퀸스 인덱스
-    this.#targetTime = 0;                            // 목표 시각 (내부적으로만 사용, 외부에서 사용할 일 없음)
-    this.#remainTime = this.#initTime[0];            // 현재 남은 시간
-    this.#isRunning = false;                         // 현재 타이머 동작 여부
-    this.#curIter = 0;                               // 현재 반복 횟수, current iteration
-    this.#maxIter = 1;                               // 총 반복 횟수 (0: 무한번), maximum iteration
+    this.#initTimeIndex = 0; // 현재 진행 시퀸스 인덱스
+    this.#targetTime = 0; // 목표 시각 (내부적으로만 사용, 외부에서 사용할 일 없음)
+    this.#remainTime = this.#initTime[0]; // 현재 남은 시간
+    this.#isRunning = false; // 현재 타이머 동작 여부
+    this.#curIter = 0; // 현재 반복 횟수, current iteration
+    this.#maxIter = 1; // 총 반복 횟수 (0: 무한번), maximum iteration
 
     // state setter
-    this.setTime = 0;                             // 남은 시간 state setter
-    this.setIsRunning = null;                        // 동작 여부 state setter
-    this.setProgress = null;                         // progress state setter
-    console.log("basic timer constructor")
+    this.setRemainTime = null; // 남은 시간 state setter
+    this.setIsRunning = null; // 동작 여부 state setter
+    this.setProgress = null; // progress state setter
+    console.log("basic timer constructor");
   }
 
   // 현재 타이머 시간이 0 이 되었을 때, 다음 동작을 결정하는 함수 (내부적으로만 사용, 외부에서 사용할 일 없음)
-  #determineNext() {
+  #determineKillCounter() {
     // 아직 시간 시퀸스를 다 못 마친 경우
     if (this.#initTimeIndex + 1 < this.#initTime.length) {
       this.#remainTime = this.#initTime[++this.#initTimeIndex];
@@ -33,8 +33,7 @@ export default class BasicTimer {
     }
     // 반복 횟수가 남아 있는 경우
     if (this.#maxIter == 0 || this.#curIter + 1 < this.#maxIter) {
-      this.#remainTime = this.#initTime[0];
-      this.#initTimeIndex = 0;
+      this.#remainTime = this.#initTime[(this.#initTimeIndex = 0)];
       if (this.#maxIter > 0) this.#curIter++;
       this.#targetTime = new Date().getTime() + this.#remainTime;
       return;
@@ -44,46 +43,48 @@ export default class BasicTimer {
     this.#isRunning = false;
     this.#remainTime = 0;
 
+    // state setter
     if (this.setIsRunning != null) this.setIsRunning(false);
   }
 
-  #count() {
+  // 타이머 카운터 시작시키는 함수
+  #startCounter() {
     this.#counter = setInterval(() => {
       const now = new Date().getTime();
       this.#remainTime = this.#targetTime - now;
-      if (this.#remainTime <= 0) this.#determineNext();
+      if (this.#remainTime <= 0) this.#determineKillCounter();
 
-      // state setter 
-      if (this.setTime != null) this.setTime(this.#remainTime);
-      if (this.setProgress != null) this.setProgress(1 - this.#remainTime / this.#initTime[this.#initTimeIndex]);
-    }, 10);
+      // state setter
+      if (this.setRemainTime != null) this.setRemainTime(this.#remainTime);
+      if (this.setProgress != null) this.setProgress(this.getProgress());
+    }, 31);
   }
 
   // 타이머 시작하는 함수
   start() {
-    if (this.#isRunning) return;                                     // 이미 시작 중이면 리턴
+    if (this.#isRunning) return; // 이미 동작 중이면 리턴
     this.#isRunning = true;
-    this.#targetTime = new Date().getTime() + this.#remainTime;      // 목표 시각 설정
-    this.#count();                                                   // 이벤트 루프 시작
+    this.#targetTime = new Date().getTime() + this.#remainTime; // 목표 시각 설정
+    this.#startCounter(); // 이벤트 루프 시작
 
-    // state setter 
+    // state setter
     if (this.setIsRunning != null) this.setIsRunning(true);
     console.log(`start: ${this.#remainTime}`);
   }
 
   // 타이머 일시 정지하는 함수
   pause() {
-    clearInterval(this.#counter);                                    // 이벤트 루프 정지
+    clearInterval(this.#counter); // 이벤트 루프 정지
     this.#isRunning = false;
 
-    // state setter 
+    // state setter
     if (this.setIsRunning != null) this.setIsRunning(false);
     console.log(`pause: ${this.#remainTime}`);
   }
 
   // 타이머를 초기화하는 함수
   // initTime list에 0:공부 1:휴식으로 나누어 입력
-  reset(initTime,study, maxIter) {
+  reset(initTime, study, maxIter) {
     clearInterval(this.#counter);
     if (initTime != null) this.#initTime[study] = initTime;
     if (maxIter != null) this.#maxIter = maxIter;
@@ -92,9 +93,9 @@ export default class BasicTimer {
     this.#curIter = 0;
     this.#initTimeIndex = 0;
 
-    // state setter 
+    // state setter
     if (this.setIsRunning != null) this.setIsRunning(false);
-    if (this.setTime != null) this.setTime(this.#remainTime);
+    if (this.setRemainTime != null) this.setRemainTime(this.#remainTime);
     if (this.setProgress != null) this.setProgress(0);
     console.log(`reset: ${this.#remainTime}`);
   }
@@ -108,10 +109,12 @@ export default class BasicTimer {
     this.#curIter = obj.curIter;
     this.#maxIter = obj.maxIter;
 
-    // state setter 
-    if (this.setTime != null) this.setTime(this.#remainTime);
+    if (this.#isRunning) this.start();
+
+    // state setter
+    if (this.setRemainTime != null) this.setRemainTime(this.#remainTime);
     if (this.setIsRunning != null) this.setIsRunning(this.#isRunning);
-    if (this.setProgress != null) this.setProgress(1 - this.#remainTime / this.#initTime[this.#initTimeIndex]);
+    if (this.setProgress != null) this.setProgress(this.getProgress());
   }
 
   save() {
@@ -122,6 +125,17 @@ export default class BasicTimer {
       isRunning: this.#isRunning,
       curIter: this.#curIter,
       maxIter: this.#maxIter,
-    }
+    };
+  }
+
+  // getter
+  getIsRunning() {
+    return this.#isRunning;
+  }
+  getRemainTime() {
+    return this.#remainTime;
+  }
+  getProgress() {
+    return 1 - this.#remainTime / this.#initTime[this.#initTimeIndex];
   }
 }

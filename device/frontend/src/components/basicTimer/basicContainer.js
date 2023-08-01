@@ -10,13 +10,12 @@ import "./basicContainer.css";
 
 import { Grid, Box, Stack, Button } from "@mui/material";
 
-export default function TimerContainer() {
-  const [timerList, setTimerList] = useState([]);
+export default function TimerContainer({ timerList, id }) {
+  const [_, setDummy] = useState(0); // 랜더링 강제로 일으키기 위해 사용
   const input = useRef(0);
 
   useEffect(() => {
     console.log("timer container constructor");
-
     return () => {
       console.log("timer container destructor");
     };
@@ -32,10 +31,9 @@ export default function TimerContainer() {
       timer: type === "timer" ? new BasicTimer() : new BasicStopwatch(),
     };
     // console.log(newWatch);
-    setTimerList((prevTimerList) => {
-      const newList = [...prevTimerList];
-      newList.splice(idx, 0, newWatch);
-      return newList;
+    setDummy((prev) => {
+      timerList.splice(idx, 0, newWatch);
+      return prev + 1;
     });
     return newWatch.id;
   }
@@ -49,10 +47,10 @@ export default function TimerContainer() {
       }
     });
 
-    setTimerList((prevTimerList) => {
-      const newList = [...prevTimerList];
-      newList.splice(deleteIdx, 1);
-      return newList;
+    setDummy((prev) => {
+      timerList[deleteIdx].timer.pause(); // clearInterval 을 위해 반드시 호출 !!
+      timerList.splice(deleteIdx, 1);
+      return prev + 1;
     });
   }
 
@@ -88,14 +86,16 @@ export default function TimerContainer() {
       console.log("load");
       console.log(res.data);
       console.log(timerList);
-      setTimerList(
+
+      setDummy((prev) => {
         res.data.map((item, idx) => {
           console.log(`${idx} : ${item}`);
           const timer = new BasicTimer();
           timer.load(item);
-          return { id: Date.now(), type: "timer", timer: timer };
-        })
-      );
+          timerList.push({ id: Date.now(), type: "timer", timer: timer });
+          return prev + 1;
+        });
+      });
     } catch (error) {
       console.log("Error Occured During Fetch: ", error);
     }

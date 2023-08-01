@@ -45,10 +45,9 @@ export default function BasicTimerComponent({
   WatchId,
   initTime,
 }) {
-  const [remainTime, setRemainTime] = useState(0);
-
-  const [isRunning, setIsRunning] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [remainTime, setRemainTime] = useState(timer.getRemainTime());
+  const [isRunning, setIsRunning] = useState(timer.getIsRunning());
+  const [progress, setProgress] = useState(timer.getProgress());
   const [input, setInput] = useState(0);
 
   // 현재 공부중인지를 검사하는 변수
@@ -61,7 +60,7 @@ export default function BasicTimerComponent({
   }, [WatchId]);
 
   useConstructor(() => {
-    timer.setTime = setRemainTime;
+    timer.setRemainTime = setRemainTime;
     timer.setIsRunning = setIsRunning;
     timer.setProgress = setProgress;
     console.log("basic timer componenet constructor");
@@ -69,7 +68,6 @@ export default function BasicTimerComponent({
 
   useEffect(() => {
     return () => {
-      timer.reset();
       console.log("basic timer componenet destructor");
     };
   }, []);
@@ -86,14 +84,14 @@ export default function BasicTimerComponent({
     timer.reset(initTime * 1000, study, maxIter);
   }
 
-  useEffect(() => {
-    console.log("progress:", progress);
-  }, [progress]);
+  // useEffect(() => {
+  //   console.log("progress:", progress);
+  // }, [progress]);
 
   return (
     <StyledTimerContainer
       container
-      className={type == "timer" ? "watch timer" : "watch stopWatch"}
+      className={type === "timer" ? "watch timer" : "watch stopWatch"}
     >
       <StyledTimerBackground className="progress-bar" progress={progress} />
       <Grid
