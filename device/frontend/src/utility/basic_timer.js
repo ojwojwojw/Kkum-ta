@@ -17,7 +17,7 @@ export default class BasicTimer {
     this.#maxIter = 1;                               // 총 반복 횟수 (0: 무한번), maximum iteration
 
     // state setter
-    this.setRemainTime = null;                             // 남은 시간 state setter
+    this.setRemainTime = null;                       // 남은 시간 state setter
     this.setIsRunning = null;                        // 동작 여부 state setter
     this.setProgress = null;                         // progress state setter
     console.log("basic timer constructor")
