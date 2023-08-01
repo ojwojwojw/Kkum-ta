@@ -13,6 +13,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import styled from "@emotion/styled";
 import { Button, IconButton } from "@mui/material";
 import Numpad from "./numpad";
+import TransitionsModal from "./transitionsModal";
 
 function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
@@ -27,14 +28,15 @@ const StyledTimerContainer = styled(Box)`
 
 // Styled 컴포넌트를 생성하여 배경색과 너비를 동적으로 변경
 const StyledTimerBackground = styled(Box)`
-  background-color: ${(props) => `rgba(253, 92, 92, ${props.progress * 0.8})`};
+  background-color: ${(props) =>
+    `rgba(253, 92, 92, ${props.progress * props.progress * 0.6 + 0.1})`};
   width: ${(props) => `${props.progress * 100}%`};
   height: 100%; /* Container의 높이만큼 배경화면 크기 설정 */
   position: absolute;
   top: 0;
   left: 0;
   z-index: -1;
-  border-radius: 15px;
+  border-radius: 10px;
 `;
 
 export default function BasicTimerComponent({
@@ -90,7 +92,6 @@ export default function BasicTimerComponent({
 
   return (
     <StyledTimerContainer
-      container
       className={type === "timer" ? "watch timer" : "watch stopWatch"}
     >
       <StyledTimerBackground className="progress-bar" progress={progress} />
@@ -115,7 +116,10 @@ export default function BasicTimerComponent({
           )}
         </Grid>
         <Grid item xs={4} className="timerButton">
-          <Button className="start" onClick={() => toggle()}>
+          <Button
+            className={isRunning ? "btn pause" : "btn start"}
+            onClick={() => toggle()}
+          >
             {isRunning ? (
               <PauseIcon fontSize="large" />
             ) : (
@@ -123,7 +127,7 @@ export default function BasicTimerComponent({
             )}
           </Button>
           <Button
-            className="reset"
+            className={remainTime === 0 ? "btn set" : "btn reset"}
             color="warning"
             // 최대값이 99:59:59가 되도록 제한
             onClick={() =>

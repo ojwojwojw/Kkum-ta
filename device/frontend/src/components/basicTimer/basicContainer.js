@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import BasicTimer from "../../utility/basic_timer";
 import BasicStopwatch from "../../utility/basic_stopwatch";
 import BasicTimerComponent from "./basicComponent";
-import TransitionsModal from "./CreateModal";
+import TransitionsModal from "./transitionsModal";
 import axios from "axios";
 
 import "./basicContainer.css";
@@ -102,9 +102,9 @@ export default function TimerContainer({ timerList, id }) {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container justifyContent={"space-between"}>
-        <Grid item xs={6}>
+    <Box className="time-container" sx={{ flexGrow: 1 }}>
+      <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
+        <Grid item xs={8}>
           {timerList.map((obj, idx) => {
             console.log(`timer ${idx}`);
             return (
@@ -120,20 +120,21 @@ export default function TimerContainer({ timerList, id }) {
             );
           })}
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={4}>
           <Grid
+            container
+            top={"80px"}
             width={"140px"}
-            height={"540px"}
+            height={"480px"}
             position={"fixed"}
             className="btn-controller"
-            container
             direction={"column"}
             justifyContent={"space-between"}
             alignItems={"center"}
           >
             <Stack xs={8}>
               <Grid item>
-                <TransitionsModal createWatch={createBasicWatch} />
+                <TransitionsModal type={"create"} />
               </Grid>
               <Grid item>
                 <Button

@@ -7,6 +7,15 @@
   pointer-events: none;
 }
 
+@font-face {
+  font-family: "Nanum Gothic";
+
+  src: url("./static/fonts/NanumGothic.ttf") format("truetype");
+
+  font-weight: 600;
+  font-style: normal;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-float infinite 3s ease-in-out;
@@ -39,21 +48,30 @@
 }
 
 .custom-tabs {
-  font-family: "Nanum Gothic";
-  font-weight: 900;
+  margin: 20px;
 }
 
 .custom-tabs a {
   margin: 2px;
-  padding: 5px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-radius: 5px;
-  border: 1px solid #000;
+  padding: 18px;
+  height: 20px;
+  padding-left: 34px;
+  padding-right: 34px;
+  border-radius: 20px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border: 2px solid #535353;
+  background-color: rgb(231, 231, 231);
+  color: black;
+  border-bottom: none;
   list-style-type: none;
   text-decoration: none;
+  font-size: 1.2rem;
 }
 
 .custom-tabs a:hover {
-  background-color: #c8c5e7;
+  margin-top: 0;
+  height: 24px;
+  background-color: #ffffff;
+  color: black;
 }

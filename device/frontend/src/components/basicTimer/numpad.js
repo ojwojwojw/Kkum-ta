@@ -1,4 +1,4 @@
-import { Grid, Input } from "@mui/material";
+import { Button, Grid, Input, Stack } from "@mui/material";
 import React from "react";
 
 const Numpad = ({ input, setInput }) => {
@@ -7,32 +7,119 @@ const Numpad = ({ input, setInput }) => {
   };
 
   return (
-    <Grid container xs={20} justifyContent={"center"} alignContent={"center"}>
-      <Grid item xs={20}>
+    <Grid
+      fontSize={"16px"}
+      container
+      xs={24}
+      justifyContent={"center"}
+      alignContent={"center"}
+    >
+      <Stack container>
         <span> {input} sec </span>
         <div>
-          {[1, 2, 3, 4, 5].map((number) => (
-            <button key={number} onClick={() => handleButtonClick(number)}>
+          {[1, 2, 3].map((number) => (
+            <Button
+              variant="outlined"
+              sx={{
+                p: 0,
+                fontWeight: 600,
+                minWidth: 40,
+                minHeight: 32,
+                border: "1px solid ",
+              }}
+              size="small"
+              key={number}
+              onClick={() => handleButtonClick(number)}
+            >
               {number}
-            </button>
+            </Button>
           ))}
         </div>
         <div>
-          {[6, 7, 8, 9, 0].map((number) => (
-            <button key={number} onClick={() => handleButtonClick(number)}>
+          {[4, 5, 6].map((number) => (
+            <Button
+              variant="outlined"
+              sx={{
+                p: 0,
+                fontWeight: 600,
+                minWidth: 40,
+                minHeight: 32,
+                border: "1px solid ",
+              }}
+              size="small"
+              key={number}
+              onClick={() => handleButtonClick(number)}
+            >
               {number}
-            </button>
+            </Button>
           ))}
         </div>
         <div>
-          <button onClick={() => setInput(Number(String(input).slice(0, -1)))}>
+          {[7, 8, 9].map((number) => (
+            <Button
+              variant="outlined"
+              sx={{
+                p: 0,
+                fontWeight: 600,
+                minWidth: 40,
+                minHeight: 32,
+                border: "1px solid ",
+              }}
+              size="small"
+              key={number}
+              onClick={() => handleButtonClick(number)}
+            >
+              {number}
+            </Button>
+          ))}
+        </div>
+        <div>
+          <Button
+            variant="outlined"
+            sx={{
+              p: 0,
+              fontWeight: 600,
+              minWidth: 40,
+              minHeight: 32,
+              border: "1px solid ",
+            }}
+            size="small"
+            onClick={() => setInput(Number(String(input).slice(0, -1)))}
+          >
             지우기
-          </button>
-          <button onClick={() => setInput(Number(String(input).slice(0,-((String(input).length)))))}>
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{
+              p: 0,
+              fontWeight: 600,
+              minWidth: 40,
+              minHeight: 32,
+              border: "1px solid ",
+            }}
+            size="small"
+            onClick={() => handleButtonClick(0)}
+          >
+            {0}
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{
+              p: 0,
+              fontWeight: 600,
+              minWidth: 40,
+              minHeight: 32,
+              border: "1px solid ",
+            }}
+            size="small"
+            onClick={() =>
+              setInput(Number(String(input).slice(0, -String(input).length)))
+            }
+          >
             리셋
-          </button>
+          </Button>
         </div>
-      </Grid>
+      </Stack>
     </Grid>
   );
 };

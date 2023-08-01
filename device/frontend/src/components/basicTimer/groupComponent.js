@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Routes, Route, Link } from "react-router-dom";
 
 import TimerContainer from "./basicContainer";
 
 // mui
-import { Tabs } from "@mui/material";
+import { Box, Grid, Tabs } from "@mui/material";
 
 export default function GroupComponent() {
   const [timerArrayList, setTimerArrayList] = useState([]);
@@ -18,7 +18,7 @@ export default function GroupComponent() {
   }, []);
 
   function add() {
-    if (timerArrayList.length > 5) return;
+    if (timerArrayList.length > 4) return;
     const newArray = {
       id: Date.now(), // 그룹 아이디
       timerList: new Array(0),
@@ -31,38 +31,49 @@ export default function GroupComponent() {
     });
   }
 
-  function remove() {}
+  for (let i = 0; i < 5; i++) {
+    add();
+  }
 
   return (
-    <>
-      <button onClick={() => add()}> create group </button>
-      <Tabs className="custom-tabs">
-        {timerArrayList.map((_, idx) => {
-          console.log(timerArrayList);
-          return (
-            <Link key={idx} to={`/${idx}`}>
-              <li>{`Group ${idx}`}</li>
-            </Link>
-          );
-        })}
-      </Tabs>
-      <Routes>
-        {timerArrayList.map((obj, idx) => {
-          return (
-            <Route
-              key={obj.id}
-              path={`/${idx}`}
-              element={
-                <TimerContainer
+    <Box>
+      <Grid container>
+        <Grid item xs={12}>
+          {/* <Button variant="outlined" size="large" onClick={() => add()}>
+            create group
+          </Button> */}
+
+          <Tabs className="custom-tabs">
+            {timerArrayList.map((_, idx) => {
+              console.log(timerArrayList);
+              return (
+                <Link key={idx} to={`/${idx}`}>
+                  <li>{`Group ${idx + 1}`}</li>
+                </Link>
+              );
+            })}
+          </Tabs>
+        </Grid>
+        <Grid item xs={12}>
+          <Routes>
+            {timerArrayList.map((obj, idx) => {
+              return (
+                <Route
                   key={obj.id}
-                  id={obj.id}
-                  timerList={obj.timerList}
-                ></TimerContainer>
-              }
-            ></Route>
-          );
-        })}
-      </Routes>
-    </>
+                  path={`/${idx}`}
+                  element={
+                    <TimerContainer
+                      key={obj.id}
+                      id={obj.id}
+                      timerList={obj.timerList}
+                    ></TimerContainer>
+                  }
+                ></Route>
+              );
+            })}
+          </Routes>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }

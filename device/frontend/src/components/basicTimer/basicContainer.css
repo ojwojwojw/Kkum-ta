@@ -1,12 +1,16 @@
 .btn-controller {
-  top: 20px;
-  right: 10px;
+  top: 40px;
+  right: 30px;
   bottom: 10px;
   width: 140px;
+  height: 480px;
   margin: 20px;
 }
 
 .btn-controller Button {
-  width: 140px;
-  height: 35px;
+  width: 160px;
+  height: 45px;
+  padding: 25px;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
