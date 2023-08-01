@@ -1,3 +1,12 @@
-button {
-  height: 32px;
+.btn-controller {
+  top: 20px;
+  right: 10px;
+  bottom: 10px;
+  width: 140px;
+  margin: 20px;
+}
+
+.btn-controller Button {
+  width: 140px;
+  height: 35px;
 }
