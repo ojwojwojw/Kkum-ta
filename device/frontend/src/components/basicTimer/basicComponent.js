@@ -140,6 +140,15 @@ export default function BasicTimerComponent({
     }
   }
 
+  const updateTimer = async() => {
+    try{
+      
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
 
   // useEffect(() => {
   //   console.log("progress:", progress);
