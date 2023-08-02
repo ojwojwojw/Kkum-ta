@@ -6,7 +6,8 @@ pipeline {
         npm 'npm_9.6.7'
     }
     enviroment {
-        
+        dockerHubRegistry = 'gugaro/kkumta'
+        dockerHubRegistryCredential = 'Docker_Hub_Key'
     }
     stages {
         stage('Checkout Application Git Branch') {
