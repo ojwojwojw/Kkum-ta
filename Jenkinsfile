@@ -21,7 +21,7 @@ pipeline {
         stage('Build Node Server') {
             steps {
                 sh '''
-                    cd ../device/backend/
+                    cd ./device/backend/
                     npm install
                 '''
             }
