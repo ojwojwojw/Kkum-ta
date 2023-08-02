@@ -2,7 +2,7 @@ class StopwatchService {
   constructor(initTime) {
     this.id = Date.now();
     this.initTime = initTime;
-    this.curTime = initTime; //외부 반출은 X. 왜...?
+    this.curTime = initTime;
     this.isRunning = false;
     this.lastLogTime = Date.now();
   }
@@ -33,7 +33,7 @@ class StopwatchService {
     return {
       id: this.id,
       type: "stopwatch",
-      initTime: this.initTime,
+      initTime: this.curTime,
       limitTime: 360000 * 1000 - 1,
       isRunning: this.isRunning,
     };
