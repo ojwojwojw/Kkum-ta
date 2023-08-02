@@ -55,7 +55,7 @@ export default class BasicTimer {
       if (this.setRemainTime != null) this.setRemainTime(this.#remainTime);
       if (this.setProgress != null) this.setProgress(this.getProgress());
       if (this.setIsRunning != null) this.setIsRunning(this.#isRunning);
-    }, 31);
+    }, 0);
   }
 
   // 타이머 시작하는 함수

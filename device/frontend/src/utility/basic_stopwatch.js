@@ -34,7 +34,7 @@ export default class BasicStopwatch {
       this.#curTime = nowTime - this.#beginTime + this.#initTime;
       if (this.#limitTime <= this.#curTime) this.#killCounter();
       if (this.setCurTime != null) this.setCurTime(this.#curTime);
-    }, 31);
+    }, 0);
   }
 
   // 스탑워치 시작
