@@ -12,7 +12,7 @@ pipeline {
         stage('Build React App') {
             steps {
                 sh "cd ./device/frontend"
-                sh "ls -al"
+                sh "ls -al ./"
                 sh "npm run build"
             }
         }
