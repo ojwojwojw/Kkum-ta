@@ -99,7 +99,7 @@ export default function TimerContainer({ timerList, id }) {
         
       });
 
-      setDummy((prev) =>prev + 1);
+      setDummy((prev) =>prev + 1); //강제 랜더링
       
     } catch (error) {
       console.log("Error Occured During Fetch: ", error);
@@ -111,14 +111,13 @@ export default function TimerContainer({ timerList, id }) {
       const data = {type : "timer" , initTime : [0] , maxIter : 1}
       const res = await axios.post("timer/",data);
       console.log('res',res.data)
-      load()
+      await load()
     }
     catch (error){
       console.log(error)
     }
   }
 
-  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container justifyContent={"space-between"}>

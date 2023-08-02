@@ -51,6 +51,7 @@ export default function BasicTimerComponent({
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
   const [progress, setProgress] = useState(timer.getProgress());
   const [input, setInput] = useState(0);
+ 
 
   // 현재 공부중인지를 검사하는 변수
   const [isStudy, setIsStudy] = useState(0);
@@ -84,6 +85,8 @@ export default function BasicTimerComponent({
   function toggle() {
     isRunning ? timer.pause() : timer.start();
     isRunning ? logPuase() : logStart(); // api 요청으로 백엔드에 시작/중지 로그 남기기
+    
+
   }
 
   function remove() {
@@ -92,8 +95,9 @@ export default function BasicTimerComponent({
 
   function resetInitTime(initTime, study, maxIter) {
     timer.reset(initTime * 1000, study, maxIter);
-    updateTimer(initTime * 1000)//최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
+    // updateTimer(initTime * 1000)//최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop()//api 요청으로 백엔드에 리셋 기록 남기기
+    
   }
 
 
@@ -163,6 +167,9 @@ export default function BasicTimerComponent({
   // useEffect(() => {
   //   console.log("progress:", progress);
   // }, [progress]);
+  useEffect(() => {
+    // 렌더링이 발생할 때 실행될 코드
+  }, [isRunning, input, remainTime]); 
 
   return (
     <StyledTimerContainer
