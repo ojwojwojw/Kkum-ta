@@ -92,7 +92,7 @@ export default function BasicTimerComponent({
 
   function resetInitTime(initTime, study, maxIter) {
     timer.reset(initTime * 1000, study, maxIter);
-    //최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
+    updateTimer(initTime * 1000)//최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop()//api 요청으로 백엔드에 리셋 기록 남기기
   }
 
@@ -147,9 +147,12 @@ export default function BasicTimerComponent({
     }
   }
 
-  const updateTimer = async() => {
+  const updateTimer = async(newInput) => {
     try{
-      
+      const timer_id = WatchId
+      const data = {initTime : [newInput]}
+      const res = await axios.put(`timer/${timer_id}`,data)
+      console.log("update initTiime data in backend")
     }
     catch(err){
       console.log(err)
