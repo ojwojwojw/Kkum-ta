@@ -12,9 +12,7 @@ pipeline {
         stage('Build React App') {
             steps {
                 sh '''
-                    ls -al ./
                     cd ./device/frontend/
-                    ls -al ./
                     npm install
                     CI=false npm run build
                 '''
@@ -33,7 +31,7 @@ pipeline {
                 sh '''
                 docker stop front-app
                 docker rm front-app
-                docker run -d -p 3000:3000 --name front-app {docker_repo}:front-server-0.1
+                docker run -d -p 3000:3000 --name front-app ${docker_repo}:front-server-0.1
 
                 yes | docker image prune -a
                 '''
