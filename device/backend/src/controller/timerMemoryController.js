@@ -23,6 +23,18 @@ moduleRouter.delete("/:id", async (req, res) => {
   return res.json({ status: "ok" });
 });
 
+moduleRouter.put("/:id", async (req, res)=>{
+  const id = req.params.id;
+  const initTime = req.body.initTime;
+  const result = moduleService.putInitTime(id, initTime);
+  if(result){
+    return res.status(200).json({status:"ok"});
+  }
+  else{
+    return res.status(404).json({status: "not found"});
+  }
+});
+
 moduleRouter.post("/", async (req, res) => {
   const type = req.body.type;
   const initTime = req.body.initTime;

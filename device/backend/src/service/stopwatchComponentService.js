@@ -38,6 +38,12 @@ class StopwatchService {
       isRunning: this.isRunning,
     };
   }
+  setInitTime(initTime){
+    this.initTime = initTime;
+    this.curTime = initTime; //외부 반출은 X. 왜...?
+    this.isRunning = false;
+    this.lastLogTime = Date.now();
+  }
 }
 
 module.exports = StopwatchService;

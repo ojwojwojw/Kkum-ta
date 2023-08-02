@@ -75,6 +75,15 @@ class TimerComponentService{
             maxIter: this.maxIter
         }
     }
+    setInitTime(initTime){
+        this.initTime = initTime;
+        this.initTimeIndex = 0;
+        this.isRunning = false;
+        this.curIter = 0;
+        this.curTimerTime = 0;
+        this.maxIter = maxIter;
+        this.lastLogTime = Date.now();
+    }
     get progress(){
         return this.curTimerTime / this.initTime[this.initTimeIndex];
     }

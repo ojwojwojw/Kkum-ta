@@ -64,5 +64,12 @@ class ModuleService {
     this.valid[id] = false;
     return true;
   }
+  putInitTime(id, initTime){
+    if(this.id < 0 || this.id >= this.array.length || this.valid[id] === false){
+        return false;
+    }
+    this.array[id].setInitTime(initTime);
+    return true;
+  }
 }
 module.exports = ModuleService;
