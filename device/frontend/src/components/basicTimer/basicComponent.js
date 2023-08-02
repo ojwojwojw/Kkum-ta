@@ -95,7 +95,7 @@ export default function BasicTimerComponent({
 
   function resetInitTime(initTime, study, maxIter) {
     timer.reset(initTime * 1000, study, maxIter);
-    // updateTimer(initTime * 1000)//최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
+    updateTimer(initTime * 1000)//최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop()//api 요청으로 백엔드에 리셋 기록 남기기
     
   }
@@ -119,7 +119,7 @@ export default function BasicTimerComponent({
     try{
       const timerId = WatchId
       const data = {operation : "start"}
-      const res = axios.post(`timer/operation/${timerId}`,data)
+      const res = await axios.post(`timer/operation/${timerId}`,data)
       console.log("log start data on backend.")
     }
     catch(err){
@@ -131,7 +131,7 @@ export default function BasicTimerComponent({
     try{
       const timerId = WatchId
       const data = {operation : "pause"}
-      const res = axios.post(`timer/operation/${timerId}`,data)
+      const res = await axios.post(`timer/operation/${timerId}`,data)
       console.log("log pause data on backend.")
     }
     catch(err){
@@ -143,7 +143,7 @@ export default function BasicTimerComponent({
     try{
       const timerId = WatchId
       const data = {operation : "stop"}
-      const res = axios.post(`timer/operation/${timerId}`,data)
+      const res = await axios.post(`timer/operation/${timerId}`,data)
       console.log("log stop(reset) data on backend.")
     }
     catch(err){
@@ -163,13 +163,19 @@ export default function BasicTimerComponent({
     }
   }
 
+  const createTimer = async() => {
+    try{
+      const data = {type : "timer" , initTime : [0] , maxIter : 1}
+      const res = await axios.post("timer/",data);
+      console.log('res',res.data)
+      await load()
+    }
+    catch (error){
+      console.log(error)
+    }
+  }
 
-  // useEffect(() => {
-  //   console.log("progress:", progress);
-  // }, [progress]);
-  useEffect(() => {
-    // 렌더링이 발생할 때 실행될 코드
-  }, [isRunning, input, remainTime]); 
+
 
   return (
     <StyledTimerContainer

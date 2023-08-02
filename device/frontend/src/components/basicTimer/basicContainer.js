@@ -84,20 +84,23 @@ export default function TimerContainer({ timerList, id }) {
     try {
       const res = await axios.get("timer/");
       console.log("load");
+
       //timerList 빈 배열로 초기화
       timerList.map((obj)=>{
         obj.timer.pause()
       })
       timerList.splice(0, timerList.length);
-      
+      // timerList = new Array(0);
       
       res.data.map((item, idx) => {
         console.log(`${idx} : ${item}`);
         const timer = new BasicTimer();
         timer.load(item);
-        timerList.push({ "id": item.id, "type": item.type, "timer": timer });
+        timerList.push({ "kkk": Date.now(), "id": item.id, "type": item.type, "timer": timer });
         
       });
+      console.log('res:',res.data)
+      console.log('timerArr:',timerList)
 
       setDummy((prev) =>prev + 1); //강제 랜더링
       
@@ -126,7 +129,7 @@ export default function TimerContainer({ timerList, id }) {
             console.log(`timer ${idx}`);
             return (
               <BasicTimerComponent
-                key={obj.id}
+                key={obj.kkk}
                 timer={obj.timer}
                 idx={idx}
                 type={obj.type}

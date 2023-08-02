@@ -1,6 +1,7 @@
 class TimerComponentService{
     constructor(initTime, maxIter){
         //initTime: array of Integers
+        this.id = Date.now();
         this.initTime = initTime;
         this.initTimeIndex = 0;
         this.isRunning = false;
