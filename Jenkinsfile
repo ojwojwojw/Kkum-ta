@@ -15,6 +15,7 @@ pipeline {
                     ls -al ./
                     cd ./device/frontend/
                     ls -al ./
+                    npm install
                     npm run build
                 '''
             }
