@@ -28,5 +28,16 @@ pipeline {
                 '''
             }
         }
+        stage('Release React App Image') {
+            steps {
+                sh '''
+                docker stop front-app
+                docker rm front-app
+                docker run -d -p 3000:3000 --name front-app {docker_repo}:front-server-0.1
+
+                yes | docker image prune -a
+                '''
+            }
+        }
     }
 }
