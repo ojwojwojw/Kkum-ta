@@ -39,10 +39,12 @@ class StopwatchService {
     };
   }
   setInitTime(initTime){
+    initTime = parseInt(initTime);
     this.initTime = initTime;
-    this.curTime = initTime; //외부 반출은 X. 왜...?
+    this.curTime = initTime;
     this.isRunning = false;
     this.lastLogTime = Date.now();
+    return true;
   }
 }
 
