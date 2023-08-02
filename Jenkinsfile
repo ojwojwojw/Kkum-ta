@@ -16,7 +16,7 @@ pipeline {
                     cd ./device/frontend/
                     ls -al ./
                     npm install
-                    npm run build
+                    CI=false npm run build
                 '''
             }
         }
