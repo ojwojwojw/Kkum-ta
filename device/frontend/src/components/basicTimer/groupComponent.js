@@ -32,6 +32,9 @@ export default function GroupComponent() {
   }
 
   function remove() {}
+  
+  
+
 
   return (
     <>

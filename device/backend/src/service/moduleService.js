@@ -21,7 +21,7 @@ class ModuleService {
     return stopwatchService.id;
   }
   getAll(){
-    return this.array.map(item=>item.json());
+    return this.array.filter((item, index)=>this.valid[index]).map(item=>item.json());
   }
   getById(id) {
     if(id < 0 || id >= this.array.length || this.valid[id] === false){

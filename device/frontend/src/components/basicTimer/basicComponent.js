@@ -13,6 +13,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import styled from "@emotion/styled";
 import { Button, IconButton } from "@mui/material";
 import Numpad from "./numpad";
+import axios from "axios";
 
 function useConstructor(callBack = () => {}) {
   const flag = useRef(false);
@@ -44,6 +45,7 @@ export default function BasicTimerComponent({
   removeTimer,
   WatchId,
   initTime,
+  load,
 }) {
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
@@ -74,6 +76,7 @@ export default function BasicTimerComponent({
 
   function toggle() {
     isRunning ? timer.pause() : timer.start();
+    isRunning ? logPuase() : logStart(); // api 요청으로 백엔드에 시작/중지 로그 남기기
   }
 
   function remove() {
@@ -82,7 +85,61 @@ export default function BasicTimerComponent({
 
   function resetInitTime(initTime, study, maxIter) {
     timer.reset(initTime * 1000, study, maxIter);
+    //최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
+    logStop()//api 요청으로 백엔드에 리셋 기록 남기기
   }
+
+
+  //api 요청 관련
+  const deleteTimer = async() =>{
+    try{
+      const timerId = WatchId
+      console.log(timerId)
+      const res = await axios.delete(`timer/${timerId}`);
+      console.log('res',res.data)
+      load()
+    }
+    catch (error){
+      console.log(error)
+    }
+  }
+
+  const logStart = async() => {
+    try{
+      const timerId = WatchId
+      const data = {operation : "start"}
+      const res = axios.post(`timer/operation/${timerId}`,data)
+      console.log("log start data on backend.")
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
+  const logPuase = async() => {
+    try{
+      const timerId = WatchId
+      const data = {operation : "pause"}
+      const res = axios.post(`timer/operation/${timerId}`,data)
+      console.log("log pause data on backend.")
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
+  const logStop = async() => {
+    try{
+      const timerId = WatchId
+      const data = {operation : "stop"}
+      const res = axios.post(`timer/operation/${timerId}`,data)
+      console.log("log stop(reset) data on backend.")
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
 
   // useEffect(() => {
   //   console.log("progress:", progress);
@@ -144,7 +201,7 @@ export default function BasicTimerComponent({
             variant="text"
             color="error"
             size="large"
-            onClick={remove}
+            onClick={deleteTimer} //remove는 프런트단에서만 삭제됨
           >
             <CloseIcon />
           </IconButton>

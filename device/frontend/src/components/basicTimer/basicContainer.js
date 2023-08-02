@@ -84,22 +84,40 @@ export default function TimerContainer({ timerList, id }) {
     try {
       const res = await axios.get("timer/");
       console.log("load");
-      console.log(res.data);
-      console.log(timerList);
-
-      setDummy((prev) => {
-        res.data.map((item, idx) => {
-          console.log(`${idx} : ${item}`);
-          const timer = new BasicTimer();
-          timer.load(item);
-          timerList.push({ id: Date.now(), type: "timer", timer: timer });
-          return prev + 1;
-        });
+      //timerList 빈 배열로 초기화
+      timerList.map((obj)=>{
+        obj.timer.pause()
+      })
+      timerList.splice(0, timerList.length);
+      
+      
+      res.data.map((item, idx) => {
+        console.log(`${idx} : ${item}`);
+        const timer = new BasicTimer();
+        timer.load(item);
+        timerList.push({ "id": item.id, "type": item.type, "timer": timer });
+        
       });
+
+      setDummy((prev) =>prev + 1);
+      
     } catch (error) {
       console.log("Error Occured During Fetch: ", error);
     }
   };
+
+  const createTimer = async() => {
+    try{
+      const data = {type : "timer" , initTime : [0] , maxIter : 1}
+      const res = await axios.post("timer/",data);
+      console.log('res',res.data)
+      load()
+    }
+    catch (error){
+      console.log(error)
+    }
+  }
+
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -116,6 +134,7 @@ export default function TimerContainer({ timerList, id }) {
                 removeTimer={remove}
                 WatchId={obj.id}
                 initTime={obj.initTime}
+                load = {load}
               />
             );
           })}
@@ -143,6 +162,12 @@ export default function TimerContainer({ timerList, id }) {
                   }
                 >
                   타이머 생성
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={createTimer}
+                >
+                  타이머 생성(api)
                 </Button>
               </Grid>
               {/* <Grid item>
