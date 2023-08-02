@@ -52,8 +52,8 @@ export default class BasicStopwatch {
   pause() {
     clearInterval(this.#counter);
     this.#isRunning = false;
-    const now = new Date().getTime();
-    this.#initTime += now - this.#beginTime;
+    const nowTime = new Date().getTime();
+    this.#initTime += nowTime - this.#beginTime;
 
     // setter
     if (this.setIsRunning != null) this.setIsRunning(false);

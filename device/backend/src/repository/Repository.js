@@ -19,7 +19,7 @@ class Repository {
       result = await conn.execute(sql, params);
     } finally {
       if (!this.conn) {
-        conn.release();
+        await conn.release();
       }
     }
     return result;
