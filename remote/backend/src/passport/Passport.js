@@ -12,7 +12,7 @@ module.exports = (passport) => {
             const userInfo = userRepository.getUserById(user.id);
         
             if(userInfo){
-                done(null, user);
+                done(null, userInfo);
             }
         } catch (error) {
             done(error);
