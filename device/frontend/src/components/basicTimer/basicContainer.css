@@ -1,6 +1,14 @@
+.time-container {
+  position: relative;
+  top: 110px;
+  left: 4px;
+  width: 780px;
+  height: 485px;
+}
+
 .btn-controller {
   top: 40px;
-  right: 30px;
+  right: 15px;
   bottom: 10px;
   width: 140px;
   height: 480px;
@@ -11,6 +19,7 @@
   width: 160px;
   height: 45px;
   padding: 25px;
+  margin: 3px;
   font-size: 1.2rem;
   font-weight: 600;
 }

@@ -26,6 +26,8 @@ const Numpad = ({ input, setInput }) => {
                 minWidth: 40,
                 minHeight: 32,
                 border: "1px solid ",
+                backgroundColor: "white",
+                opacity: "80%",
               }}
               size="small"
               key={number}
@@ -45,6 +47,8 @@ const Numpad = ({ input, setInput }) => {
                 minWidth: 40,
                 minHeight: 32,
                 border: "1px solid ",
+                backgroundColor: "white",
+                opacity: "80%",
               }}
               size="small"
               key={number}
@@ -64,6 +68,8 @@ const Numpad = ({ input, setInput }) => {
                 minWidth: 40,
                 minHeight: 32,
                 border: "1px solid ",
+                backgroundColor: "white",
+                opacity: "80%",
               }}
               size="small"
               key={number}
@@ -82,6 +88,8 @@ const Numpad = ({ input, setInput }) => {
               minWidth: 40,
               minHeight: 32,
               border: "1px solid ",
+              backgroundColor: "white",
+              opacity: "80%",
             }}
             size="small"
             onClick={() => setInput(Number(String(input).slice(0, -1)))}
@@ -96,6 +104,8 @@ const Numpad = ({ input, setInput }) => {
               minWidth: 40,
               minHeight: 32,
               border: "1px solid ",
+              backgroundColor: "white",
+              opacity: "80%",
             }}
             size="small"
             onClick={() => handleButtonClick(0)}
@@ -110,6 +120,8 @@ const Numpad = ({ input, setInput }) => {
               minWidth: 40,
               minHeight: 32,
               border: "1px solid ",
+              backgroundColor: "white",
+              opacity: "80%",
             }}
             size="small"
             onClick={() =>

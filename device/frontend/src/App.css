@@ -48,11 +48,19 @@
 }
 
 .custom-tabs {
-  margin: 20px;
+  padding-left: 20px;
+  padding-top: 20px;
+  padding-bottom: 0;
+  position: fixed;
+  width: 1024px;
+  height: 80px;
+  background-color: white;
+  z-index: 1;
 }
 
 .custom-tabs a {
-  margin: 2px;
+  /* position: fixed; */
+  margin: 4px;
   padding: 18px;
   height: 20px;
   padding-left: 34px;
@@ -60,8 +68,8 @@
   border-radius: 20px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  border: 2px solid #535353;
-  background-color: rgb(231, 231, 231);
+  border: 6px solid #376f94;
+  background-color: #7ca9c7;
   color: black;
   border-bottom: none;
   list-style-type: none;

@@ -47,7 +47,11 @@ export default function GroupComponent() {
             {timerArrayList.map((_, idx) => {
               console.log(timerArrayList);
               return (
-                <Link key={idx} to={`/${idx}`}>
+                <Link
+                  sx={{ left: `${(idx + 1) * 20 + 6}` }}
+                  key={idx}
+                  to={`/${idx}`}
+                >
                   <li>{`Group ${idx + 1}`}</li>
                 </Link>
               );
