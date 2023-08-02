@@ -1,6 +1,5 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route, Link, RouterProvider } from 'react-router-dom';
 
 import GroupComponent from "./components/basicTimer/groupComponent";
 

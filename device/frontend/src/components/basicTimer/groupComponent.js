@@ -1,15 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import TimerContainer from "./basicContainer";
 
+// mui
+import { Tabs } from "@mui/material";
 
 export default function GroupComponent() {
-
   const [timerArrayList, setTimerArrayList] = useState([]);
 
   useEffect(() => {
     console.log("group constructor");
+
+    fetch('http://localhost:3000/hello.txt')
+      .then(response => response.text())
+      .then(data => {
+        console.log(data); // This will log the file's content to the console
+      })
+      .catch(error => {
+        console.error('Error fetching the file:', error);
+      });
+
 
     return () => {
       console.log("group destructor");
@@ -17,7 +28,7 @@ export default function GroupComponent() {
   }, []);
 
   function add() {
-
+    if (timerArrayList.length > 5) return;
     const newArray = {
       id: Date.now(), // 그룹 아이디
       timerList: new Array(0),
@@ -30,35 +41,37 @@ export default function GroupComponent() {
     });
   }
 
-  function remove() {
-
-  }
+  function remove() { }
 
   return (
     <>
       <button onClick={() => add()}> create group </button>
-      {
-        timerArrayList.map((_, idx) => {
+      <Tabs className="custom-tabs">
+        {timerArrayList.map((_, idx) => {
           console.log(timerArrayList);
           return (
-            <Link key={idx} to={`/${idx}`}><li>{`${idx} 번`}</li></Link>
+            <Link key={idx} to={`/${idx}`}>
+              <li>{`Group ${idx}`}</li>
+            </Link>
           );
-        })
-      }
+        })}
+      </Tabs>
       <Routes>
-        {
-          timerArrayList.map((obj, idx) => {
-            return (
-              <Route key={obj.id}
-                path={`/${idx}`}
-                element={<TimerContainer
+        {timerArrayList.map((obj, idx) => {
+          return (
+            <Route
+              key={obj.id}
+              path={`/${idx}`}
+              element={
+                <TimerContainer
                   key={obj.id}
                   id={obj.id}
                   timerList={obj.timerList}
-                ></TimerContainer>}></Route>
-            );
-          })
-        }
+                ></TimerContainer>
+              }
+            ></Route>
+          );
+        })}
       </Routes>
     </>
   );
