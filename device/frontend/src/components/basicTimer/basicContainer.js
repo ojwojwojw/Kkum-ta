@@ -32,7 +32,7 @@ export default function TimerContainer({ timerList, id }) {
     };
     // console.log(newWatch);
     setDummy((prev) => {
-      timerList.splice(idx, 0, newWatch);
+      timerList.splice(timerList.length, 0, newWatch);
       return prev + 1;
     });
     return newWatch.id;
@@ -119,6 +119,27 @@ export default function TimerContainer({ timerList, id }) {
               />
             );
           })}
+          {timerList.length < 10 && (
+            <Button
+              variant="contained"
+              className="btn-create-timer"
+              sx={{
+                width: "775px",
+                ml: 3.8,
+                mb: 2,
+                border: "8px solid #376f94",
+                borderRadius: 4,
+                bgcolor: "#376f94",
+                fontSize: 30,
+                pb: 0,
+              }}
+              onClick={() =>
+                createBasicWatch((input.type = "timer"), input.current)
+              }
+            >
+              +
+            </Button>
+          )}
         </Grid>
         <Grid item xs={4}>
           <Stack
@@ -136,7 +157,7 @@ export default function TimerContainer({ timerList, id }) {
               <Grid item>
                 <TransitionsModal type={"create"} />
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Button
                   variant="outlined"
                   onClick={() =>
@@ -145,7 +166,7 @@ export default function TimerContainer({ timerList, id }) {
                 >
                   타이머 생성
                 </Button>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 {/* <Button
                   variant="outlined"

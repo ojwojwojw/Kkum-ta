@@ -12,15 +12,6 @@ export default function GroupComponent() {
   useEffect(() => {
     console.log("group constructor");
 
-    fetch("http://localhost:3000/hello.txt")
-      .then((response) => response.text())
-      .then((data) => {
-        console.log(data); // This will log the file's content to the console
-      })
-      .catch((error) => {
-        console.error("Error fetching the file:", error);
-      });
-
     return () => {
       console.log("group destructor");
     };
@@ -43,7 +34,6 @@ export default function GroupComponent() {
   for (let i = 0; i < 5; i++) {
     add();
   }
-  function remove() {}
 
   return (
     <Box>
@@ -57,11 +47,7 @@ export default function GroupComponent() {
             {timerArrayList.map((_, idx) => {
               console.log(timerArrayList);
               return (
-                <Link
-                  sx={{ left: `${(idx + 1) * 20 + 6}` }}
-                  key={idx}
-                  to={`/${idx}`}
-                >
+                <Link key={idx} to={`/${idx}`}>
                   <li>{`Group ${idx + 1}`}</li>
                 </Link>
               );

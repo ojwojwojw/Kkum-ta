@@ -7,6 +7,10 @@ import Button from "@mui/material/Button";
 import Numpad from "./numpad";
 import { Grid } from "@mui/material";
 
+// swiper
+import Swiper from "swiper";
+import { Navigation, Pagination } from "swiper/modules";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -86,6 +90,13 @@ export default function TransitionsModal(type) {
                 </Grid>
                 <Grid item xs={3}>
                   <Button>Create Timer</Button>
+                  <div className="swiper">
+                    <div className="swiper-wrapper">
+                      <div className="swiper-slide">1</div>
+                      <div className="swiper-slide">2</div>
+                      <div className="swiper-slide">3</div>
+                    </div>
+                  </div>
                 </Grid>
               </Grid>
             </Box>
