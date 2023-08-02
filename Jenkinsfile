@@ -22,7 +22,10 @@ pipeline {
         }
         stage('Build React App Image') {
             steps {
-                sh "docker build -t ${docker_repo}:front-server-0.1 ."
+                sh '''
+                cd ./device/frontend/
+                docker build -t ${docker_repo}:front-server-0.1 .
+                '''
             }
         }
     }
