@@ -18,22 +18,46 @@ pipeline {
                 '''
             }
         }
-        stage('Build React App Image') {
+        stage('Build Node Server') {
             steps {
                 sh '''
-                cd ./device/frontend/
-                docker build -t ${docker_repo}:front-server-0.1 .
+                    cd ../device/backend/
+                    npm install
                 '''
             }
         }
-        stage('Release React App Image') {
+        stage('Build React App Image') {
             steps {
                 sh '''
-                docker stop front-app
-                docker rm front-app
-                docker run -d -p 3000:3000 --name front-app ${docker_repo}:front-server-0.1
+                    cd ./device/frontend/
+                    docker build -t ${docker_repo}:front-server-0.1 .
+                '''
+            }
+        }
+        stage('Build Node Server Image') {
+            steps {
+                sh '''
+                    cd ./device/backend/
+                    docker build -t ${docker_repo}:back-server-0.1 .
+                '''
+            }
+        }
+        stage('Deploy React App Image') {
+            steps {
+                sh '''
+                    docker stop front-app
+                    docker start front-app
+                '''
+            }
+        }
+        stage('Deploy Node Server Image') {
+            steps {
+                sh '''
+                    docker stop back-server
+                    docker start back-server
 
-                yes | docker image prune -a
+                    yes | docker image prune -a
+
                 '''
             }
         }
