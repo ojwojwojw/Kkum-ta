@@ -8,15 +8,15 @@ export const timerSlice = createSlice({
   name: 'timer',
   initialState,
   reducers: {
+    fetchData: (state, action) =>{
+      state.timerArray = action.payload;
+    },
     create: (state ,action) => {
       state.timerArray.push(action.payload);
     },
     deleteTimer: (state, action) => {
       state.timerArray = state.timerArray.filter((item , index) => item.id !== action.payload)
     },
-    fetchData: (state, action) =>{
-      state.timerArray = action.payload;
-    }
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 // mui
 import Box from "@mui/material/Box";
@@ -44,7 +44,6 @@ export default function BasicTimerComponent({
   timer,
   idx,
   type,
-  removeTimer,
   WatchId,
   initTime,
   load,
@@ -86,22 +85,18 @@ export default function BasicTimerComponent({
 
   function toggle() {
     isRunning ? timer.pause() : timer.start();
-    isRunning ? logPuase() : logStart(); // api 요청으로 백엔드에 시작/중지 로그 남기기
-    
-
+    isRunning ? logPause() : logStart(); // api 요청으로 백엔드에 시작/중지 로그 남기기
   }
 
-  function remove() {
-    removeTimer(WatchId);
-  }
+  // function remove() {
+  //   removeTimer(WatchId);
+  // }
 
   function resetInitTime(initTime, study, maxIter) {
     timer.reset(initTime * 1000, study, maxIter);
     updateTimer(initTime * 1000)//최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop()//api 요청으로 백엔드에 리셋 기록 남기기
-    
   }
-
 
   //api 요청 관련
   const deleteWatch = async() =>{
@@ -122,19 +117,19 @@ export default function BasicTimerComponent({
       const timerId = WatchId
       const data = {operation : "start"}
       const res = await axios.post(`timer/operation/${timerId}`,data)
-      console.log("log start data on backend.")
+      console.log("log start data on backend." , res.data)
     }
     catch(err){
       console.log(err)
     }
   }
 
-  const logPuase = async() => {
+  const logPause = async() => {
     try{
       const timerId = WatchId
       const data = {operation : "pause"}
       const res = await axios.post(`timer/operation/${timerId}`,data)
-      console.log("log pause data on backend.")
+      console.log("log pause data on backend." , res.data)
     }
     catch(err){
       console.log(err)
@@ -146,7 +141,7 @@ export default function BasicTimerComponent({
       const timerId = WatchId
       const data = {operation : "stop"}
       const res = await axios.post(`timer/operation/${timerId}`,data)
-      console.log("log stop(reset) data on backend.")
+      console.log("log stop(reset) data on backend." , res.data)
     }
     catch(err){
       console.log(err)
@@ -158,14 +153,12 @@ export default function BasicTimerComponent({
       const timer_id = WatchId
       const data = {initTime : [newInput]}
       const res = await axios.put(`timer/${timer_id}`,data)
-      console.log("update initTiime data in backend")
+      console.log("update initTiime data in backend" , res.data)
     }
     catch(err){
       console.log(err)
     }
   }
-
-
 
   return (
     <StyledTimerContainer
