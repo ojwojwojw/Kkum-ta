@@ -14,6 +14,8 @@ import styled from "@emotion/styled";
 import { Button, IconButton } from "@mui/material";
 import Numpad from "./numpad";
 import axios from "axios";
+import { deleteTimer } from "../../redux/timerSlice";
+import { useDispatch } from "react-redux";
 
 // function useConstructor(callBack = () => {}) {
 //   const flag = useRef(false);
@@ -51,7 +53,7 @@ export default function BasicTimerComponent({
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
   const [progress, setProgress] = useState(timer.getProgress());
   const [input, setInput] = useState(0);
- 
+  const dispatch = useDispatch()
 
   // 현재 공부중인지를 검사하는 변수
   const [isStudy, setIsStudy] = useState(0);
@@ -102,13 +104,13 @@ export default function BasicTimerComponent({
 
 
   //api 요청 관련
-  const deleteTimer = async() =>{
+  const deleteWatch = async() =>{
     try{
       const timerId = WatchId
       console.log(timerId)
       const res = await axios.delete(`timer/${timerId}`);
       console.log('res',res.data)
-      load()
+      dispatch(deleteTimer(timerId))
     }
     catch (error){
       console.log(error)
@@ -160,18 +162,6 @@ export default function BasicTimerComponent({
     }
     catch(err){
       console.log(err)
-    }
-  }
-
-  const createTimer = async() => {
-    try{
-      const data = {type : "timer" , initTime : [0] , maxIter : 1}
-      const res = await axios.post("timer/",data);
-      console.log('res',res.data)
-      await load()
-    }
-    catch (error){
-      console.log(error)
     }
   }
 
@@ -233,7 +223,7 @@ export default function BasicTimerComponent({
             variant="text"
             color="error"
             size="large"
-            onClick={deleteTimer} //remove는 프런트단에서만 삭제됨
+            onClick={deleteWatch} //remove는 프런트단에서만 삭제됨
           >
             <CloseIcon />
           </IconButton>

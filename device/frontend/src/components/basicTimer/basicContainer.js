@@ -5,14 +5,18 @@ import BasicStopwatch from "../../utility/basic_stopwatch";
 import BasicTimerComponent from "./basicComponent";
 import TransitionsModal from "./CreateModal";
 import axios from "axios";
-
 import "./basicContainer.css";
+import { useDispatch , useSelector } from "react-redux";
+import { create, fetchData } from "../../redux/timerSlice";
 
 import { Grid, Box, Stack, Button } from "@mui/material";
 
 export default function TimerContainer({ timerList, id }) {
   const [_, setDummy] = useState(0); // 랜더링 강제로 일으키기 위해 사용
   const input = useRef(0);
+
+  const dispatch = useDispatch()
+  const storeTimerArray = useSelector((state) => state.timer.timerArray)
 
   useEffect(() => {
     console.log("timer container constructor");
@@ -96,11 +100,10 @@ export default function TimerContainer({ timerList, id }) {
         console.log(`${idx} : ${item}`);
         const timer = new BasicTimer();
         timer.load(item);
-        timerList.push({ "kkk": Date.now(), "id": item.id, "type": item.type, "timer": timer });
-        
+        dispatch(create({ "id": item.id, "type": item.type, "timer": timer }));
       });
-      console.log('res:',res.data)
-      console.log('timerArr:',timerList)
+      // console.log('res:',res.data)
+      // console.log('timerArr:',timerList)
 
       setDummy((prev) =>prev + 1); //강제 랜더링
       
@@ -113,8 +116,8 @@ export default function TimerContainer({ timerList, id }) {
     try{
       const data = {type : "timer" , initTime : [0] , maxIter : 1}
       const res = await axios.post("timer/",data);
-      console.log('res',res.data)
-      await load()
+      const timer = new BasicTimer();
+      dispatch(create({"id": res.data.id, "type": "timer", "timer": timer }))
     }
     catch (error){
       console.log(error)
@@ -125,7 +128,7 @@ export default function TimerContainer({ timerList, id }) {
     <Box sx={{ flexGrow: 1 }}>
       <Grid container justifyContent={"space-between"}>
         <Grid item xs={6}>
-          {timerList.map((obj, idx) => {
+          {storeTimerArray.map((obj, idx) => {
             console.log(`timer ${idx}`);
             return (
               <BasicTimerComponent
