@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import BasicTimer from "../../utility/basic_timer";
 import BasicStopwatch from "../../utility/basic_stopwatch";
 import BasicTimerComponent from "./basicComponent";
-import TransitionsModal from "./CreateModal";
+import TransitionsModal from "./transitionsModal";
 import axios from "axios";
 
 import "./basicContainer.css";
@@ -102,9 +102,9 @@ export default function TimerContainer({ timerList, id }) {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container justifyContent={"space-between"}>
-        <Grid item xs={6}>
+    <Box className="time-container" sx={{ flexGrow: 1 }}>
+      <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
+        <Grid item xs={8}>
           {timerList.map((obj, idx) => {
             console.log(`timer ${idx}`);
             return (
@@ -120,20 +120,21 @@ export default function TimerContainer({ timerList, id }) {
             );
           })}
         </Grid>
-        <Grid item xs={2}>
-          <Grid
+        <Grid item xs={4}>
+          <Stack
+            container
+            top={"80px"}
             width={"140px"}
-            height={"540px"}
+            height={"480px"}
             position={"fixed"}
             className="btn-controller"
-            container
             direction={"column"}
             justifyContent={"space-between"}
             alignItems={"center"}
           >
             <Stack xs={8}>
               <Grid item>
-                <TransitionsModal createWatch={createBasicWatch} />
+                <TransitionsModal type={"create"} />
               </Grid>
               <Grid item>
                 <Button
@@ -145,19 +146,19 @@ export default function TimerContainer({ timerList, id }) {
                   타이머 생성
                 </Button>
               </Grid>
-              {/* <Grid item>
-                <Button
+              <Grid item>
+                {/* <Button
                   variant="outlined"
                   onClick={() =>
                     createBasicWatch((input.type = "stopWatch"), input.current)
                   }
                 >
                   스톱워치 생성
-                </Button>
-              </Grid> */}
+                </Button> */}
+              </Grid>
             </Stack>
 
-            <Stack xs={1}>
+            <Stack xs={2}>
               <Button variant="outlined" onClick={() => load()}>
                 불러오기
               </Button>
@@ -165,24 +166,36 @@ export default function TimerContainer({ timerList, id }) {
                 저장하기
               </Button>
             </Stack>
-            <Stack xs={3}>
+            <Stack xs={2}>
               <Grid item>
-                <Button variant="outlined" onClick={() => allStart()}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={() => allStart()}
+                >
                   전체 시작
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant="outlined" onClick={() => allPause()}>
+                <Button
+                  variant="contained"
+                  color="warning"
+                  onClick={() => allPause()}
+                >
                   전체 정지
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant="outlined" onClick={() => allReset()}>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => allReset()}
+                >
                   전체 초기화
                 </Button>
               </Grid>
             </Stack>
-          </Grid>
+          </Stack>
         </Grid>
       </Grid>
     </Box>

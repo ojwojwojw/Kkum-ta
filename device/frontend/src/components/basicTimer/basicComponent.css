@@ -1,21 +1,22 @@
 .watch {
   display: flex;
-  width: 800px;
-  height: 140px;
+  left: 20px;
+  width: 760px;
+  height: 170px;
   margin: 10px;
   border-radius: 20px;
 }
 
 .timer {
-  border: 4px solid #0435ab;
+  border: 8px solid #376f94;
 }
 
 .stopWatch {
-  border: 4px solid #fd5c5c;
+  border: 8px solid #fd5c5c;
 }
 
 .time {
-  font-size: 4rem;
+  font-size: 5rem;
 }
 
 .micro {
@@ -28,12 +29,28 @@
   height: 80px;
   width: 80px;
   border: 8px solid;
-  box-shadow: 0px 0px 10px gray;
+  box-shadow: 2px 2px 3px gray;
   border-radius: 50%;
   text-align: center;
   background-color: white;
 }
 
-.timerButton Button:hover {
+.btn.start {
+  color: #49a740;
+}
+
+.btn.pause {
+  color: #c46f3f;
+}
+
+.btn.reset {
+  color: #fd5c5c;
+}
+
+.btn.set {
+  color: gray;
+}
+
+.timerButton Button:active {
   background-color: rgb(212, 212, 212);
 }
