@@ -11,8 +11,8 @@ pipeline {
     stages {
         stage('Build React App') {
             steps {
-                sh "ls -al"
                 sh "cd ./device/frontend"
+                sh "ls -al"
                 sh "npm run build"
             }
         }
