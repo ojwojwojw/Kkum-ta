@@ -14,4 +14,6 @@ COPY . .
 
 EXPOSE 8085
 
+#hi!
+
 CMD ["npm", "start"]
