@@ -12,6 +12,16 @@ export default function GroupComponent() {
   useEffect(() => {
     console.log("group constructor");
 
+    fetch('http://localhost:3000/hello.txt')
+      .then(response => response.text())
+      .then(data => {
+        console.log(data); // This will log the file's content to the console
+      })
+      .catch(error => {
+        console.error('Error fetching the file:', error);
+      });
+
+
     return () => {
       console.log("group destructor");
     };
@@ -31,10 +41,9 @@ export default function GroupComponent() {
     });
   }
 
+
   function remove() {}
   
-  
-
 
   return (
     <>

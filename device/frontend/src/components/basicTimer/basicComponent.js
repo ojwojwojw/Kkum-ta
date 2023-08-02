@@ -15,12 +15,12 @@ import { Button, IconButton } from "@mui/material";
 import Numpad from "./numpad";
 import axios from "axios";
 
-function useConstructor(callBack = () => {}) {
-  const flag = useRef(false);
-  if (flag.current) return;
-  callBack();
-  flag.current = true;
-}
+// function useConstructor(callBack = () => {}) {
+//   const flag = useRef(false);
+//   if (flag.current) return;
+//   callBack();
+//   flag.current = true;
+// }
 
 const StyledTimerContainer = styled(Box)`
   position: relative;
@@ -61,15 +61,22 @@ export default function BasicTimerComponent({
     }
   }, [WatchId]);
 
-  useConstructor(() => {
+  // useConstructor(() => {
+  //   timer.setRemainTime = setRemainTime;
+  //   timer.setIsRunning = setIsRunning;
+  //   timer.setProgress = setProgress;
+  //   console.log("basic timer componenet constructor");
+  // });
+
+  useEffect(() => {
     timer.setRemainTime = setRemainTime;
     timer.setIsRunning = setIsRunning;
     timer.setProgress = setProgress;
     console.log("basic timer componenet constructor");
-  });
-
-  useEffect(() => {
     return () => {
+      timer.setRemainTime = null;
+      timer.setIsRunning = null;
+      timer.setProgress = null;
       console.log("basic timer componenet destructor");
     };
   }, []);
