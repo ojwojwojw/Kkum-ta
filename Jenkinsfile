@@ -11,11 +11,9 @@ pipeline {
     stages {
         stage('Build React App') {
             steps {
-                dirs('./device/frontend')
-                {
-                    sh "pwd"
-                    sh "npm run build ."
-                }
+                sh "cd ./device/frontend/",
+                sh "pwd",
+                sh "npm run build ./device/frontend/"
             }
         }
         stage('Build React App Image') {
