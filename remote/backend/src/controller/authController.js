@@ -1,65 +1,77 @@
-const express = require('express');
-const axios = require('axios');
-const loginService = require('../service/loginService');
+const express = require("express");
+const passport = require("passport");
+const loginService = require("../service/signupService");
 const loginApp = new loginService();
-const session = require('../service/sessionService');
+const { isLoggedIn, isNotLoggedIn } = require("../service/loginService");
 
 const authRouter = express.Router();
 
-authRouter.use(session);
-
-authRouter.get('/', (req, res)=>{
-	res.status(200).send("GET userRouter /");
+authRouter.get("/", (req, res) => {
+  res.status(200).send("GET userRouter /");
 });
 
-authRouter.post('/', (req, res)=>{
-	res.status(200).send("POST userRouter /");
+authRouter.post("/", (req, res) => {
+  res.status(200).send("POST userRouter /");
 });
 
-authRouter.get('/check', async(req, res)=>{
-	if(req.session.user_id)
-		return res.status(200).json({id: req.session.user_id});
-	else
-		return res.status(200).json({id: null, message: "Please sign in first!"});
+authRouter.get("/check", async (req, res) => {
+  if (req.session.user_id)
+    return res.status(200).json({ id: req.session.user_id });
+  else
+    return res.status(200).json({ id: null, message: "Please sign in first!" });
 });
 
-authRouter.post('/login', async (req, res)=>{
-	if(req.session.user_id){
-		return res.status(200).json({message: `Already Signed In: ${req.session.user_id}`});
-	}
-	const id = req.body.id;
-	const pw = req.body.password;
-	console.log(id, pw);
-	if(!id || !pw){
-		return res.status(400).json({message: 'Invalid requests'});
-	}
-	const loginResult = await loginApp.signin(id, pw);
-	if(loginResult.result){
-		req.session.user_id = id;
-		return res.status(200).json({message: 'OK'});
-	}
-	else{
-		return res.status(401).json({message: loginResult.message});
-	}
+authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
+  passport.authenticate("local", (authError, user, info) => {
+    if (authError) {
+      console.error(authError);
+      return next(authError);
+    }
+    if (!user) {
+      res.status(500);
+      return res.send(info.message);
+    }
+    return req.login(user, (loginError) => {
+      if (loginError) {
+        console.error(loginError);
+        return next(loginError);
+      }
+      return res.redirect("/test/login");
+    });
+  })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
 
-authRouter.post('/signup', async (req, res)=>{
-	const id = req.body.id;
-	const pw = req.body.password;
-	const serial = req.body.serial;
-	const email = req.body.email;
-	if(!id || !pw || !email || !serial){
-		return res.status(400).json({message: 'Invaild requests'});
-	}
-	const signUpResult = await loginApp.signup(id, pw, serial, email);
-	return res.status(200).json(signUpResult);
+authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
+  const id = req.body.id;
+  const pw = req.body.password;
+  const email = req.body.email;
+  if (!id || !pw || !email) {
+    return res.status(400).json({ message: "Invaild requests" });
+  }
+  const signUpResult = await loginApp.signup_local(id, pw, email, "local");
+  return res.status(200).json(signUpResult);
 });
 
-authRouter.post('/signout', async(req, res)=>{
-	req.session.destroy((err)=>{
-		if(err) throw err;
-		res.status(200).json({message: "OK"});
-	})
-})
+authRouter.get("/kakao", passport.authenticate("kakao"));
+
+authRouter.get(
+  "/kakao/callback",
+  passport.authenticate("kakao", {
+    failureRedirect: "/", // kakaoStrategy에서 실패한다면 실행
+  }),
+  // kakaoStrategy에서 성공한다면 콜백 실행
+  (req, res) => {
+    res.redirect("/test/login");
+  }
+);
+
+authRouter.post("/signout", isLoggedIn, async (req, res) => {
+  req.logout((err) => {
+    if (err) throw err;
+    req.session.destroy();
+    res.clearCookie("connect.sid");
+    res.redirect("/test/signout");
+  });
+});
 
 module.exports = authRouter;
