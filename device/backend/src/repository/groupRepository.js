@@ -15,7 +15,7 @@ class GroupRepository extends Repository{
         ENGINE=InnoDB;`
         const params = [];
         await this.query(sql, params);
-        await this.query("INSERT IGNORE INTO group_tbl(group_key) VALUES(0)", []);
+        await this.query("INSERT IGNORE INTO group_tbl(group_key) VALUES(0), (1), (2), (3), (4)", []);
     }
     createGroup(name=null){
         if(name === null){
