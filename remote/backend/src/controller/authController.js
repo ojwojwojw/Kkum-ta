@@ -52,7 +52,11 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
   return res.status(200).json(signUpResult);
 });
 
-authRouter.get("/kakao", isNotLoggedIn, passport.authenticate("kakao"));
+authRouter.get(
+  "/kakao",
+  isNotLoggedIn,
+  passport.authenticate("kakao", { prompt: "select_account" })
+);
 
 authRouter.get(
   "/kakao/callback",
@@ -68,7 +72,10 @@ authRouter.get(
 authRouter.get(
   "/google",
   isNotLoggedIn,
-  passport.authenticate("google", { scope: ["profile"] })
+  passport.authenticate("google", {
+    scope: ["profile"],
+    prompt: "select_account",
+  })
 );
 
 authRouter.get(
