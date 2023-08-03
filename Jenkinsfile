@@ -56,8 +56,6 @@ pipeline {
                     docker stop back-server
                     docker start back-server
 
-                    yes | docker image prune -a
-
                 '''
             }
         }
