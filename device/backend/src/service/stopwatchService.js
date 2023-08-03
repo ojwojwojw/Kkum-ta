@@ -1,7 +1,8 @@
 class StopwatchService {
-  constructor(initTime) {
-    this.id = Date.now();
+  constructor(initTime, group_id=0) {
+    this.id = 0;
     this.initTime = initTime;
+    this.group_id= group_id;
     this.curTime = initTime;
     this.isRunning = false;
     this.lastLogTime = Date.now();

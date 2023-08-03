@@ -28,6 +28,11 @@ class ComponentRepository extends Repository{
         const params = [id];
         return this.query(sql, parmas);
     }
+    async getByGroup(group_id){
+        const sql = "SELECT * FROM component_tbl WHERE group_key=?";
+        const params= [group_id];
+        return this.query(sql, params);
+    }
     async getAll(){
         const sql = "SELECT * FROM component_tbl";
         return this.query(sql, []);
