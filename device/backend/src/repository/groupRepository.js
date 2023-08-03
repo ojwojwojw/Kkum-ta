@@ -3,12 +3,11 @@ const Repository = require('./repository');
 class GroupRepository extends Repository{
     constructor(){
         super();
-        this.init();
     }
     async init(){
         const sql =`
         CREATE TABLE IF NOT EXISTS group_tbl (
-            group_key INT(11) NOT NULL DEFAULT '0',
+            group_key INT(11) NOT NULL,
             name VARCHAR(50) NULL DEFAULT '기본' COLLATE 'utf8mb4_general_ci',
             PRIMARY KEY (group_key) USING BTREE
         )
@@ -16,11 +15,11 @@ class GroupRepository extends Repository{
         ENGINE=InnoDB;`
         const params = [];
         await this.query(sql, params);
-        await this.query("INSERT IGNORE INTO group_tbl VALUES()", []);
+        await this.query("INSERT IGNORE INTO group_tbl(group_key) VALUES(0)", []);
     }
     createGroup(name=null){
         if(name === null){
-            const sql = `INSERT INTO group_tbl VALUES();`
+            const sql = `INSERT IGNORE INTO group_tbl VALUES();`
             const params = [];
             return this.query(sql, params);
         }
