@@ -1,5 +1,5 @@
-const TimerService = require("./timerComponentService");
-const StopwatchService = require("./stopwatchComponentService");
+const TimerService = require("./timerService");
+const StopwatchService = require("./stopwatchService");
 class ModuleService {
   constructor() {
     this.array = [];
