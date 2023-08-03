@@ -110,11 +110,14 @@ export default function BasicTimerComponent({
       console.log(timerId)
       const res = await axios.delete(`timer/${timerId}`);
       console.log('res',res.data)
-      dispatch(deleteTimer(timerId))
-      dispatch(forceRendering())
+      
+      // dispatch(forceRendering())
     }
     catch (error){
+      const timerId = WatchId
+      dispatch(deleteTimer(timerId))
       console.log(error)
+      console.log(WatchId)
     }
   }
 
