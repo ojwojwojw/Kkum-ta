@@ -39,7 +39,7 @@ export default function TimerContainer({ timerList, id }) {
   }
 
   function remove(id) {
-    if (timerList.length == 0) return;
+    if (timerList.length === 0) return;
     let deleteIdx = 0;
     timerList.forEach((obj, idx) => {
       if (obj.id === id) {
