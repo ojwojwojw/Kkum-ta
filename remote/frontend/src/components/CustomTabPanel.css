@@ -1,0 +1,11 @@
+.header {
+  background-color: aquamarine;
+}
+
+button .MuiTab-root .Mui-selected {
+  color: black;
+}
+
+.Mui-selected {
+  background-color: rgb(212, 212, 212);
+}
