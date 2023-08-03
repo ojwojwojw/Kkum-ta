@@ -97,7 +97,7 @@ export default function TimerContainer({ timerList, id }) {
         
         const timer = new BasicTimer();
         timer.load(item);
-        tempTimerList.push({ "id": item.id, "type": item.type, "timer": timer });
+        tempTimerList.push({"id": item.id, "type": item.type, "timer": timer });
         return null
       });   
       console.log(tempTimerList)
@@ -167,7 +167,7 @@ export default function TimerContainer({ timerList, id }) {
             console.log(`timer ${idx}`);
             return (
               <BasicTimerComponent
-                key={obj.kkk}
+                key={obj.id}
                 timer={obj.timer}
                 idx={idx}
                 type={obj.type}
