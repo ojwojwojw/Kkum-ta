@@ -8,7 +8,8 @@ class GroupRepository extends Repository{
         const sql =`
         CREATE TABLE IF NOT EXISTS group_tbl (
             group_key INT(11) NOT NULL,
-            name VARCHAR(50) NULL DEFAULT '기본' COLLATE 'utf8mb4_general_ci',
+            name VARCHAR(50) NULL DEFAULT "default" COLLATE 'utf8mb4_general_ci',
+            last_update TIMESTAMP NULL DEFAULT current_timestamp(),
             PRIMARY KEY (group_key) USING BTREE
         )
         COLLATE='utf8mb4_general_ci'
