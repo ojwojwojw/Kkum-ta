@@ -1,4 +1,4 @@
-const Repository = require('./repository');
+const Repository = require('./Repository');
 
 class GroupRepository extends Repository{
     constructor(){
