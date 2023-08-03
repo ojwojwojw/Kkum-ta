@@ -45,6 +45,7 @@ class ComponentRepository extends Repository{
         return this.query(sql, params);
     }
     async setInitTime(id, init_time){
+        init_time = JSON.stringify(init_time);
         const sql = `UPDATE component_tbl SET init_time=? WHERE component_key=?`;
         const params = [init_time, id];
         return this.query(sql, params);
@@ -61,7 +62,7 @@ class ComponentRepository extends Repository{
     }
     async set(id, group_key, component_type, init_time, cur_time, max_iter){
         const sql = `UPDATE component_tbl SET group_key=?, component_type=?, init_time=?, cur_time=?, max_iter=? WHERE component_key=?`
-        const params = [group_key, component_type, init_time, cur_time, max_iter, id];
+        const params = [group_key, component_type, JSON.stringify(init_time), cur_time, max_iter, id];
         return this.query(sql, params);
     }
     async deleteById(id){

@@ -22,7 +22,7 @@ moduleRouter.get("/:id", async (req, res) => {
 });
 
 moduleRouter.delete("/:id", async (req, res) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
   const result = moduleService.deleteById(id);
   if(result.ok)
     return res.status(400).json({ status: "ok" });
@@ -32,10 +32,10 @@ moduleRouter.delete("/:id", async (req, res) => {
 });
 
 moduleRouter.put("/:id", async (req, res)=>{
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
   const initTime = req.body.initTime;
   const result = await moduleService.putInitTime(id, initTime);
-  if(result){
+  if(result.ok){
     return res.status(200).json({status:"ok"});
   }
   else{
