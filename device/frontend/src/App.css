@@ -10,7 +10,7 @@
 @font-face {
   font-family: "Nanum Gothic";
 
-  src: url("./static/fonts/NanumGothic.ttf") format("truetype");
+  src: url("./static/fonts/NanumGothic.ttf") format("font-truetype");
 
   font-weight: 600;
   font-style: normal;
@@ -47,7 +47,7 @@
   }
 }
 
-.custom-tabs {
+/* .custom-tabs {
   padding-left: 20px;
   padding-top: 20px;
   padding-bottom: 0;
@@ -59,7 +59,6 @@
 }
 
 .custom-tabs a {
-  /* position: fixed; */
   margin: 4px;
   padding: 18px;
   height: 20px;
@@ -70,7 +69,6 @@
   border-bottom-right-radius: 0;
   border: 6px solid #376f94;
   background-color: #7ca9c7;
-  color: black;
   border-bottom: none;
   list-style-type: none;
   text-decoration: none;
@@ -81,5 +79,4 @@
   margin-top: 0;
   height: 24px;
   background-color: #ffffff;
-  color: black;
-}
+} */

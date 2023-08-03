@@ -1,35 +1,62 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import TimerContainer from "./basicContainer";
 
 // mui
-import { Box, Grid, Tabs } from "@mui/material";
+import { Box, Grid, Tabs, Tab } from "@mui/material";
+import PropTypes from "prop-types";
+
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box>{children}</Box>}
+    </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 export default function GroupComponent() {
   const [timerArrayList, setTimerArrayList] = useState([]);
 
+  const [value, setValue] = useState(0);
+
+  const handelChange = (e, newValue) => {
+    setValue(newValue);
+  };
+
   useEffect(() => {
     console.log("group constructor");
-
-    fetch("http://localhost:3000/hello.txt")
-      .then((response) => response.text())
-      .then((data) => {
-        console.log(data); // This will log the file's content to the console
-      })
-      .catch((error) => {
-        console.error("Error fetching the file:", error);
-      });
 
     return () => {
       console.log("group destructor");
     };
   }, []);
 
-  function add() {
+  function add(idx) {
     if (timerArrayList.length > 4) return;
     const newArray = {
-      id: Date.now(), // 그룹 아이디
+      id: Date.now() + idx, // 그룹 아이디
       timerList: new Array(0),
     };
 
@@ -41,51 +68,31 @@ export default function GroupComponent() {
   }
 
   for (let i = 0; i < 5; i++) {
-    add();
+    add(i);
   }
-  function remove() {}
+
+  console.log(timerArrayList);
 
   return (
     <Box>
       <Grid container>
         <Grid item xs={12}>
-          {/* <Button variant="outlined" size="large" onClick={() => add()}>
-            create group
-          </Button> */}
-
-          <Tabs className="custom-tabs">
-            {timerArrayList.map((_, idx) => {
-              console.log(timerArrayList);
-              return (
-                <Link
-                  sx={{ left: `${(idx + 1) * 20 + 6}` }}
-                  key={idx}
-                  to={`/${idx}`}
-                >
-                  <li>{`Group ${idx + 1}`}</li>
-                </Link>
-              );
-            })}
+          <Tabs value={value} onChange={handelChange} aria-label="Group tabs">
+            {timerArrayList.map((_, idx) => (
+              <Tab key={idx} label={`Group ${idx + 1}`} {...a11yProps(idx)} />
+            ))}
           </Tabs>
         </Grid>
         <Grid item xs={12}>
-          <Routes>
-            {timerArrayList.map((obj, idx) => {
-              return (
-                <Route
-                  key={obj.id}
-                  path={`/${idx}`}
-                  element={
-                    <TimerContainer
-                      key={obj.id}
-                      id={obj.id}
-                      timerList={obj.timerList}
-                    ></TimerContainer>
-                  }
-                ></Route>
-              );
-            })}
-          </Routes>
+          {timerArrayList.map((obj, idx) => (
+            <CustomTabPanel key={obj.id} value={value} index={idx}>
+              <TimerContainer
+                key={obj.id}
+                id={obj.id}
+                timerList={obj.timerList}
+              ></TimerContainer>
+            </CustomTabPanel>
+          ))}
         </Grid>
       </Grid>
     </Box>
