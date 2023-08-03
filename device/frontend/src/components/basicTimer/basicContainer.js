@@ -23,22 +23,22 @@ export default function TimerContainer({ timerList, id }) {
   }, []);
 
  
-  // 타이머 스톱워치 생성 함수 리팩토링(중복 제거 후 타입으로 구분)
-  function createBasicWatch(type, idx) {
-    if (timerList.length >= 10) return;
+  // // 타이머 스톱워치 생성 함수 리팩토링(중복 제거 후 타입으로 구분)
+  // function createBasicWatch(type, idx) {
+  //   if (timerList.length >= 10) return;
 
-    const newWatch = {
-      id: Date.now(),
-      type: type,
-      timer: type === "timer" ? new BasicTimer() : new BasicStopwatch(),
-    };
-    // console.log(newWatch);
-    setDummy((prev) => {
-      timerList.splice(timerList.length, 0, newWatch);
-      return prev + 1;
-    });
-    return newWatch.id;
-  }
+  //   const newWatch = {
+  //     id: Date.now(),
+  //     type: type,
+  //     timer: type === "timer" ? new BasicTimer() : new BasicStopwatch(),
+  //   };
+  //   // console.log(newWatch);
+  //   setDummy((prev) => {
+  //     timerList.splice(timerList.length, 0, newWatch);
+  //     return prev + 1;
+  //   });
+  //   return newWatch.id;
+  // }
 
   function remove(id) {
     if (timerList.length === 0) return;
@@ -49,11 +49,11 @@ export default function TimerContainer({ timerList, id }) {
       }
     });
 
-    setDummy((prev) => {
-      timerList[deleteIdx].timer.pause(); // clearInterval 을 위해 반드시 호출 !!
-      timerList.splice(deleteIdx, 1);
-      return prev + 1;
-    });
+  //   setDummy((prev) => {
+  //     timerList[deleteIdx].timer.pause(); // clearInterval 을 위해 반드시 호출 !!
+  //     timerList.splice(deleteIdx, 1);
+  //     return prev + 1;
+  //   });
   }
 
   
@@ -100,6 +100,7 @@ export default function TimerContainer({ timerList, id }) {
         tempTimerList.push({ "id": item.id, "type": item.type, "timer": timer });
         return null
       });   
+      console.log(tempTimerList)
       dispatch(fetchData(tempTimerList))
       dispatch(forceRendering())
     } catch (error) {
@@ -113,6 +114,7 @@ export default function TimerContainer({ timerList, id }) {
     try{
       const data = {type : "timer" , initTime : [0] , maxIter : 1}
       const res = await axios.post("timer/",data);
+      console.log(res.data)
       const timer = new BasicTimer();
       dispatch(create({"id": res.data.id, "type": "timer", "timer": timer }))
       dispatch(forceRendering())
@@ -161,7 +163,7 @@ export default function TimerContainer({ timerList, id }) {
     <Box className="time-container" sx={{ flexGrow: 1 }}>
       <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
         <Grid item xs={8}>
-          {timerList.map((obj, idx) => {
+          {storeTimerArray.map((obj, idx) => {
             console.log(`timer ${idx}`);
             return (
               <BasicTimerComponent
@@ -189,9 +191,7 @@ export default function TimerContainer({ timerList, id }) {
                 fontSize: 30,
                 pb: 0,
               }}
-              onClick={() =>
-                createBasicWatch((input.type = "timer"), input.current)
-              }
+              onClick={createTimer}
             >
               +
             </Button>

@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
-import "./static/fonts/font.css";
 import { Provider } from "react-redux";
 import { Mystore } from "./redux/store";
 
