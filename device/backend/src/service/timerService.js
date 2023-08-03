@@ -1,6 +1,7 @@
 class TimerComponentService{
     constructor(initTime, maxIter){
         //initTime: array of Integers
+        this.id = 0;
         this.initTime = initTime;
         this.initTimeIndex = 0;
         this.isRunning = false;
@@ -19,8 +20,9 @@ class TimerComponentService{
         this.isRunning = false;
     }
     update(){
-        const ellapsedMilliseconds = Date.now() - this.lastLogTime;
-        this.lastLogTime = Date.now();
+        const now = Date.now();
+        const ellapsedMilliseconds = now - this.lastLogTime;
+        this.lastLogTime = now;
         if(!this.isRunning) return;
         this.curTimerTime += ellapsedMilliseconds;
         while(this.curTimerTime >= this.initTime[this.initTimeIndex]){
