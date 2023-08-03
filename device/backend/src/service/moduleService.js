@@ -1,91 +1,85 @@
-const TimerService = require("./timerComponentService");
-const StopwatchService = require("./stopwatchComponentService");
+const TimerService = require("./timerService");
+const StopwatchService = require("./stopwatchService");
 class ModuleService {
-  constructor() {
-    this.keyMap = {};
-    this.array = [];
-    this.valid = [];
+  constructor(componentRepository, timerRepository, stopwatchRepository) {
+    this.componentRepository = componentRepository;
+    this.timerRepository = timerRepository;
+    this.stopwatchRepository = stopwatchRepository;
+    this.array = new Map(); //Object와 비슷하지만 순서를 유지
   }
-  createTimer(initTimes, maxIter) {
+  async init(){
+    const [rows] = await this.componentRepository.getAll();
+    rows.forEach((item)=>{
+      item.init_time = JSON.parse(item.init_time);
+      let service;
+      switch(item.component_type){
+        case 'stopwatch':
+          service = new StopwatchService(item.init_time);
+          service.id = item.component_key;
+          this.array.set(item.component_key, service);
+          break;
+        case 'timer':
+          service = new TimerService(item.init_time, item.max_iter);
+          service.id = item.component_key;
+          this.array.set(item.component_key, service);
+          break;
+        default:
+          throw `Unexpected type found in DB: ${item.component_type}`;
+      }
+    })
+  }
+  async createTimer(initTimes, maxIter) {
     if(maxIter === undefined) maxIter = 1;
+    const promise = this.timerRepository.create(initTimes, maxIter);
     const timerService = new TimerService(initTimes, maxIter);
-    this.keyMap[timerService.id] = this.array.length;
-    //timerService.id = this.array.length;
-    this.array.push(timerService);
-    this.valid.push(true);
+    timerService.id = await promise;
+    this.array.set(timerService.id, timerService);
     return timerService.id;
   }
-  createStopwatch(initTime) {
+  async createStopwatch(initTime) {
+    const promise = this.stopwatchRepository.create(initTime);
     const stopwatchService = new StopwatchService(initTime);
-    this.keyMap[timerService.id] = this.array.length;
-    //stopwatchService.id = this.array.length;
-    this.array.push(stopwatchService);
-    this.valid.push(true);
+    stopwatchService.id = await promise;
+    this.array.set(stopwatchService.id, stopwatchService);
     return stopwatchService.id;
   }
   getAll(){
-    return this.array.filter((item, index)=>this.valid[index]).map(item=>item.json());
+    return [...this.array.values()].map(item=>item.json());
   }
   getById(id) {
-    id = this.keyMap[id];
-    console.log("getById",id);
-    if(id < 0 || id >= this.array.length || this.valid[id] === false){
-        return null;
-    }
-    return this.array[id].json();
+    if(!this.array.has(id)) return null;
+    return this.array.get(id).json();
   }
   start(id){
-    id = this.keyMap[id];
-    console.log("start",id);
-    if(id < 0 || id >= this.array.length || this.valid[id] === false){
-        return false;
-    }
-    this.array[id].start();
-    return true;
+    if(!this.array.has(id)) return {ok:false, message:`Cannot find item with id=${id}`};
+    this.array.get(id).start();
+    return {ok:true, message:"ok"};
   }
   pause(id){
-    id = this.keyMap[id];
-    console.log("pause",id);
-    if(id < 0 || id >= this.array.length || this.valid[id] === false){
-        return false;
-    }
-    this.array[id].pause();
-    return true;
+    if(!this.array.has(id)) return {ok:false, message:`Cannot find item with id=${id}`};
+    this.array.get(id).pause();
+    return {ok:true, message:"ok"};
   }
   stop(id){
-    id = this.keyMap[id];
-    console.log("stop",id);
-    if(id < 0 || id >= this.array.length || this.valid[id] === false){
-        return false;
-    }
-    this.array[id].stop();
-    return true;
+    if(!this.array.has(id)) return {ok:false, message:`Cannot find item with id=${id}`};
+    this.array.get(id).stop();
+    return {ok:true, message:"ok"};
   }
   tag(id){
-    id = this.keyMap[id];
-    console.log("tag",id);
-    if(id < 0 || id >= this.array.length || this.valid[id] === false){
-        return false;
-    }
-    this.array[id].tag();
-    return true;
+    if(!this.array.has(id)) return {ok:false, message:`Cannot find item with id=${id}`};
+    this.array.get(id).tag();
+    return {ok:true, message:"ok"};
   }
   deleteById(id){
-    id = this.keyMap[id];
-    console.log("delete",id);
-    if(this.id < 0 || this.id >= this.array.length || this.valid[id] === false){
-        return false;
-    }
-    this.valid[id] = false;
-    return true;
+    if(!this.array.has(id)) return {ok:false, message:`Cannot find item with id=${id}`};
+    this.array.delete(id);
+    return {ok:true, message:"ok"};
   }
-  putInitTime(id, initTime){
-    console.log("initTime",id);
-    id = this.keyMap[id];
-    if(this.id < 0 || this.id >= this.array.length || this.valid[id] === false){
-        return false;
-    }
-    return this.array[id].setInitTime(initTime);
+  async putInitTime(id, initTime){
+    if(!this.array.has(id)) return {ok:false, message:`Cannot find item with id=${id}`};
+    await this.componentRepository.setInitTime(id, initTime);
+    await this.array.get(id).setInitTime(initTime);
+    return {ok:true, message:"ok"}
   }
 }
 module.exports = ModuleService;

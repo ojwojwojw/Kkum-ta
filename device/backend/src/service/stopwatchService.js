@@ -2,7 +2,7 @@ class StopwatchService {
   constructor(initTime) {
     this.id = Date.now();
     this.initTime = initTime;
-    this.curTime = initTime; //외부 반출은 X. 왜...?
+    this.curTime = initTime;
     this.isRunning = false;
     this.lastLogTime = Date.now();
   }
@@ -13,10 +13,11 @@ class StopwatchService {
   }
   pause() {
     if (!this.isRunning) return;
-    const ellapsedMilliseconds = Date.now() - this.lastLogTime;
+    const now = Date.now()
+    const ellapsedMilliseconds = now - this.lastLogTime;
+    this.lastLogTime = now;
     this.curTime += ellapsedMilliseconds;
     this.isRunning = false;
-    this.lastLogTime = Date.now();
   }
   tag() {
     return { next: null };
@@ -27,13 +28,14 @@ class StopwatchService {
     this.lastLogTime = Date.now();
   }
   json() {
-    const ellapsedMilliseconds = Date.now() - this.lastLogTime;
+    const now = Date.now();
+    const ellapsedMilliseconds = now - this.lastLogTime;
     this.curTime += ellapsedMilliseconds;
-    this.lastLogTime = Date.now();
+    this.lastLogTime = now;
     return {
       id: this.id,
       type: "stopwatch",
-      initTime: this.initTime,
+      initTime: this.curTime,
       limitTime: 360000 * 1000 - 1,
       isRunning: this.isRunning,
     };
