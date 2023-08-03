@@ -3,53 +3,54 @@ const options = require("../config/connection.js");
 const SQLError = require("../dto/SQLError.js");
 
 class Repository {
-  constructor() {
-    this.pool = mysql.createPool(options);
-    this.conn = null;
-  }
-  async closeDB() {
-    await this.pool.end();
-    this.pool = null;
-    this.conn = null;
-  }
+    constructor() {
+        this.pool = mysql.createPool(options);
+        this.conn = null;
+    }
+    async closeDB() {
+        await this.pool.end();
+        this.pool = null;
+        this.conn = null;
+    }
 
-  async query(sql, params) {
-    let conn, result;
-    try {
-      conn = this.conn ? this.conn : await this.pool.getConnection();
-      result = await conn.execute(sql, params);
-    } catch(e){
-      throw new SQLError("sql:" + sql+ ", params: "+ params + " : "+e.sqlMessage);
-    } finally {
-      if (!this.conn && conn) {
-        await conn.release();
-      }
+    async query(sql, params) {
+        let conn, result;
+        try {
+            conn = this.conn ? this.conn : await this.pool.getConnection();
+            result = await conn.execute(sql, params);
+        } catch (e) {
+            throw new SQLError(
+                "sql:" + sql + ", params: " + params + " : " + e.sqlMessage
+            );
+        } finally {
+            if (!this.conn && conn) {
+                await conn.release();
+            }
+        }
     }
-    return result;
-  }
-  async beginTransaction() {
-    if (this.conn) {
-      throw new Error("Transaction already begun");
+    async beginTransaction() {
+        if (this.conn) {
+            throw new Error("Transaction already begun");
+        }
+        this.conn = await this.pool.getConnection();
+        this.conn.beginTransaction();
     }
-    this.conn = await this.pool.getConnection();
-    await this.conn.beginTransaction();
-  }
-  async rollback() {
-    if (!this.conn) {
-      throw new Error("No transaction were running");
+    async rollback() {
+        if (!this.conn) {
+            throw new Error("No transaction were running");
+        }
+        await this.conn.rollback();
+        await this.conn.release();
+        this.conn = null;
     }
-    await this.conn.rollback();
-    await this.conn.release();
-    this.conn = null;
-  }
-  async commit() {
-    if (!this.conn) {
-      throw new Error("No transaction were running");
+    async commit() {
+        if (!this.conn) {
+            throw new Error("No transaction were running");
+        }
+        await this.conn.commit();
+        await this.conn.release();
+        this.conn = null;
     }
-    await this.conn.commit();
-    await this.conn.release();
-    this.conn = null;
-  }
 }
 
 module.exports = Repository;
