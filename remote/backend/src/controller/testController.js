@@ -4,7 +4,6 @@ const { isLoggedIn, isNotLoggedIn } = require("../service/loginService");
 const testRouter = express.Router();
 
 testRouter.get("/login", isLoggedIn, (req, res) => {
-  console.log(req);
   res.status(200).send("login");
 });
 

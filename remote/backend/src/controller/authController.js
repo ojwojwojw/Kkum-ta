@@ -21,7 +21,7 @@ authRouter.get("/check", async (req, res) => {
     return res.status(200).json({ id: null, message: "Please sign in first!" });
 });
 
-authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
+authRouter.get("/signin", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (authError, user, info) => {
     if (authError) {
       console.error(authError);
@@ -52,7 +52,7 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
   return res.status(200).json(signUpResult);
 });
 
-authRouter.get("/kakao", passport.authenticate("kakao"));
+authRouter.get("/kakao", isNotLoggedIn, passport.authenticate("kakao"));
 
 authRouter.get(
   "/kakao/callback",
@@ -65,7 +65,24 @@ authRouter.get(
   }
 );
 
-authRouter.post("/signout", isLoggedIn, async (req, res) => {
+authRouter.get(
+  "/google",
+  isNotLoggedIn,
+  passport.authenticate("google", { scope: ["profile"] })
+);
+
+authRouter.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/", // googleStrategy에서 실패한다면 실행
+  }),
+  // googleStrategy에서 성공한다면 콜백 실행
+  (req, res) => {
+    res.redirect("/test/login");
+  }
+);
+
+authRouter.get("/signout", isLoggedIn, async (req, res) => {
   req.logout((err) => {
     if (err) throw err;
     req.session.destroy();
