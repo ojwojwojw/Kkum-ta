@@ -9,7 +9,13 @@ let moduleService;
 })();
 
 moduleRouter.get("/", async (req, res) => {
-  return res.status(200).json(moduleService.getAll());
+  const group_id = req.query.group_id;
+  if(group_id){
+    return res.status(200).json(moduleService.getByGroup(parseInt(group_id)));
+  }
+  else{
+    return res.status(200).json(moduleService.getAll());
+  }
 });
 
 moduleRouter.get("/:id", async (req, res) => {
@@ -25,7 +31,7 @@ moduleRouter.delete("/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const result = moduleService.deleteById(id);
   if(result.ok)
-    return res.status(400).json({ status: "ok" });
+    return res.status(200).json({ status: "ok" });
   else{
     return res.status(404).json({status:"not found"});
   }
@@ -44,16 +50,17 @@ moduleRouter.put("/:id", async (req, res)=>{
 });
 
 moduleRouter.post("/", async (req, res) => {
+  const group_id = req.query.group_id;
   const type = req.body.type;
   const initTime = req.body.initTime;
   const maxIter = req.body.maxIter;
   let id;
   switch (type) {
     case "timer":
-      id = await moduleService.createTimer(initTime, maxIter);
+      id = await moduleService.createTimer(initTime, maxIter, parseInt(group_id));
       return res.status(200).json({ status: "ok", id: id });
     case "stopwatch":
-      id = await moduleService.createStopwatch(initTime);
+      id = await moduleService.createStopwatch(initTime, parseInt(group_id));
       return res.status(200).json({ status: "ok", id: id });
     default:
       return res.status(200).status(404).json({ status: "not found" });
