@@ -136,4 +136,29 @@ export default class BasicTimer {
   getProgress() {
     return 1 - this.#remainTime / this.#initTime[this.#initTimeIndex];
   }
+  // #counter 변수에 접근할 수 있는 public 메서드
+  getCounter() {
+    return this.#counter;
+  }
+  // #targetTime 변수에 접근할 수 있는 public 메서드
+  getTargetTime() {
+    return this.#targetTime;
+  }
+  // #initTime 변수에 접근할 수 있는 public 메서드
+  getInitTime() {
+    return this.#initTime;
+  }
+  // #initTimeIndex 변수에 접근할 수 있는 public 메서드
+  getInitTimeIndex() {
+    return this.#initTimeIndex;
+  }
+  // #maxIter 변수에 접근할 수 있는 public 메서드
+  getMaxIter() {
+    return this.#maxIter;
+  }
+  // #curIter 변수에 접근할 수 있는 public 메서드
+  getCurIter() {
+    return this.#curIter;
+  }
+
 }

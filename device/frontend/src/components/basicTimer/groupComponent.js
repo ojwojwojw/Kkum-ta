@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
-
+import React, { useEffect, useRef, useState } from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { forceRendering } from "../../redux/timerSlice";
+import { useDispatch } from "react-redux";
 import TimerContainer from "./basicContainer";
 
 // mui
@@ -38,6 +39,7 @@ function a11yProps(index) {
 
 export default function GroupComponent() {
   const [timerArrayList, setTimerArrayList] = useState([]);
+  const dispatch = useDispatch();
 
   const [value, setValue] = useState(0);
 
@@ -65,6 +67,8 @@ export default function GroupComponent() {
       newList.push(newArray);
       return newList;
     });
+    
+    dispatch(forceRendering())
   }
 
   for (let i = 0; i < 5; i++) {
