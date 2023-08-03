@@ -1,9 +1,11 @@
 .time-container {
   position: relative;
-  top: 110px;
-  left: 4px;
-  width: 780px;
-  height: 485px;
+  padding-top: 0;
+  top: 100px;
+  left: 0px;
+  width: 770px;
+  height: 470px;
+  /* border: 6px solid; */
 }
 
 .btn-controller {
@@ -22,4 +24,8 @@
   margin: 3px;
   font-size: 1.2rem;
   font-weight: 600;
+}
+
+.img-bomb {
+  background-image: url("/public/nyan-cat.gif");
 }

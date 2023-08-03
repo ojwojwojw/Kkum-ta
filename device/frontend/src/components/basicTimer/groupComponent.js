@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { forceRendering } from "../../redux/timerSlice";
 import { useDispatch } from "react-redux";
 import TimerContainer from "./basicContainer";
@@ -67,8 +66,8 @@ export default function GroupComponent() {
       newList.push(newArray);
       return newList;
     });
-    
-    dispatch(forceRendering())
+
+    dispatch(forceRendering());
   }
 
   for (let i = 0; i < 5; i++) {
@@ -81,7 +80,12 @@ export default function GroupComponent() {
     <Box>
       <Grid container>
         <Grid item xs={12}>
-          <Tabs value={value} onChange={handelChange} aria-label="Group tabs">
+          <Tabs
+            value={value}
+            onChange={handelChange}
+            aria-label="Group tabs"
+            // indicatorColor="none"
+          >
             {timerArrayList.map((_, idx) => (
               <Tab key={idx} label={`Group ${idx + 1}`} {...a11yProps(idx)} />
             ))}
