@@ -1,5 +1,6 @@
 const mysql = require("mysql2/promise");
 const options = require("../config/connection.js");
+const SQLError = require("../dto/SQLError.js");
 
 class Repository {
     constructor() {
@@ -17,14 +18,15 @@ class Repository {
         try {
             conn = this.conn ? this.conn : await this.pool.getConnection();
             result = await conn.execute(sql, params);
-        } catch (err) {
-          console.log('Error Occured: ', err);
+        } catch (e) {
+            throw new SQLError(
+                "sql:" + sql + ", params: " + params + " : " + e.sqlMessage
+            );
         } finally {
-            if (!this.conn) {
-                conn.release();
+            if (!this.conn && conn) {
+                await conn.release();
             }
         }
-        return result;
     }
     async beginTransaction() {
         if (this.conn) {

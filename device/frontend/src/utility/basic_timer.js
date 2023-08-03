@@ -32,7 +32,7 @@ export default class BasicTimer {
       return;
     }
     // 반복 횟수가 남아 있는 경우
-    if (this.#maxIter == 0 || this.#curIter + 1 < this.#maxIter) {
+    if (this.#maxIter === 0 || this.#curIter + 1 < this.#maxIter) {
       this.#remainTime = this.#initTime[(this.#initTimeIndex = 0)];
       if (this.#maxIter > 0) this.#curIter++;
       this.#targetTime = new Date().getTime() + this.#remainTime;
@@ -65,7 +65,7 @@ export default class BasicTimer {
     this.#targetTime = new Date().getTime() + this.#remainTime; // 목표 시각 설정
     this.#startCounter(); // 이벤트 루프 시작
 
-    // state setter 
+    // state setter
     if (this.setIsRunning != null) this.setIsRunning(this.#isRunning);
     console.log(`start: ${this.#remainTime}`);
   }
@@ -75,7 +75,7 @@ export default class BasicTimer {
     clearInterval(this.#counter); // 이벤트 루프 정지
     this.#isRunning = false;
 
-    // state setter 
+    // state setter
     if (this.setIsRunning != null) this.setIsRunning(this.#isRunning);
     console.log(`pause: ${this.#remainTime}`);
   }
@@ -91,7 +91,7 @@ export default class BasicTimer {
     this.#curIter = 0;
     this.#initTimeIndex = 0;
 
-    // state setter 
+    // state setter
     if (this.setIsRunning != null) this.setIsRunning(this.#isRunning);
     if (this.setRemainTime != null) this.setRemainTime(this.#remainTime);
     if (this.setProgress != null) this.setProgress(this.getProgress());
@@ -107,7 +107,7 @@ export default class BasicTimer {
     this.#curIter = obj.curIter;
     this.#maxIter = obj.maxIter;
 
-    if(this.#isRunning === true) this.start();
+    if (this.#isRunning === true) this.start();
 
     // state setter
     if (this.setRemainTime != null) this.setRemainTime(this.#remainTime);
@@ -136,4 +136,29 @@ export default class BasicTimer {
   getProgress() {
     return 1 - this.#remainTime / this.#initTime[this.#initTimeIndex];
   }
+  // #counter 변수에 접근할 수 있는 public 메서드
+  getCounter() {
+    return this.#counter;
+  }
+  // #targetTime 변수에 접근할 수 있는 public 메서드
+  getTargetTime() {
+    return this.#targetTime;
+  }
+  // #initTime 변수에 접근할 수 있는 public 메서드
+  getInitTime() {
+    return this.#initTime;
+  }
+  // #initTimeIndex 변수에 접근할 수 있는 public 메서드
+  getInitTimeIndex() {
+    return this.#initTimeIndex;
+  }
+  // #maxIter 변수에 접근할 수 있는 public 메서드
+  getMaxIter() {
+    return this.#maxIter;
+  }
+  // #curIter 변수에 접근할 수 있는 public 메서드
+  getCurIter() {
+    return this.#curIter;
+  }
+
 }

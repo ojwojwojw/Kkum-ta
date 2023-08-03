@@ -14,7 +14,7 @@ const redisSession = session({
 	store: redisStore,
 	resave: false,
 	saveUninitialized: false,
-	secret: '8%wGdw2FuZ8*JT5+uN^)ZWra',
+	secret: process.env.SESSION_SECRETE,
 	cookie: {
 		path: '/',
 		httpOnly: true,
