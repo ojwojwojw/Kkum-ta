@@ -16,6 +16,7 @@ import Numpad from "./numpad";
 import axios from "axios";
 import { deleteTimer } from "../../redux/timerSlice";
 import { useDispatch } from "react-redux";
+import { forceRendering } from "../../redux/timerSlice";
 
 // function useConstructor(callBack = () => {}) {
 //   const flag = useRef(false);
@@ -86,6 +87,7 @@ export default function BasicTimerComponent({
   function toggle() {
     isRunning ? timer.pause() : timer.start();
     isRunning ? logPause() : logStart(); // api 요청으로 백엔드에 시작/중지 로그 남기기
+    dispatch(forceRendering())
   }
 
   // function remove() {
@@ -96,6 +98,7 @@ export default function BasicTimerComponent({
     timer.reset(initTime * 1000, study, maxIter);
     updateTimer(initTime * 1000)//최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop()//api 요청으로 백엔드에 리셋 기록 남기기
+    dispatch(forceRendering())
   }
 
   //api 요청 관련
@@ -106,6 +109,7 @@ export default function BasicTimerComponent({
       const res = await axios.delete(`timer/${timerId}`);
       console.log('res',res.data)
       dispatch(deleteTimer(timerId))
+      dispatch(forceRendering())
     }
     catch (error){
       console.log(error)
@@ -113,11 +117,17 @@ export default function BasicTimerComponent({
   }
 
   const logStart = async() => {
+    const startTime = Date.now();
+
+    // 비동기 요청 보내기
     try{
       const timerId = WatchId
       const data = {operation : "start"}
       const res = await axios.post(`timer/operation/${timerId}`,data)
       console.log("log start data on backend." , res.data)
+      const endTime = Date.now();
+      const requestDuration = endTime - startTime;
+      console.log("요청-응답 시간:", requestDuration, "밀리초");
     }
     catch(err){
       console.log(err)
@@ -125,11 +135,15 @@ export default function BasicTimerComponent({
   }
 
   const logPause = async() => {
+    // const startTime = Date.now();
     try{
       const timerId = WatchId
       const data = {operation : "pause"}
       const res = await axios.post(`timer/operation/${timerId}`,data)
       console.log("log pause data on backend." , res.data)
+      // const endTime = Date.now();
+      // const requestDuration = endTime - startTime;
+      // console.log("요청-응답 시간:", requestDuration, "밀리초");
     }
     catch(err){
       console.log(err)

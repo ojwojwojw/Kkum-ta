@@ -1,16 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect , useState} from "react";
 import BasicTimer from "../../utility/basic_timer";
 import BasicTimerComponent from "./basicComponent";
 import TransitionsModal from "./CreateModal";
 import axios from "axios";
 import "./basicContainer.css";
 import { useDispatch , useSelector } from "react-redux";
-import { create , fetchData } from "../../redux/timerSlice";
+import { create , fetchData ,forceRendering} from "../../redux/timerSlice";
 import { Grid, Box, Stack, Button } from "@mui/material";
+
+
+
 
 export default function TimerContainer({ timerList, id }) {
   const dispatch = useDispatch()
-  const storeTimerArray = useSelector((state) => state.timer.timerArray)
+  const storeTimerArray = useSelector((state) => state.timer.timerArray) //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
 
   useEffect(() => {
     console.log("timer container constructor");
@@ -19,6 +22,11 @@ export default function TimerContainer({ timerList, id }) {
     };
   }, []);
 
+  
+  
+ 
+
+  
   function save() {
     // time, init
     const arr = [];
@@ -52,22 +60,23 @@ export default function TimerContainer({ timerList, id }) {
   //타이머 전체 read
   const load = async () => {
     try {
-      const timerList = []
+      const tempTimerList = []
       const res = await axios.get("timer/");
       console.log("load");
       res.data.map((item, idx) => {
         
         const timer = new BasicTimer();
         timer.load(item);
-        timerList.push({ "id": item.id, "type": item.type, "timer": timer });
+        tempTimerList.push({ "id": item.id, "type": item.type, "timer": timer });
         return null
       });   
-      console.log(timerList)
-      dispatch(fetchData(timerList))
+      dispatch(fetchData(tempTimerList))
+      dispatch(forceRendering())
     } catch (error) {
       console.log("Error Occured During Fetch: ", error);
     }
   };
+  
 
   //타이머 Create
   const createTimer = async() => {
@@ -76,6 +85,7 @@ export default function TimerContainer({ timerList, id }) {
       const res = await axios.post("timer/",data);
       const timer = new BasicTimer();
       dispatch(create({"id": res.data.id, "type": "timer", "timer": timer }))
+      dispatch(forceRendering())
     }
     catch (error){
       console.log(error)

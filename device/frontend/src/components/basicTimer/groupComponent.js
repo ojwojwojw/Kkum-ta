@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-
+import { forceRendering } from "../../redux/timerSlice";
+import { useDispatch } from "react-redux";
 import TimerContainer from "./basicContainer";
 
 // mui
@@ -8,6 +9,7 @@ import { Tabs } from "@mui/material";
 
 export default function GroupComponent() {
   const [timerArrayList, setTimerArrayList] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("group constructor");
@@ -39,6 +41,8 @@ export default function GroupComponent() {
       newList.push(newArray);
       return newList;
     });
+    
+    dispatch(forceRendering())
   }
 
 

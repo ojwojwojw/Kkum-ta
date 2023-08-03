@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   timerArray : [],
+  Rendering : false,
 };
 
 export const timerSlice = createSlice({
@@ -17,10 +18,13 @@ export const timerSlice = createSlice({
     deleteTimer: (state, action) => {
       state.timerArray = state.timerArray.filter((item , index) => item.id !== action.payload)
     },
+    forceRendering : (state) =>{
+      state.Rendering = !state.Rendering
+    }
   },
 });
 
-export const {  create , fetchData ,deleteTimer,} = timerSlice.actions;
+export const {  create , fetchData ,deleteTimer, forceRendering} = timerSlice.actions;
 
 export const selectArray = (state) => state.timer.timerArray;
 
