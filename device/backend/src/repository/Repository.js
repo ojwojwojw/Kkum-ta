@@ -14,10 +14,10 @@ class Repository {
     }
 
     async query(sql, params) {
-        let conn, result;
+        let conn;
         try {
             conn = this.conn ? this.conn : await this.pool.getConnection();
-            result = await conn.execute(sql, params);
+            return conn.execute(sql, params);
         } catch (e) {
             throw new SQLError(
                 "sql:" + sql + ", params: " + params + " : " + e.sqlMessage
