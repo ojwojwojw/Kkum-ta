@@ -1,23 +1,19 @@
-const local = require('./localStrategy');
-const UserRepository = require('../repository/userRepository');
+const local = require("./localStrategy");
+const kakao = require("./kakaoStrategy");
 
 module.exports = (passport) => {
-    passport.serializeUser((user, done) => {
-        done(null, user);
-    });
+  passport.serializeUser((user, done) => {
+    done(null, user);
+  });
 
-    passport.deserializeUser((user, done) => {
-        try {
-            const userRepository = new UserRepository();
-            const userInfo = userRepository.getUserById(user.id);
-        
-            if(userInfo){
-                done(null, userInfo);
-            }
-        } catch (error) {
-            done(error);
-        }
-    })
+  passport.deserializeUser((user, done) => {
+    try {
+      done(null, user);
+    } catch (error) {
+      done(error);
+    }
+  });
 
-    local(passport);
-}
+  local();
+  kakao();
+};

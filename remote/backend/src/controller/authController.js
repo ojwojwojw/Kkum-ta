@@ -1,18 +1,10 @@
 const express = require("express");
 const passport = require("passport");
-const loginService = require("../service/loginService");
+const loginService = require("../service/signupService");
 const loginApp = new loginService();
-const session = require("../service/sessionService");
-const { isLoggedIn, isNotLoggedIn } = require("../service/loginCheckService");
+const { isLoggedIn, isNotLoggedIn } = require("../service/loginService");
 
 const authRouter = express.Router();
-const passportConfig = require("../passport/Passport");
-
-passportConfig(passport);
-
-authRouter.use(session);
-authRouter.use(passport.initialize());
-authRouter.use(passport.session());
 
 authRouter.get("/", (req, res) => {
   res.status(200).send("GET userRouter /");
@@ -29,27 +21,7 @@ authRouter.get("/check", async (req, res) => {
     return res.status(200).json({ id: null, message: "Please sign in first!" });
 });
 
-// authRouter.post('/login', isNotLoggedin, async (req, res)=>{
-// 	if(req.session.user_id){
-// 		return res.status(200).json({message: `Already Signed In: ${req.session.user_id}`});
-// 	}
-// 	const id = req.body.id;
-// 	const pw = req.body.password;
-// 	console.log(id, pw);
-// 	if(!id || !pw){
-// 		return res.status(400).json({message: 'Invalid requests'});
-// 	}
-// 	const loginResult = await loginApp.signin(id, pw);
-// 	if(loginResult.result){
-// 		req.session.user_id = id;
-// 		return res.status(200).json({message: 'OK'});
-// 	}
-// 	else{
-// 		return res.status(401).json({message: loginResult.message});
-// 	}
-// });
-
-authRouter.post("/login", isNotLoggedIn, (req, res, next) => {
+authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (authError, user, info) => {
     if (authError) {
       console.error(authError);
@@ -64,7 +36,7 @@ authRouter.post("/login", isNotLoggedIn, (req, res, next) => {
         console.error(loginError);
         return next(loginError);
       }
-      return res.redirect('/');
+      return res.redirect("/test/login");
     });
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
@@ -72,20 +44,33 @@ authRouter.post("/login", isNotLoggedIn, (req, res, next) => {
 authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
   const id = req.body.id;
   const pw = req.body.password;
-  const serial = req.body.serial;
   const email = req.body.email;
-  if (!id || !pw || !email || !serial) {
+  if (!id || !pw || !email) {
     return res.status(400).json({ message: "Invaild requests" });
   }
-  const signUpResult = await loginApp.signup(id, pw, serial, email);
+  const signUpResult = await loginApp.signup_local(id, pw, email, "local");
   return res.status(200).json(signUpResult);
 });
 
+authRouter.get("/kakao", passport.authenticate("kakao"));
+
+authRouter.get(
+  "/kakao/callback",
+  passport.authenticate("kakao", {
+    failureRedirect: "/", // kakaoStrategy에서 실패한다면 실행
+  }),
+  // kakaoStrategy에서 성공한다면 콜백 실행
+  (req, res) => {
+    res.redirect("/test/login");
+  }
+);
+
 authRouter.post("/signout", isLoggedIn, async (req, res) => {
-  req.logout((err)=>{
-  	if(err) throw err;
-  	req.session.destroy();
-  	res.redirect('/auth');
+  req.logout((err) => {
+    if (err) throw err;
+    req.session.destroy();
+    res.clearCookie("connect.sid");
+    res.redirect("/test/signout");
   });
 });
 
