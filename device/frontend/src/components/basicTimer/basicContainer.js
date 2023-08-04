@@ -14,7 +14,6 @@ import { Grid, Box, Stack, Button } from "@mui/material";
 export default function TimerContainer({ timerList, id }) {
   const dispatch = useDispatch()
   const storeTimerArray = useSelector((state) => state.timer.timerArray) //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
-  const [test, setTest] = useState(false);
 
   useEffect(() => {
     console.log("timer container constructor");
@@ -25,18 +24,35 @@ export default function TimerContainer({ timerList, id }) {
 
   useEffect(() => {
     console.log("timer container constructor");
-    // 3초 뒤에 load 함수 호출을 지연시킵니다.
+    // 0.1초 뒤에 load 함수 호출을 지연시킵니다.
     const timerId = setTimeout(() => {
       load();
-      setTest(true);
     }, 100);
   
     return () => {
       console.log("timer container destructor");
-      // 컴포넌트가 3초 전에 언마운트되었다면 타이머를 클리어합니다.
+      // 컴포넌트가 0.1초 전에 언마운트되었다면 타이머를 클리어합니다.
       clearTimeout(timerId);
     };
   }, []);
+
+
+  useEffect(() => {
+    console.log("timer container useEffect storeTimerArray");
+    forceAllStart();
+  }, [storeTimerArray]); // storeTimerArray가 변경될 때마다 forceAllStart 호출
+
+  // useEffect(()=>{
+  //   const groupRender = setTimeout(()=>{
+  //     forceAllStart();
+  //   },1000)
+
+  //   return () =>{
+  //     clearTimeout(groupRender)
+  //   }
+  // },[])
+
+  
 
  
   // // 타이머 스톱워치 생성 함수 리팩토링(중복 제거 후 타입으로 구분)
@@ -101,6 +117,19 @@ export default function TimerContainer({ timerList, id }) {
 
   }
 
+  //그룹이동 랜더링 관련
+  function forceAllStart() {
+    storeTimerArray.forEach((item) => {
+      if(item.isRunning === true){
+        console.log('조건문 안에 들어오나?')
+        item.timer.pause()
+        item.timer.start()
+      }
+    });
+
+    dispatch(forceRendering());
+  }
+
   //API 요청관련
 
   //타이머 전체 read
@@ -113,7 +142,7 @@ export default function TimerContainer({ timerList, id }) {
         
         const timer = new BasicTimer();
         timer.load(item);
-        tempTimerList.push({"id": item.id, "type": item.type, "timer": timer });
+        tempTimerList.push({"id": item.id, "type": item.type, isRunning : item.isRunning ,"timer": timer });
         return null
       });   
       console.log(tempTimerList)
@@ -132,7 +161,7 @@ export default function TimerContainer({ timerList, id }) {
       const res = await axios.post(`timer/?group_id=${id}`,data);
       console.log(res.data)
       const timer = new BasicTimer();
-      dispatch(create({"id": res.data.id, "type": "timer", "timer": timer }))
+      dispatch(create({"id": res.data.id, "type": "timer", isRunning: false ,"timer": timer }))
       dispatch(forceRendering())
     }
     catch (error){
@@ -183,7 +212,7 @@ export default function TimerContainer({ timerList, id }) {
       <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
         <Grid item xs={8}>
           {storeTimerArray.map((obj, idx) => {
-            console.log(`timer ${idx}`);
+            // console.log(`timer ${idx}`);
             return (
               <BasicTimerComponent
                 key={obj.id}
