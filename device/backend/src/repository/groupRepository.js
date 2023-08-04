@@ -9,13 +9,14 @@ class GroupRepository extends Repository{
         CREATE TABLE IF NOT EXISTS group_tbl (
             group_key INT(11) NOT NULL,
             name VARCHAR(50) NULL DEFAULT '기본' COLLATE 'utf8mb4_general_ci',
+            last_update TIMESTAMP NULL DEFAULT current_timestamp(),
             PRIMARY KEY (group_key) USING BTREE
         )
         COLLATE='utf8mb4_general_ci'
         ENGINE=InnoDB;`
         const params = [];
         await this.query(sql, params);
-        await this.query("INSERT IGNORE INTO group_tbl(group_key) VALUES(0)", []);
+        await this.query("INSERT IGNORE INTO group_tbl(group_key) VALUES(0), (1), (2), (3), (4)", []);
     }
     createGroup(name=null){
         if(name === null){
