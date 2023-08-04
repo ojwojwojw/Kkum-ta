@@ -26,6 +26,22 @@ class UserRepository extends Repository{
     return this.query(`SELECT * FROM user_tbl`, []);
   }
 
+  async getUserById(id) {
+    try {
+      const conn = await this.pool.getConnection();
+      const sql = "SELECT * FROM login_tbl WHERE id = ?";
+      const params = [id];
+      const [rows, fields] = await conn.execute(sql, params);
+      conn.release();
+      if (rows.length === 0) {
+        return null;
+      }
+      return rows[0];
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async getUserByIdAndProvider(id, provider) {
     const sql = "SELECT * FROM user_tbl WHERE id = ? AND provider = ?";
     const params = [id, provider];
@@ -65,6 +81,15 @@ class UserRepository extends Repository{
       const sql = "DELETE FROM user_tbl WHERE id = ?";
       const params = [id];
       return this.query(sql, params);
+  }
+
+  async findUserIdByEmail(userEmail) {
+    try {
+      const sql = "SELECT id FROM timer.login_tbl WHERE email = ?";
+      const params = [userEmail];
+    } catch(err) {
+      console.log(err);
+    }
   }
 }
 
