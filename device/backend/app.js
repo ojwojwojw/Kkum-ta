@@ -8,9 +8,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 const debug = (req, res, next)=>{
     console.log(req.method + " " + req.path + ", body:" + JSON.stringify(req.body) + ", query:" + JSON.stringify(req.query)+"\n");
+    const beginTime = Date.now();
     originalJSON = res.json;
     res.json = function(data) {
-        console.log(`\t${JSON.stringify(data)}\n`);
+        console.log(`\t${JSON.stringify(data)}`);
+        console.log(`ellapsed time: ${Date.now() - beginTime} ms`);
         originalJSON.call(this, data);
     }
     next();
