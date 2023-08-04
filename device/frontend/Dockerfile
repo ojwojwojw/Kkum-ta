@@ -14,6 +14,6 @@ COPY ./default.conf /etc/nginx/conf.d/
 
 COPY ./nginx.conf /etc/nginx/
 
-EXPOSE 443
+EXPOSE 3000
 
 CMD ["nginx", "-g", "daemon off;"]

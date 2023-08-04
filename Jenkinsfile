@@ -46,7 +46,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop front-app
-                    docker run -d --name front-app1 -p 443:443 --network=web-network --volumes-from front-app gugaro/kkumta:front-server-0.1
+                    docker run -d --name front-app1 -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-server-0.1
                     docker rm front-app
                     docker stop front-app1
                     docker rename front-app1 front-app
