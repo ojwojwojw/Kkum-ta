@@ -1,4 +1,5 @@
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 const LocalStrategy = require("passport-local").Strategy;
 const UserRepository = require("../repository/userRepository");
 const EncryptService = require("../service/encryptService");
@@ -9,7 +10,7 @@ module.exports = () => {
       {
         usernameField: "id",
         passwordField: "password",
-        session: false, // 세션에 저장 여부
+        session: true, // 세션에 저장 여부
         passReqToCallback: false,
       },
       async (id, password, done) => {
@@ -31,6 +32,11 @@ module.exports = () => {
             salt
           );
           if (hashedPW === challenge) {
+            const accessToken = jwt.sign(userInfo.id, process.enc.JWT_SECRET, {
+              expiresIn: "30m",
+              issuer: "local",
+              subject: "user_id",
+            });
             done(null, userInfo);
           } else {
             done(null, false, { message: "비밀번호가 일치하지 않습니다." });
