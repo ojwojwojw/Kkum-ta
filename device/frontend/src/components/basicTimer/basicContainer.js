@@ -14,11 +14,27 @@ import { Grid, Box, Stack, Button } from "@mui/material";
 export default function TimerContainer({ timerList, id }) {
   const dispatch = useDispatch()
   const storeTimerArray = useSelector((state) => state.timer.timerArray) //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
+  const [test, setTest] = useState(false);
 
   useEffect(() => {
     console.log("timer container constructor");
     return () => {
       console.log("timer container destructor");
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("timer container constructor");
+    // 3초 뒤에 load 함수 호출을 지연시킵니다.
+    const timerId = setTimeout(() => {
+      load();
+      setTest(true);
+    }, 100);
+  
+    return () => {
+      console.log("timer container destructor");
+      // 컴포넌트가 3초 전에 언마운트되었다면 타이머를 클리어합니다.
+      clearTimeout(timerId);
     };
   }, []);
 
@@ -91,13 +107,13 @@ export default function TimerContainer({ timerList, id }) {
   const load = async () => {
     try {
       const tempTimerList = []
-      const res = await axios.get("timer/");
+      const res = await axios.get(`timer/?group_id=${id}`);
       console.log("load");
       res.data.map((item, idx) => {
         
         const timer = new BasicTimer();
         timer.load(item);
-        tempTimerList.push({ "id": item.id, "type": item.type, "timer": timer });
+        tempTimerList.push({"id": item.id, "type": item.type, "timer": timer });
         return null
       });   
       console.log(tempTimerList)
@@ -113,7 +129,7 @@ export default function TimerContainer({ timerList, id }) {
   const createTimer = async() => {
     try{
       const data = {type : "timer" , initTime : [0] , maxIter : 1}
-      const res = await axios.post("timer/",data);
+      const res = await axios.post(`timer/?group_id=${id}`,data);
       console.log(res.data)
       const timer = new BasicTimer();
       dispatch(create({"id": res.data.id, "type": "timer", "timer": timer }))
@@ -131,6 +147,7 @@ export default function TimerContainer({ timerList, id }) {
       const data = {operation : "start"}
       const res = await axios.post(`timer/operation/${timerId}`,data)
       console.log("log start data on backend." , res.data)
+      dispatch(forceRendering())
     }
     catch(err){
       console.log(err)
@@ -142,6 +159,7 @@ export default function TimerContainer({ timerList, id }) {
       const data = {operation : "pause"}
       const res = await axios.post(`timer/operation/${timerId}`,data)
       console.log("log pause data on backend." , res.data)
+      dispatch(forceRendering())
     }
     catch(err){
       console.log(err)
@@ -153,6 +171,7 @@ export default function TimerContainer({ timerList, id }) {
       const data = {operation : "stop"}
       const res = await axios.post(`timer/operation/${timerId}`,data)
       console.log("log stop(reset) data on backend." , res.data)
+      dispatch(forceRendering())
     }
     catch(err){
       console.log(err)
@@ -167,7 +186,7 @@ export default function TimerContainer({ timerList, id }) {
             console.log(`timer ${idx}`);
             return (
               <BasicTimerComponent
-                key={obj.kkk}
+                key={obj.id}
                 timer={obj.timer}
                 idx={idx}
                 type={obj.type}
