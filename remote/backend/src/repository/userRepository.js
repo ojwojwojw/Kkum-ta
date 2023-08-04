@@ -28,6 +28,22 @@ class UserRepository {
     return query;
   }
 
+  async getUserById(id) {
+    try {
+      const conn = await this.pool.getConnection();
+      const sql = "SELECT * FROM login_tbl WHERE id = ?";
+      const params = [id];
+      const [rows, fields] = await conn.execute(sql, params);
+      conn.release();
+      if (rows.length === 0) {
+        return null;
+      }
+      return rows[0];
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async getUserByIdAndProvider(id, provider) {
     try {
       const conn = await this.pool.getConnection();
