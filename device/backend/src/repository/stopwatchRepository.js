@@ -8,7 +8,7 @@ class StopwatchRepository extends ComponentRepository{
         super.init();
     }
     async create(init_time, group_key=0){
-        super.insert(group_key, "stopwatch", init_time, init_time, 1);
+        return super.insert(group_key, "stopwatch", init_time, init_time, 1);
     }
 
 }

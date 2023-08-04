@@ -17,9 +17,8 @@ export const timerSlice = createSlice({
       state.timerArray.push(action.payload);
     },
     deleteTimer: (state, action) => {
-      const timerIdToDelete = action.payload
-      console.log('d',timerIdToDelete)
-      state.timerArray = state.timerArray.filter((item) => item.id !== timerIdToDelete)
+      state.timerArray = state.timerArray.filter((item) => item.id !== action.payload)
+      console.log('is changed?',state.timerArray)
     },
     forceRendering : (state) =>{
       state.Rendering = !state.Rendering
