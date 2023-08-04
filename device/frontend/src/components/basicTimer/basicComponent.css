@@ -54,3 +54,7 @@
 .timerButton Button:active {
   background-color: rgb(212, 212, 212);
 }
+
+.timerButton .MuiButtonBase-root:hover{
+  background-color: white;
+}
