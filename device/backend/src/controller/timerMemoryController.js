@@ -53,7 +53,7 @@ moduleRouter.put("/:id", async (req, res)=>{
   const result = await componentService.putInitTime(id, initTime);
   if(result.ok){
     res.status(200).json({status:"ok"});
-    await componentLogService.log(id, "stop");
+    await componentLogService.log(id, "fix");
     return;
   }
   else{
