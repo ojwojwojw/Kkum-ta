@@ -1,42 +1,98 @@
-const TimerRepository = require("../repository/timerRepository");
+class TimerComponentService{
+    constructor(initTime, maxIter, group_id=0){
+        //initTime: array of Integers
+        this.id = 0;
+        this.group_id=group_id;
+        this.initTime = initTime;
+        this.initTimeIndex = 0;
+        this.isRunning = false;
+        this.curIter = 0;
+        this.curTimerTime = 0;
+        this.maxIter = maxIter;
+        this.lastLogTime = Date.now();
+    }
 
-class TimerService{
-    constructor(){
-        this.timerRepo = new TimerRepository();
+    start(){
+        this.update();
+        this.isRunning = true;
     }
-    async getAllTimer(){
-        const [rows] = await this.timerRepo.findAll();
-        return rows;
+    pause(){
+        this.update();
+        this.isRunning = false;
     }
-    async getTimerById(id){
-        if(Object.is(parseInt(id), NaN)) return null;
-        const [timer] = await this.timerRepo.findTimerById(id);
-        if(timer.length == 0){
-            return null;
+    update(){
+        const now = Date.now();
+        const ellapsedMilliseconds = now - this.lastLogTime;
+        this.lastLogTime = now;
+        if(!this.isRunning) return;
+        this.curTimerTime += ellapsedMilliseconds;
+        while(this.curTimerTime >= this.initTime[this.initTimeIndex]){
+            this.curTimerTime -= this.initTime[this.initTimeIndex];
+            this.initTimeIndex++;
+            if(this.initTimeIndex >= this.initTime.length){
+                this.initTimeIndex = 0;
+                this.curIter++;
+            }
+            if(this.curIter >= this.maxIter){
+                this.initTimeIndex = this.initTime.length - 1;
+                this.curTimerTime = this.initTime[this.initTimeIndex];
+                this.curIter = this.maxIter;
+                this.isRunning = false;
+                break;
+            }
         }
-        return timer[0];
     }
-    async getTimerByName(name){
-        const [rows] = await this.timerRepo.findTimerByName(name);
-        return rows;
+    stop(){
+        this.isRunning = false;
+        this.initTimeIndex = 0;
+        this.curTimerTime = 0;
+        this.curIter = 0;
+        this.lastLogTime = Date.now();
     }
-    async createTimer(name, total_time){
-        if(Object.is(parseInt(total_time), NaN)){
-            return {status:"invalid parameter"};
+    tag(){
+        this.isRunning = true;
+        this.initTimeIndex++;
+        if(this.initTimeIndex >= this.initTime.length){
+            this.initTimeIndex = 0;
+            this.curIter++;
         }
-        const [rows] = await this.timerRepo.createTimer(total_time, name);
-        return {status:"ok", timer_id:rows.insertId};
-    }
-    async putTimer(id, name, total_time){
-        if(!id || !name || !total_time){
-            return {status:"invalid parameter"};
+        if(this.curIter >= this.maxIter){
+            this.reset();
+            return {next:null};
         }
-        await this.timerRepo.putTimer(id, name, total_time);
-        return {status:"ok"};
+        this.curTimerTime = 0;
+        this.lastLogTime = Date.now();
+        return {next:{initTime:this.initTime[this.initTimeIndex], isRunning:true}};
     }
-    async deleteTimer(id){
-        await this.timerRepo.deleteTimer(id);
-        return {status:"ok"};
+
+    json(){
+        this.update();
+        return {
+            id: this.id,
+            type: "timer",
+            initTime: this.initTime,
+            initTimeIndex: this.initTimeIndex,
+            remainTime: this.initTime[this.initTimeIndex] - this.curTimerTime,
+            isRunning: this.isRunning,
+            curIter: this.curIter,
+            maxIter: this.maxIter
+        }
+    }
+    setInitTime(initTime){
+        if(!initTime.length){
+            return false;
+        }
+        this.initTime = initTime;
+        this.initTimeIndex = 0;
+        this.isRunning = false;
+        this.curIter = 0;
+        this.curTimerTime = 0;
+        this.lastLogTime = Date.now();
+        return true;
+    }
+    get progress(){
+        return this.curTimerTime / this.initTime[this.initTimeIndex];
     }
 }
-module.exports = TimerService;
+
+module.exports = TimerComponentService;

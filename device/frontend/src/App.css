@@ -72,7 +72,15 @@
   border-bottom-left-radius: 0;
 }
 
-.MuiTabs-root .Mui-selected {
-  background-color: white;
-  /* border-bottom: none; */
+.custom-tabs a:hover {
+  margin-top: 0;
+  height: 24px;
+  background-color: #ffffff;
+} */
+
+.swiper {
+  height: 3rem;
+  font-size: 2.5rem;
+  width: 4rem;
+  text-align: center;
 }
