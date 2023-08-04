@@ -3,7 +3,8 @@ const ComponentRepository = require('./repository/componentRepository');
 const GroupRepository = require('./repository/groupRepository');
 const StopwatchRepository = require('./repository/stopwatchRepository');
 const TimerRepository = require('./repository/timerRepository');
-const ModuleService = require('./service/moduleService');
+const ComponentService = require('./service/componentService');
+const ComponentLogService = require('./service/componentLogService');
 
 class Global {
     static #componentRepository = null;
@@ -11,7 +12,8 @@ class Global {
     static #stopwatchRepository = null;
     static #timerRepository = null;
     static #componentLogRepository = null;
-    static #moduleService = null;
+    static #componentService = null;
+    static #componentLogService = null;
 
     static async getComponentRepository() {
         if (!Global.#componentRepository) {
@@ -52,12 +54,27 @@ class Global {
         return Global.#componentLogRepository;
     }
 
-    static async getModuleService() {
-        if(!Global.#moduleService){
-            Global.#moduleService = new ModuleService(await Global.getComponentRepository(), await Global.getTimerRepository(), await Global.getStopwatchRepository());
-            await Global.#moduleService.init();
+    static async getComponentService() {
+        if(!Global.#componentService){
+            Global.#componentService = new ComponentService(
+                await Global.getComponentRepository(),
+                await Global.getTimerRepository(),
+                await Global.getStopwatchRepository()
+            );
+            await Global.#componentService.init();
         }
-        return Global.#moduleService;
+        return Global.#componentService;
+    }
+    static async getComponentLogRepository(){
+        if(!Global.#componentLogRepository){
+            Global.#componentLogRepository = new ComponentLogRepository();
+            await Global.#componentLogRepository.init();
+        }
+        return Global.#componentLogRepository;
+    }
+
+    static async getComponentLogService(){
+        return Global.#componentLogService ??= new ComponentLogService(await Global.getComponentLogRepository());
     }
 }
 

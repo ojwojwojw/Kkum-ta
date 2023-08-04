@@ -1,6 +1,6 @@
 const TimerService = require("./timerService");
 const StopwatchService = require("./stopwatchService");
-class ModuleService {
+class ComponentService {
   constructor(componentRepository, timerRepository, stopwatchRepository) {
     this.componentRepository = componentRepository;
     this.timerRepository = timerRepository;
@@ -73,17 +73,17 @@ class ModuleService {
     this.array.get(id).tag();
     return {ok:true, message:"ok"};
   }
-  deleteById(id){
+  async deleteById(id){
     if(!this.array.has(id)) return {ok:false, message:`Cannot find item with id=${id}`};
     this.array.delete(id);
-    this.componentRepository.deleteById(id);
+    await this.componentRepository.deleteById(id);
     return {ok:true, message:"ok"};
   }
   async putInitTime(id, initTime){
     if(!this.array.has(id)) return {ok:false, message:`Cannot find item with id=${id}`};
     await this.componentRepository.setInitTime(id, initTime);
     await this.array.get(id).setInitTime(initTime);
-    return {ok:true, message:"ok"}
+    return {ok:true, message:"ok"};
   }
 }
-module.exports = ModuleService;
+module.exports = ComponentService;
