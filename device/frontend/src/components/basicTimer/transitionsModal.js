@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
-import Numpad from "./numpad";
 import { Grid } from "@mui/material";
 
-// swiper
-import Swiper from "swiper";
-import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 const style = {
   position: "absolute",
@@ -25,139 +23,117 @@ const style = {
   p: 4,
 };
 
-export default function TransitionsModal(type) {
+export default function TransitionsModal({ input, setInput }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [input, setInput] = useState(0);
 
-  // 시간설정을 위한 변수 작성
   const [hour, setHour] = useState(0);
   const [min, setMin] = useState(0);
   const [sec, setSec] = useState(0);
 
+  useEffect(() => {
+    setInput(hour * 3600 + min * 60 + sec);
+  });
+
+  let arr100 = Array.from({ length: 100 }, (v, i) =>
+    String(i).padStart(2, "0")
+  );
+  let arr60 = Array.from({ length: 60 }, (v, i) => String(i).padStart(2, "0"));
+
   return (
     <div>
-      {type === "create" && <Button onClick={handleOpen}>Create watch</Button>}
       <Button onClick={handleOpen}>Create watch</Button>
-      {type === "create" ? (
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          open={open}
-          onClose={handleClose}
-          closeAfterTransition
-          slots={{ backdrop: Backdrop }}
-          slotProps={{
-            backdrop: {
-              timeout: 500,
-            },
-          }}
-        >
-          <Fade in={open}>
-            <Box sx={style}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <input
-                    type="number"
-                    min={0}
-                    max={99}
-                    onChange={(hour) =>
-                      setHour(hour.target.value < 0 ? 0 : hour.target.value)
-                    }
-                  ></input>
-                  <input
-                    type="number"
-                    min={0}
-                    max={59}
-                    onChange={(min) =>
-                      setMin(min.target.value < 0 ? 0 : min.target.value)
-                    }
-                  ></input>
-                  <input
-                    type="number"
-                    min={0}
-                    max={59}
-                    onChange={(sec) =>
-                      setSec(sec.target.value < 0 ? 0 : sec.target.value)
-                    }
-                  ></input>
-
-                  {/* <Numpad
-                  input={hour * 3600 + min * 60 + Number(sec)}
-                  setInput={setInput}
-                /> */}
-                </Grid>
-                <Grid item xs={3}>
-                  <Button>Create Timer</Button>
-                  <div className="swiper">
-                    <div className="swiper-wrapper">
-                      <div className="swiper-slide">1</div>
-                      <div className="swiper-slide">2</div>
-                      <div className="swiper-slide">3</div>
-                    </div>
-                  </div>
-                </Grid>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            <Grid container justifyContent={"center"} alignItems={"center"}>
+              <Grid item xs={2}>
+                <Swiper
+                  direction={"vertical"}
+                  spaceBetween={4}
+                  slidesPerView={1}
+                  loop={true}
+                  onActiveIndexChange={(obj) => {
+                    setHour(obj.realIndex);
+                  }}
+                >
+                  {arr100.map((hour) => (
+                    <SwiperSlide>{hour}</SwiperSlide>
+                  ))}
+                </Swiper>
               </Grid>
-            </Box>
-          </Fade>
-        </Modal>
-      ) : (
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          open={open}
-          onClose={handleClose}
-          closeAfterTransition
-          slots={{ backdrop: Backdrop }}
-          slotProps={{
-            backdrop: {
-              timeout: 500,
-            },
-          }}
-        >
-          <Fade in={open}>
-            <Box sx={style}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <input
-                    type="number"
-                    min={0}
-                    max={99}
-                    onChange={(hour) =>
-                      setHour(hour.target.value < 0 ? 0 : hour.target.value)
-                    }
-                  ></input>
-                  <input
-                    type="number"
-                    min={0}
-                    max={59}
-                    onChange={(min) =>
-                      setMin(min.target.value < 0 ? 0 : min.target.value)
-                    }
-                  ></input>
-                  <input
-                    type="number"
-                    min={0}
-                    max={59}
-                    onChange={(sec) =>
-                      setSec(sec.target.value < 0 ? 0 : sec.target.value)
-                    }
-                  ></input>
-
-                  {/* <Numpad
-                  input={hour * 3600 + min * 60 + Number(sec)}
-                  setInput={setInput}
-                /> */}
-                </Grid>
-                <Grid item xs={3}>
-                  <Button>Create Timer</Button>
-                </Grid>
+              <Grid item xs={1} textAlign={"center"} fontSize={"35px"}>
+                :
               </Grid>
-            </Box>
-          </Fade>
-        </Modal>
-      )}
+              <Grid item xs={2}>
+                <Swiper
+                  direction={"vertical"}
+                  spaceBetween={4}
+                  slidesPerView={1}
+                  loop={true}
+                  onActiveIndexChange={(obj) => {
+                    setMin(obj.realIndex);
+                  }}
+                >
+                  {arr60.map((min) => (
+                    <SwiperSlide>{min}</SwiperSlide>
+                  ))}
+                </Swiper>
+              </Grid>
+              <Grid item xs={1} textAlign={"center"} fontSize={"35px"}>
+                :
+              </Grid>
+              <Grid item xs={2}>
+                <Swiper
+                  direction={"vertical"}
+                  spaceBetween={4}
+                  slidesPerView={1}
+                  loop={true}
+                  onActiveIndexChange={(obj) => {
+                    setSec(obj.realIndex);
+                  }}
+                >
+                  {arr60.map((sec) => (
+                    <SwiperSlide>{sec}</SwiperSlide>
+                  ))}
+                </Swiper>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              height={"100px"}
+              justifyContent={"flex-end"}
+              alignItems={"flex-end"}
+            >
+              <Button
+                onClick={() => {
+                  setInput(hour * 3600 + min * 60 + sec);
+                  console.log(input);
+                  setHour(0);
+                  setMin(0);
+                  setSec(0);
+                  handleClose();
+                }}
+              >
+                Create Timer
+              </Button>
+            </Grid>
+          </Box>
+        </Fade>
+      </Modal>
     </div>
   );
 }

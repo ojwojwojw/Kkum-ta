@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BasicTimer from "../../utility/basic_timer";
 import BasicTimerComponent from "./basicComponent";
-import TransitionsModal from "./transitionsModal";
+import TransitionsModal from "./CreateModal";
 import axios from "axios";
 import "./basicContainer.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,8 +9,10 @@ import { create, fetchData, forceRendering } from "../../redux/timerSlice";
 import { Grid, Box, Stack, Button } from "@mui/material";
 
 export default function TimerContainer({ timerList, id }) {
-  const dispatch = useDispatch()
-  const storeTimerArray = useSelector((state) => state.timer.timerArray) //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
+  const dispatch = useDispatch();
+  const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
+  const [timerInput,setTimerInput] = useState(0);
+  const [click, setClick] = useState(0);
 
   useEffect(() => {
     console.log("timer container constructor");
@@ -198,6 +200,26 @@ export default function TimerContainer({ timerList, id }) {
 
   return (
     <Box className="time-container" sx={{ flexGrow: 1 }}>
+      <Grid
+        container
+        className={click % 20 === 0 && click !== 0 ? "img-bomb" : ""}
+        position={"sticky"}
+        ml={"32px"}
+        mb={"10px"}
+        width={766}
+        height={60}
+        bgcolor={"#003366"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        color={"white"}
+        zIndex={4}
+        fontSize={"1.3rem"}
+        onClick={() => {
+          setClick(click + 1);
+        }}
+      >
+        <p>{`지금까지 공부한 시간 :  00:00:00`}</p>
+      </Grid>
       <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
         <Grid item xs={8}>
           {storeTimerArray.map((obj, idx) => {
@@ -214,15 +236,14 @@ export default function TimerContainer({ timerList, id }) {
               />
             );
           })}
-          {timerList.length < 10 && (
+          {storeTimerArray.length < 10 && (
             <Button
               variant="contained"
               className="btn-create-timer"
               sx={{
-                width: "775px",
-                ml: 3.8,
+                width: "770px",
+                ml: "30px",
                 mb: 2,
-                border: "8px solid #376f94",
                 borderRadius: 4,
                 bgcolor: "#376f94",
                 fontSize: 30,
