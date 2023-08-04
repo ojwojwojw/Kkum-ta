@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { exit } = require('process');
 if(!fs.existsSync("./src/config/.env")){
-    console.log(`Cannot open file at ./src/config/.env.
+    console.log(`Cannot open file "./src/config/.env".
 Please make sure if this file exists.
 This file contains:
     MYSQL_HOST={Your MySQL Host}
