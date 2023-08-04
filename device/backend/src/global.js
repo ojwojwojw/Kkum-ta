@@ -1,3 +1,4 @@
+const ComponentLogRepository = require('./repository/componentLogRepository');
 const ComponentRepository = require('./repository/componentRepository');
 const GroupRepository = require('./repository/groupRepository');
 const StopwatchRepository = require('./repository/stopwatchRepository');
@@ -9,6 +10,7 @@ class Global {
     static #groupRepository = null;
     static #stopwatchRepository = null;
     static #timerRepository = null;
+    static #componentLogRepository = null;
     static #moduleService = null;
 
     static async getComponentRepository() {
@@ -41,6 +43,13 @@ class Global {
             await Global.#timerRepository.init();
         }
         return Global.#timerRepository;
+    }
+    static async getComponentLogRepository(){
+        if(!Global.#componentLogRepository){
+            Global.#componentLogRepository = new ComponentLogRepository();
+            await Global.#componentLogRepository.init();
+        }
+        return Global.#componentLogRepository;
     }
 
     static async getModuleService() {

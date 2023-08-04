@@ -1,10 +1,25 @@
 .App {
+  min-height: 700px;
   text-align: center;
+  background-color: rgb(233, 233, 233);
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.navbar {
+  height: 50px;
+  background-color: #a8df61;
+  color: black;
+}
+
+a:-webkit-any-link {
+  text-decoration: none;
+  color: black;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 @media (prefers-reduced-motion: no-preference) {

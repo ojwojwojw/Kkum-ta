@@ -1,4 +1,4 @@
-const Repository = require("./Repository");
+const Repository = require("./repository");
 
 class ComponentRepository extends Repository{
     constructor(groupRepository){
@@ -27,6 +27,11 @@ class ComponentRepository extends Repository{
         const sql = "SELECT * FROM component_tbl WHERE component_key=?";
         const params = [id];
         return this.query(sql, parmas);
+    }
+    async getByGroup(group_id){
+        const sql = "SELECT * FROM component_tbl WHERE group_key=?";
+        const params= [group_id];
+        return this.query(sql, params);
     }
     async getAll(){
         const sql = "SELECT * FROM component_tbl";
