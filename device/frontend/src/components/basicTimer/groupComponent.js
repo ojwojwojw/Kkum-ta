@@ -58,7 +58,8 @@ export default function GroupComponent() {
   function add(idx) {
     if (timerArrayList.length > 4) return;
     const newArray = {
-      id: Date.now() + idx, // 그룹 아이디
+      // id: Date.now() + idx, // 그룹 아이디
+      id: idx, // 그룹 아이디
       timerList: new Array(0),
     };
 

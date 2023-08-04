@@ -29,7 +29,7 @@ export default function TimerContainer({ timerList, id }) {
     const timerId = setTimeout(() => {
       load();
       setTest(true);
-    }, 1000);
+    }, 100);
   
     return () => {
       console.log("timer container destructor");
@@ -107,7 +107,7 @@ export default function TimerContainer({ timerList, id }) {
   const load = async () => {
     try {
       const tempTimerList = []
-      const res = await axios.get("timer/");
+      const res = await axios.get(`timer/?group_id=${id}`);
       console.log("load");
       res.data.map((item, idx) => {
         
@@ -129,7 +129,7 @@ export default function TimerContainer({ timerList, id }) {
   const createTimer = async() => {
     try{
       const data = {type : "timer" , initTime : [0] , maxIter : 1}
-      const res = await axios.post("timer/",data);
+      const res = await axios.post(`timer/?group_id=${id}`,data);
       console.log(res.data)
       const timer = new BasicTimer();
       dispatch(create({"id": res.data.id, "type": "timer", "timer": timer }))

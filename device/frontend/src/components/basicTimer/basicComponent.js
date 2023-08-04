@@ -108,17 +108,17 @@ export default function BasicTimerComponent({
     try{
       const timerId = WatchId
       console.log(timerId)
-      timer.puase()
+      timer.pause()
       const res = await axios.delete(`timer/${timerId}`);
       console.log('res',res.data)
+      dispatch(deleteTimer(timerId))
       dispatch(forceRendering())
       // dispatch(forceRendering())
     }
     catch (error){
        console.log("occured error during delete request.",error)
        const timerId = WatchId
-       dispatch(deleteTimer(timerId))
-      
+       console.log(timerId)   
     }
   }
 
@@ -143,7 +143,7 @@ export default function BasicTimerComponent({
   const logPause = async() => {
     // const startTime = Date.now();
     try{
-      const timerId = WatchId
+      const timerId = WatchId 
       const data = {operation : "pause"}
       const res = await axios.post(`timer/operation/${timerId}`,data)
       console.log("log pause data on backend." , res.data)
