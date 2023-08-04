@@ -123,6 +123,15 @@ class UserRepository {
       throw err;
     }
   }
+
+  async findUserIdByEmail(userEmail) {
+    try {
+      const sql = "SELECT id FROM timer.login_tbl WHERE email = ?";
+      const params = [userEmail];
+    } catch(err) {
+      console.log(err);
+    }
+  }
 }
 
 module.exports = UserRepository;

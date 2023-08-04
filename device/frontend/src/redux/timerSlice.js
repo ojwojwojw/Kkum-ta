@@ -13,13 +13,34 @@ export const timerSlice = createSlice({
       state.timerArray = action.payload;
     },
     create: (state ,action) => {
-      console.log(action.payload)
+      // console.log(action.payload)
       state.timerArray.push(action.payload);
     },
     deleteTimer: (state, action) => {
-      const timerIdToDelete = action.payload
-      console.log('d',timerIdToDelete)
-      state.timerArray = state.timerArray.filter((item) => item.id !== timerIdToDelete)
+      state.timerArray = state.timerArray.filter((item) => item.id !== action.payload)
+      // console.log('is changed?',state.timerArray);
+    },
+    isRunningTrue : (state, action) => {
+      state.timerArray = state.timerArray.map((item) => {
+        if (item.id === action.payload) {
+          return {
+            ...item,
+            isRunning: true,
+          };
+        }
+        return item; // 반드시 값을 반환해야 합니다.
+      });
+    },
+    isRunningFalse : (state, action) => {
+      state.timerArray = state.timerArray.map((item) => {
+        if (item.id === action.payload) {
+          return {
+            ...item,
+            isRunning: false,
+          };
+        }
+        return item; // 반드시 값을 반환해야 합니다.
+      });
     },
     forceRendering : (state) =>{
       state.Rendering = !state.Rendering
@@ -27,7 +48,9 @@ export const timerSlice = createSlice({
   },
 });
 
-export const {  create , fetchData ,deleteTimer, forceRendering} = timerSlice.actions;
+export const {  create , fetchData ,deleteTimer, 
+  toggleIsRunning , forceRendering , isRunningTrue ,
+  isRunningFalse} = timerSlice.actions;
 
 export const selectArray = (state) => state.timer.timerArray;
 

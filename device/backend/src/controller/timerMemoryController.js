@@ -3,60 +3,85 @@ const Global = require("../global");
 const moduleRouter = express.Router();
 
 
-let moduleService;
+let componentService, componentLogService;
 (async()=>{
-  moduleService = await Global.getModuleService();
+  componentService = await Global.getComponentService();
+  componentLogService = await Global.getComponentLogService();
 })();
 
 moduleRouter.get("/", async (req, res) => {
-  return res.status(200).json(moduleService.getAll());
+  const group_id = req.query.group_id;
+  if(group_id){
+    res.status(200).json(componentService.getByGroup(parseInt(group_id)));
+    return;
+  }
+  else{
+    res.status(200).json(componentService.getAll());
+    return;
+  }
 });
 
 moduleRouter.get("/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const item = moduleService.getById(id);
+  const item = componentService.getById(id);
   if(item === null){
-    return res.status(404).json({status:"not found"});
+    res.status(404).json({status:"not found"});
+    return;
   }
-  return res.status(200).json(moduleService.getById(id));
+  else{
+    res.status(200).json(item);
+    return;
+  }
 });
 
 moduleRouter.delete("/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const result = moduleService.deleteById(id);
-  if(result.ok)
-    return res.status(400).json({ status: "ok" });
-  else{
-    return res.status(404).json({status:"not found"});
+  const result = await componentService.deleteById(id);
+  if(result.ok){
+    res.status(200).json({ status: "ok" });
+    await componentLogService.log(id, "deleted");
+    return;
+  } else{
+    res.status(404).json({status:"not found"});
+    return;
   }
 });
 
 moduleRouter.put("/:id", async (req, res)=>{
   const id = parseInt(req.params.id);
   const initTime = req.body.initTime;
-  const result = await moduleService.putInitTime(id, initTime);
+  const result = await componentService.putInitTime(id, initTime);
   if(result.ok){
-    return res.status(200).json({status:"ok"});
+    res.status(200).json({status:"ok"});
+    await componentLogService.log(id, "fix");
+    return;
   }
   else{
-    return res.status(404).json({status: "not found"});
+    res.status(404).json({status: "not found"});
+    return;
   }
 });
 
 moduleRouter.post("/", async (req, res) => {
+  const group_id = req.query.group_id;
   const type = req.body.type;
   const initTime = req.body.initTime;
   const maxIter = req.body.maxIter;
   let id;
   switch (type) {
     case "timer":
-      id = await moduleService.createTimer(initTime, maxIter);
-      return res.status(200).json({ status: "ok", id: id });
+      id = await componentService.createTimer(initTime, maxIter, parseInt(group_id));
+      res.status(200).json({ status: "ok", id: id });
+      await componentLogService.log(id, "created");
+      return;
     case "stopwatch":
-      id = await moduleService.createStopwatch(initTime);
-      return res.status(200).json({ status: "ok", id: id });
+      id = await componentService.createStopwatch(initTime, parseInt(group_id));
+      res.status(200).json({ status: "ok", id: id });
+      await componentLogService.log(id, "created");
+      return;
     default:
-      return res.status(200).status(404).json({ status: "not found" });
+      res.status(404).json({ status: "not found" });
+      return;
   }
 });
 
@@ -64,38 +89,50 @@ moduleRouter.post("/operation/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const operation = req.body.operation;
   if(operation === "tag"){
-    const { next } = moduleService.tag(id);
-    return res.json({ status: "ok", next });
+    const { next } = componentService.tag(id);
+    res.json({ status: "ok", next });
+    await componentLogService.log(id, "tag");
+    return;
   }
   let result;
   switch (operation) {
     case "start":
-      result = moduleService.start(id);
+      result = componentService.start(id);
       if(result.ok){
-        return res.status(200).json({ status: "ok" });
+        res.status(200).json({ status: "ok" });
+        await componentLogService.log(id, "start");
+        return;
       }
       else{
-        return res.status(204).json({status: "fail", message:result.message});
+        res.status(204).json({status: "fail", message:result.message});
+        return;
       }
     case "pause":
-      result = moduleService.pause(id);
+      result = componentService.pause(id);
       if(result.ok){
-        return res.status(200).json({ status: "ok" });
+        res.status(200).json({ status: "ok" });
+        await componentLogService.log(id, "pause");
+        return;
       }
       else{
-        return res.status(204).json({status: "fail", message:result.message});
+        res.status(204).json({status: "fail", message:result.message});
+        return;
       }
     case "stop":
-      result = moduleService.stop(id);
+      result = componentService.stop(id);
       if(result.ok){
-        return res.status(200).json({ status: "ok" });
+        res.status(200).json({ status: "ok" });
+        await componentLogService.log(id, "stop");
+        return;
       }
       else{
-        return res.status(204).json({status: "fail", message:result.message});
+        res.status(204).json({status: "fail", message:result.message});
+        return;
       }
     default:
-      return res.status(400).json({status:"invalid operation"});
-  }
+      res.status(400).json({status:"invalid operation"});
+      return;
+    }
 });
 
 module.exports = moduleRouter;

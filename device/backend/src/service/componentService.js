@@ -1,6 +1,6 @@
 const TimerService = require("./timerService");
 const StopwatchService = require("./stopwatchService");
-class ModuleService {
+class ComponentService {
   constructor(componentRepository, timerRepository, stopwatchRepository) {
     this.componentRepository = componentRepository;
     this.timerRepository = timerRepository;
@@ -14,12 +14,12 @@ class ModuleService {
       let service;
       switch(item.component_type){
         case 'stopwatch':
-          service = new StopwatchService(item.init_time);
+          service = new StopwatchService(item.init_time, JSON.parse(item.group_key));
           service.id = item.component_key;
           this.array.set(item.component_key, service);
           break;
         case 'timer':
-          service = new TimerService(item.init_time, item.max_iter);
+          service = new TimerService(item.init_time, item.max_iter, JSON.parse(item.group_key));
           service.id = item.component_key;
           this.array.set(item.component_key, service);
           break;
@@ -28,23 +28,26 @@ class ModuleService {
       }
     })
   }
-  async createTimer(initTimes, maxIter) {
+  async createTimer(initTimes, maxIter, group_id=0) {
     if(maxIter === undefined) maxIter = 1;
-    const promise = this.timerRepository.create(initTimes, maxIter);
-    const timerService = new TimerService(initTimes, maxIter);
+    const promise = this.timerRepository.create(initTimes, maxIter, group_id);
+    const timerService = new TimerService(initTimes, maxIter, group_id);
     timerService.id = await promise;
     this.array.set(timerService.id, timerService);
     return timerService.id;
   }
-  async createStopwatch(initTime) {
-    const promise = this.stopwatchRepository.create(initTime);
-    const stopwatchService = new StopwatchService(initTime);
+  async createStopwatch(initTime, group_id=0) {
+    const promise = this.stopwatchRepository.create(initTime, group_id);
+    const stopwatchService = new StopwatchService(initTime, group_id);
     stopwatchService.id = await promise;
     this.array.set(stopwatchService.id, stopwatchService);
     return stopwatchService.id;
   }
   getAll(){
     return [...this.array.values()].map(item=>item.json());
+  }
+  getByGroup(group_id){
+    return [...this.array.values()].filter(item=>item.group_id===group_id).map(item=>item.json());
   }
   getById(id) {
     if(!this.array.has(id)) return null;
@@ -70,16 +73,17 @@ class ModuleService {
     this.array.get(id).tag();
     return {ok:true, message:"ok"};
   }
-  deleteById(id){
+  async deleteById(id){
     if(!this.array.has(id)) return {ok:false, message:`Cannot find item with id=${id}`};
     this.array.delete(id);
+    await this.componentRepository.deleteById(id);
     return {ok:true, message:"ok"};
   }
   async putInitTime(id, initTime){
     if(!this.array.has(id)) return {ok:false, message:`Cannot find item with id=${id}`};
     await this.componentRepository.setInitTime(id, initTime);
     await this.array.get(id).setInitTime(initTime);
-    return {ok:true, message:"ok"}
+    return {ok:true, message:"ok"};
   }
 }
-module.exports = ModuleService;
+module.exports = ComponentService;
