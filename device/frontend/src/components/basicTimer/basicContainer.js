@@ -150,12 +150,12 @@ export default function TimerContainer({ timerList, id }) {
   };
 
   //타이머 Create
-  const createTimer = async () => {
+  const createTimer = async (initTime, maxIter) => {
     try {
-      const data = { type: "timer", initTime: [0], maxIter: 1 };
+      const data = { type: "timer", initTime: [initTime], maxIter: maxIter };
       const res = await axios.post(`timer/?group_id=${id}`, data);
       console.log(res.data);
-      const timer = new BasicTimer();
+      const timer = new BasicTimer(initTime={initTime});
       dispatch(create({"id": res.data.id, "type": "timer", isRunning: false ,"timer": timer }))
       dispatch(forceRendering())
     }
@@ -269,7 +269,7 @@ export default function TimerContainer({ timerList, id }) {
           >
             <Stack xs={8}>
               <Grid item>
-                <TransitionsModal input={timerInput} setInput={setTimerInput} />
+                <TransitionsModal input={timerInput} setInput={setTimerInput} createTimer={createTimer} />
               </Grid>
               <Grid item></Grid>
             </Stack>

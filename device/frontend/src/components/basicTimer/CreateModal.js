@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import { Grid } from "@mui/material";
+
+import { Grid,Box,Modal,Fade,Button,Backdrop } from "@mui/material";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -23,7 +19,7 @@ const style = {
   p: 4,
 };
 
-export default function TransitionsModal({ input, setInput }) {
+export default function TransitionsModal({ input, setInput, createTimer }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -120,7 +116,9 @@ export default function TransitionsModal({ input, setInput }) {
             >
               <Button
                 onClick={() => {
+                  var maxIter=1
                   setInput(hour * 3600 + min * 60 + sec);
+                  createTimer(input*1000, maxIter)
                   console.log(input);
                   setHour(0);
                   setMin(0);

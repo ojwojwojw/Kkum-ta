@@ -76,11 +76,18 @@
   margin-top: 0;
   height: 24px;
   background-color: #ffffff;
-} */
-
+}
 .swiper {
   height: 3rem;
   font-size: 2.5rem;
   width: 4rem;
   text-align: center;
+}
+
+.swiper-wrapper {
+  font-size: 2.5rem;
+}
+
+.swiper-initialized {
+  height: 3rem;
 }

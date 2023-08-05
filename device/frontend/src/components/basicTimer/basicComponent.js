@@ -17,7 +17,6 @@ import axios from "axios";
 import { deleteTimer } from "../../redux/timerSlice";
 import { useDispatch } from "react-redux";
 import { forceRendering, isRunningTrue ,isRunningFalse} from "../../redux/timerSlice";
-import TransitionsModal from "./transitionsModal";
 
 // function useConstructor(callBack = () => {}) {
 //   const flag = useRef(false);
