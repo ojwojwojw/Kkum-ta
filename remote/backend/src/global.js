@@ -1,8 +1,8 @@
 const UserRepository = require("./repository/userRepository");
 
 class Global {
-    #userRepository = null;
-    async getUserRepository(){
+    static #userRepository = null;
+    static async getUserRepository(){
         if(!Global.#userRepository){
             Global.#userRepository = new UserRepository();
             Global.#userRepository.init();
