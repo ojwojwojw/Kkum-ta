@@ -21,6 +21,7 @@
     "passport-google-oauth2": "^0.2.0",
     "passport-kakao": "^1.0.1",
     "passport-local": "^1.0.0",
+    "randexp": "^0.5.3",
     "redis": "^4.6.7"
   }
 }
