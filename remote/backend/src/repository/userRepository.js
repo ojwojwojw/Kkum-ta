@@ -62,6 +62,16 @@ class UserRepository extends Repository {
     return rows[0];
   }
 
+  async getIdByEmail(email) {
+    const sql = "SELECT id FROM user_tbl WHERE email= ?";
+    const params = [email];
+    const [rows] = await this.query(sql, params);
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows[0];
+  }
+
   async getUserByRefreshToken(refreshToken) {
     const sql = "SELECT * FROM user_tbl WHERE refresh_token= ?";
     const params = [refreshToken];

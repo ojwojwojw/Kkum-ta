@@ -4,6 +4,8 @@ const jwtService = require("../service/jwtService");
 const jwt = new jwtService();
 const loginService = require("../service/signupService");
 const loginApp = new loginService();
+const SearchService = require("../service/searchService");
+const searchService = new SearchService();
 const UserRepository = require("../repository/userRepository");
 const { isLoggedIn, isNotLoggedIn } = require("../service/authService");
 
@@ -145,6 +147,16 @@ authRouter.get("/refresh", (req, res) => {
   );
   return res.json(message);
 });
+
+authRouter.get("/SearchID", async (req, res) =>{
+  const email = req.body.email;
+  if (!email) {
+    return res.status(400).json({ message: "Invaild requests" });
+  }
+
+  const id = await searchService.SearchID(email);
+  return res.json(id);
+})
 
 authRouter.get("/signout", isLoggedIn, async (req, res) => {
   const userRepository = new UserRepository();
