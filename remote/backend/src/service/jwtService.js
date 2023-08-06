@@ -33,18 +33,17 @@ class jwtService {
   refresh(token, id, provider) {
     try {
       const myToken = jwt.verify(token, process.env.JWT_SECRET);
+      if (myToken == "jwt expired") {
+        return { message: "expired" };
+      }
+  
+      console.log({ id: id, provider: provider });
+  
+      const accessToken = this.getAccessToken(id, provider);
+      return { token: accessToken };
     } catch (err) {
       return { message: err };
     }
-
-    if (myToken == "jwt expired") {
-      return { message: "expired" };
-    }
-
-    console.log({ id: id, provider: provider });
-
-    const accessToken = this.getAccessToken(id, provider);
-    return { token: accessToken };
   }
 }
 
