@@ -4,7 +4,8 @@ const jwtService = require("../service/jwtService");
 const jwt = new jwtService();
 const loginService = require("../service/signupService");
 const loginApp = new loginService();
-const { isLoggedIn, isNotLoggedIn } = require("../service/loginService");
+const UserRepository = require("../repository/userRepository");
+const { isLoggedIn, isNotLoggedIn } = require("../service/authService");
 
 const authRouter = express.Router();
 
@@ -17,12 +18,12 @@ authRouter.post("/", (req, res) => {
 });
 
 authRouter.get("/check", isLoggedIn, (req, res) => {
-  console.log("check");
+  console.log(req.headers.authorization.split('Bearer ') [1]);
   return res.status(200).json("check");
 });
 
-authRouter.get("/signin", (req, res, next) => {
-  passport.authenticate("local", (authError, user, info) => {
+authRouter.get("/signin", isNotLoggedIn, (req, res, next) => {
+  passport.authenticate("local", async (authError, user, info) => {
     if (authError) {
       console.error(authError);
       return next(authError);
@@ -31,9 +32,15 @@ authRouter.get("/signin", (req, res, next) => {
       res.status(500);
       return res.send(info.message);
     }
-    const accessToken = jwt.accessToken(user.id, user.provider);
+    const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
+    const userRepository = new UserRepository();
+    await userRepository.updateRefreshToken(user.id, user.provider, refreshToken);
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
     const res_user = { id: user.id, email: user.email };
-    return res.status(200).cookie('accessToken', accessToken).json({ user: res_user });
+    return res.status(200).json({ user: res_user, accessToken: accessToken });
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
 
@@ -85,9 +92,18 @@ authRouter.get(
   }
 );
 
+authRouter.get("/refresh", (req, res) => {
+  const message = jwt.refresh(req.cookies.refreshToken, req.body.id, req.body.provider);
+  return res.json(message);
+});
+
 authRouter.get("/signout", isLoggedIn, async (req, res) => {
-  res.clearCookie("accessToken");
-  res.json("OK!");
+  const userRepository = new UserRepository();
+  const user = await userRepository.getUserByRefreshToken(req.cookies.refreshToken);
+
+  userRepository.updateRefreshToken(user.id, user.provider, "");
+  res.clearCookie("refreshToken");
+  res.json("signout!");
 });
 
 module.exports = authRouter;
