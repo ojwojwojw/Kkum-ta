@@ -9,7 +9,7 @@ module.exports = () => {
       {
         usernameField: "id",
         passwordField: "password",
-        session: true, // 세션에 저장 여부
+        session: false, // 세션에 저장 여부
         passReqToCallback: false,
       },
       async (id, password, done) => {
