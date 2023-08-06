@@ -8,11 +8,7 @@ module.exports = () => {
   passport.use(
     new JWTStrategy(
       {
-        jwtFromRequest: ExtractJWT.fromExtractors([
-          (req) => {
-            return req?.cookies?.accessToken;
-          },
-        ]),
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
         secretOrKey: process.env.JWT_SECRET,
       },
       async (jwtPayload, done) => {

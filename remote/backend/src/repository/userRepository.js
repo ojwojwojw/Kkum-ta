@@ -62,6 +62,16 @@ class UserRepository extends Repository {
     return rows[0];
   }
 
+  async getUserByRefreshToken(refreshToken) {
+    const sql = "SELECT * FROM user_tbl WHERE refresh_token= ?";
+    const params = [refreshToken];
+    const [rows] = await this.query(sql, params);
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows[0];
+  }
+
   async insertUser(id, salt, hashedPw, email) {
     const sql =
       "INSERT INTO user_tbl(id, salt, hashedPw, email) VALUES (?, ?, ?, ?)";
@@ -73,6 +83,13 @@ class UserRepository extends Repository {
   async insertSNSUser(id, provider) {
     const sql = "INSERT INTO user_tbl(id, provider) VALUES (?, ?)";
     const params = [id, provider];
+    await this.query(sql, params);
+    return true;
+  }
+
+  async updateRefreshToken(id, provider, refreshToken) {
+    const sql = "UPDATE timer.user_tbl SET refresh_token = ? WHERE id = ? AND provider = ?";
+    const params = [refreshToken, id, provider];
     await this.query(sql, params);
     return true;
   }
