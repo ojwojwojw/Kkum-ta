@@ -11,9 +11,9 @@ const authController = require("./src/controller/authController");
 
 passportConfig(passport);
 
-app.use(session);
+//app.use(session);
 app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/auth", authController);

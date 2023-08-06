@@ -1,5 +1,7 @@
 const express = require("express");
 const passport = require("passport");
+const jwtService = require("../service/jwtService");
+const jwt = new jwtService();
 const loginService = require("../service/signupService");
 const loginApp = new loginService();
 const { isLoggedIn, isNotLoggedIn } = require("../service/loginService");
@@ -14,14 +16,12 @@ authRouter.post("/", (req, res) => {
   res.status(200).send("POST userRouter /");
 });
 
-authRouter.get("/check", async (req, res) => {
-  if (req.session.user_id)
-    return res.status(200).json({ id: req.session.user_id });
-  else
-    return res.status(200).json({ id: null, message: "Please sign in first!" });
+authRouter.get("/check", isLoggedIn, (req, res) => {
+  console.log("check");
+  return res.status(200).json("check");
 });
 
-authRouter.get("/signin", isNotLoggedIn, (req, res, next) => {
+authRouter.get("/signin", (req, res, next) => {
   passport.authenticate("local", (authError, user, info) => {
     if (authError) {
       console.error(authError);
@@ -31,13 +31,9 @@ authRouter.get("/signin", isNotLoggedIn, (req, res, next) => {
       res.status(500);
       return res.send(info.message);
     }
-    return req.login(user, (loginError) => {
-      if (loginError) {
-        console.error(loginError);
-        return next(loginError);
-      }
-      return res.redirect("/test/login");
-    });
+    const accessToken = jwt.accessToken(user.id, user.provider);
+    const res_user = { id: user.id, email: user.email };
+    return res.status(200).cookie('accessToken', accessToken).json({ user: res_user });
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
 
@@ -90,12 +86,8 @@ authRouter.get(
 );
 
 authRouter.get("/signout", isLoggedIn, async (req, res) => {
-  req.logout((err) => {
-    if (err) throw err;
-    req.session.destroy();
-    res.clearCookie("connect.sid");
-    res.redirect("/test/signout");
-  });
+  res.clearCookie("accessToken");
+  res.json("OK!");
 });
 
 module.exports = authRouter;
