@@ -2,9 +2,9 @@ FROM nginx
 
 WORKDIR /app
 
-RUN mkdir ./build
+RUN mkdir ./build_device
 
-ADD ./build ./build
+ADD ./build ./build_device
 
 RUN rm /etc/nginx/conf.d/default.conf
 

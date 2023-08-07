@@ -2,9 +2,9 @@ FROM node:18
 
 WORKDIR /app
 
-RUN mkdir ./server
+RUN mkdir ./server_device
 
-WORKDIR ./server
+WORKDIR ./server_device
 
 COPY ./package*.json ./
 
