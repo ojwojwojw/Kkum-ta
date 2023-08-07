@@ -26,15 +26,15 @@ pipeline {
                 '''
             }
         }
-        // stage('Build React App - Web') {
-        //     steps {
-        //         sh '''
-        //             cd ./remote/frontend/
-        //             npm install
-        //             CI=false npm run build
-        //         '''
-        //     }
-        // }
+        stage('Build React App - Web') {
+            steps {
+                sh '''
+                    cd ./remote/frontend/
+                    npm install
+                    CI=false npm run build
+                '''
+            }
+        }
         stage('Build React App - Device') {
             steps {
                 sh '''
