@@ -35,7 +35,7 @@ pipeline {
                 '''
             }
         }
-        stage('Build React App - Web') {
+        stage('Build Node Server - Web') {
             steps {
                 sh '''
                     cd ./remote/back/
