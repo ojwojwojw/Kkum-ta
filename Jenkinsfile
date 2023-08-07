@@ -12,11 +12,10 @@ pipeline {
     stages {
         stage('test ssh') {
             steps {
-                sshagent(credentials: ['Raspberry']) {
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no ${ssh_target_host} "1"
-                    '''
-                }
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'Raspberry', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+                sh '''
+                    ls -al
+                '''
             }
         }
     //     stage('Build React App') {
