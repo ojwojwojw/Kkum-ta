@@ -42,7 +42,7 @@ pipeline {
             steps {
                 sh '''
                     cd ./device/backend/
-                    docker build --platform linux/arm64/v8 -t ${docker_repo}:back-server-0.1 .
+                    docker build --platform linux/arm64/v8 -t ${docker_repo}:back-server-for-raspberry-0.1 .
                 '''
             }
         }
