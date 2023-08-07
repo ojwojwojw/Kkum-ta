@@ -16,7 +16,11 @@ import Numpad from "./numpad";
 import axios from "axios";
 import { deleteTimer } from "../../redux/timerSlice";
 import { useDispatch } from "react-redux";
-import { forceRendering, isRunningTrue ,isRunningFalse} from "../../redux/timerSlice";
+import {
+  forceRendering,
+  isRunningTrue,
+  isRunningFalse,
+} from "../../redux/timerSlice";
 
 // function useConstructor(callBack = () => {}) {
 //   const flag = useRef(false);
@@ -59,6 +63,8 @@ export default function BasicTimerComponent({
   // 현재 공부중인지를 검사하는 변수
   const [isStudy, setIsStudy] = useState(0);
 
+  console.log("init:", initTime);
+
   useEffect(() => {
     if (WatchId) {
       // console.log("New timer Id:", WatchId);
@@ -88,9 +94,10 @@ export default function BasicTimerComponent({
   function toggle() {
     isRunning ? timer.pause() : timer.start();
     isRunning ? logPause() : logStart(); // api 요청으로 백엔드에 시작/중지 로그 남기기
-    isRunning ? dispatch(isRunningFalse(WatchId)) 
-    : dispatch(isRunningTrue(WatchId))
-    dispatch(forceRendering())
+    isRunning
+      ? dispatch(isRunningFalse(WatchId))
+      : dispatch(isRunningTrue(WatchId));
+    dispatch(forceRendering());
   }
 
   // function remove() {
@@ -105,23 +112,22 @@ export default function BasicTimerComponent({
   }
 
   //api 요청 관련
-  const deleteWatch = async() =>{
-    try{
-      const timerId = WatchId
+  const deleteWatch = async () => {
+    try {
+      const timerId = WatchId;
       // console.log(timerId)
-      timer.pause()
+      timer.pause();
       const res = await axios.delete(`timer/${timerId}`);
-      console.log('res',res.data)
-      dispatch(deleteTimer(timerId))
-      dispatch(forceRendering())
+      console.log("res", res.data);
+      dispatch(deleteTimer(timerId));
+      dispatch(forceRendering());
       // dispatch(forceRendering())
+    } catch (error) {
+      console.log("occured error during delete request.", error);
+      const timerId = WatchId;
+      //  console.log(timerId)
     }
-    catch (error){
-       console.log("occured error during delete request.",error)
-       const timerId = WatchId
-      //  console.log(timerId)   
-    }
-  }
+  };
 
   const logStart = async () => {
     const startTime = Date.now();
@@ -135,19 +141,18 @@ export default function BasicTimerComponent({
       const endTime = Date.now();
       const requestDuration = endTime - startTime;
       // console.log("요청-응답 시간:", requestDuration, "밀리초");
-    }
-    catch(err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
   };
 
   const logPause = async () => {
     // const startTime = Date.now();
-    try{
-      const timerId = WatchId 
-      const data = {operation : "pause"}
-      const res = await axios.post(`timer/operation/${timerId}`,data)
-      console.log("log pause data on backend." , res.data)
+    try {
+      const timerId = WatchId;
+      const data = { operation: "pause" };
+      const res = await axios.post(`timer/operation/${timerId}`, data);
+      console.log("log pause data on backend.", res.data);
       // const endTime = Date.now();
       // const requestDuration = endTime - startTime;
       // console.log("요청-응답 시간:", requestDuration, "밀리초");
