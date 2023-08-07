@@ -1,111 +1,103 @@
-const mysql = require("mysql2/promise");
-const options = require("../config/connection.js");
+const Repository = require("./repository");
 
-class UserRepository {
+class UserRepository extends Repository {
   constructor() {
-    this.pool = mysql.createPool(options);
+    super();
   }
 
-  async beginTransaction() {
-    const conn = await this.pool.getConnection();
-    conn.beginTransaction();
-
-    return conn;
-  }
-
-  rollback(conn) {
-    conn.rollback();
-    conn.endTransaction();
-  }
-
-  commit(conn) {
-    conn.commit();
-    conn.endTransaction();
+  async init() {
+    const sql = `
+      CREATE TABLE user_tbl (
+        user_key INT(11) NOT NULL AUTO_INCREMENT,
+        id VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+        salt CHAR(64) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+        hashedPw CHAR(88) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+        email VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+        provider VARCHAR(20) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+        PRIMARY KEY (user_key) USING BTREE
+      )
+      COLLATE='utf8mb4_general_ci'
+      ENGINE=InnoDB
+      `;
+    await this.query(sql, []);
   }
 
   async findAll() {
-    const query = await this.pool.query(`SELECT * FROM login_tbl`);
-    return query;
+    return this.query(`SELECT * FROM user_tbl`, []);
+  }
+
+  async getUserById(id) {
+    try {
+      const conn = await this.pool.getConnection();
+      const sql = "SELECT * FROM user_tbl WHERE id = ?";
+      const params = [id];
+      const [rows, fields] = await conn.execute(sql, params);
+      conn.release();
+      if (rows.length === 0) {
+        return null;
+      }
+      return rows[0];
+    } catch (err) {
+      throw err;
+    }
   }
 
   async getUserByIdAndProvider(id, provider) {
-    try {
-      const conn = await this.pool.getConnection();
-      const sql = "SELECT * FROM login_tbl WHERE id = ? AND provider = ?";
-      const params = [id, provider];
-      const [rows, fields] = await conn.execute(sql, params);
-      conn.release();
-      if (rows.length === 0) {
-        return null;
-      }
-      return rows[0];
-    } catch (err) {
-      throw err;
+    const sql = "SELECT * FROM user_tbl WHERE id = ? AND provider = ?";
+    const params = [id, provider];
+    const [rows] = await this.query(sql, params);
+    if (rows.length === 0) {
+      return null;
     }
+    return rows[0];
   }
 
   async getUserByEmail(email) {
-    try {
-      const conn = await this.pool.getConnection();
-      const sql = "SELECT * FROM login_tbl WHERE email= ?";
-      const params = [email];
-      const [rows, fields] = await conn.execute(sql, params);
-      conn.release();
-      if (rows.length === 0) {
-        return null;
-      }
-      return rows[0];
-    } catch (err) {
-      throw err;
+    const sql = "SELECT * FROM user_tbl WHERE email= ?";
+    const params = [email];
+    const [rows] = await this.query(sql, params);
+    if (rows.length === 0) {
+      return null;
     }
+    return rows[0];
   }
 
-  async insertUser(id, salt, hashedPw, email, provider) {
-    let conn;
+  async getUserByRefreshToken(refreshToken) {
+    const sql = "SELECT * FROM user_tbl WHERE refresh_token= ?";
+    const params = [refreshToken];
+    const [rows] = await this.query(sql, params);
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows[0];
+  }
+
+  async insertUser(id, salt, hashedPw, email) {
     const sql =
-      "INSERT INTO login_tbl(id, salt, hashedPw, email, provider) VALUES (?, ?, ?, ?, ?)";
-    const params = [id, salt, hashedPw, email, provider];
-    try {
-      conn = await this.pool.getConnection();
-    } catch (err) {
-      throw err;
-    }
-    try {
-      await conn.execute(sql, params);
-      conn.release();
-    } catch (err) {
-      console.error(err);
-    }
+      "INSERT INTO user_tbl(id, salt, hashedPw, email) VALUES (?, ?, ?, ?)";
+    const params = [id, salt, hashedPw, email];
+    await this.query(sql, params);
     return true;
   }
 
   async insertSNSUser(id, provider) {
-    let conn;
-    const sql = "INSERT INTO login_tbl(id, provider) VALUES (?, ?)";
+    const sql = "INSERT INTO user_tbl(id, provider) VALUES (?, ?)";
     const params = [id, provider];
-    try {
-      conn = await this.pool.getConnection();
-    } catch (err) {
-      throw err;
-    }
-    try {
-      await conn.execute(sql, params);
-      conn.release();
-    } catch (err) {
-      console.error(err);
-    }
+    await this.query(sql, params);
+    return true;
+  }
+
+  async updateRefreshToken(id, provider, refreshToken) {
+    const sql = "UPDATE timer.user_tbl SET refresh_token = ? WHERE id = ? AND provider = ?";
+    const params = [refreshToken, id, provider];
+    await this.query(sql, params);
     return true;
   }
 
   async deleteUserById(id) {
-    try {
-      const conn = await db.getConnection();
-      const sql = "DELETE FROM login_tbl WHERE id = ?";
-      const params = [id];
-      const [rows, fields] = await conn.execute(sql, params);
-    } catch (err) {
-      throw err;
-    }
+    const sql = "DELETE FROM user_tbl WHERE id = ?";
+    const params = [id];
+    return this.query(sql, params);
   }
 }
 

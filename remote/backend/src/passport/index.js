@@ -1,5 +1,7 @@
 const local = require("./localStrategy");
 const kakao = require("./kakaoStrategy");
+const google = require("./googleStrategy");
+const jwt = require("./jwtStrategy");
 
 module.exports = (passport) => {
   passport.serializeUser((user, done) => {
@@ -16,4 +18,6 @@ module.exports = (passport) => {
 
   local();
   kakao();
+  google();
+  jwt();
 };

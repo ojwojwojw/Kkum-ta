@@ -1,19 +1,18 @@
-import React, { useEffect , useState} from "react";
+import React, { useEffect, useState } from "react";
 import BasicTimer from "../../utility/basic_timer";
 import BasicTimerComponent from "./basicComponent";
-import TransitionsModal from "./transitionsModal";
+import TransitionsModal from "./CreateModal";
 import axios from "axios";
 import "./basicContainer.css";
-import { useDispatch , useSelector } from "react-redux";
-import { create , fetchData ,forceRendering} from "../../redux/timerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { create, fetchData, forceRendering } from "../../redux/timerSlice";
 import { Grid, Box, Stack, Button } from "@mui/material";
 
-
-
-
 export default function TimerContainer({ timerList, id }) {
-  const dispatch = useDispatch()
-  const storeTimerArray = useSelector((state) => state.timer.timerArray) //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
+  const dispatch = useDispatch();
+  const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
+  const [timerInput,setTimerInput] = useState(0);
+  const [click, setClick] = useState(0);
 
   useEffect(() => {
     console.log("timer container constructor");
@@ -28,7 +27,7 @@ export default function TimerContainer({ timerList, id }) {
     const timerId = setTimeout(() => {
       load();
     }, 100);
-  
+
     return () => {
       console.log("timer container destructor");
       // 컴포넌트가 0.1초 전에 언마운트되었다면 타이머를 클리어합니다.
@@ -81,14 +80,13 @@ export default function TimerContainer({ timerList, id }) {
       }
     });
 
-  //   setDummy((prev) => {
-  //     timerList[deleteIdx].timer.pause(); // clearInterval 을 위해 반드시 호출 !!
-  //     timerList.splice(deleteIdx, 1);
-  //     return prev + 1;
-  //   });
+    //   setDummy((prev) => {
+    //     timerList[deleteIdx].timer.pause(); // clearInterval 을 위해 반드시 호출 !!
+    //     timerList.splice(deleteIdx, 1);
+    //     return prev + 1;
+    //   });
   }
 
-  
   function save() {
     // time, init
     const arr = [];
@@ -103,18 +101,17 @@ export default function TimerContainer({ timerList, id }) {
 
   function allStart() {
     storeTimerArray.forEach(({ timer }) => timer.start());
-    storeTimerArray.forEach((timer)=> logStart(timer.id))
+    storeTimerArray.forEach((timer) => logStart(timer.id));
   }
 
   function allPause() {
     storeTimerArray.forEach(({ timer }) => timer.pause());
-    storeTimerArray.forEach((timer)=> logPause(timer.id))
+    storeTimerArray.forEach((timer) => logPause(timer.id));
   }
 
   function allReset() {
     storeTimerArray.forEach(({ timer }) => timer.reset());
-    storeTimerArray.forEach((timer)=> logStop(timer.id))
-
+    storeTimerArray.forEach((timer) => logStop(timer.id));
   }
 
   //그룹이동 랜더링 관련
@@ -135,11 +132,10 @@ export default function TimerContainer({ timerList, id }) {
   //타이머 전체 read
   const load = async () => {
     try {
-      const tempTimerList = []
+      const tempTimerList = [];
       const res = await axios.get(`timer/?group_id=${id}`);
       console.log("load");
       res.data.map((item, idx) => {
-        
         const timer = new BasicTimer();
         timer.load(item);
         tempTimerList.push({"id": item.id, "type": item.type, isRunning : item.isRunning ,"timer": timer });
@@ -152,63 +148,78 @@ export default function TimerContainer({ timerList, id }) {
       console.log("Error Occured During Fetch: ", error);
     }
   };
-  
 
   //타이머 Create
-  const createTimer = async() => {
-    try{
-      const data = {type : "timer" , initTime : [0] , maxIter : 1}
-      const res = await axios.post(`timer/?group_id=${id}`,data);
-      console.log(res.data)
-      const timer = new BasicTimer();
+  const createTimer = async (initTime, maxIter) => {
+    try {
+      const data = { type: "timer", initTime: [initTime], maxIter: maxIter };
+      const res = await axios.post(`timer/?group_id=${id}`, data);
+      console.log(res.data);
+      const timer = new BasicTimer(initTime={initTime});
       dispatch(create({"id": res.data.id, "type": "timer", isRunning: false ,"timer": timer }))
       dispatch(forceRendering())
     }
     catch (error){
       console.log(error)
     }
-  }
-
+  };
 
   //타이머 전체 동작 로그 관련
-  const logStart = async(timerId) => {
-    try{
-      const data = {operation : "start"}
-      const res = await axios.post(`timer/operation/${timerId}`,data)
-      console.log("log start data on backend." , res.data)
-      dispatch(forceRendering())
+  const logStart = async (timerId) => {
+    try {
+      const data = { operation: "start" };
+      const res = await axios.post(`timer/operation/${timerId}`, data);
+      console.log("log start data on backend.", res.data);
+      dispatch(forceRendering());
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-      console.log(err)
-    }
-  }
+  };
 
-  const logPause = async(timerId) => {
-    try{
-      const data = {operation : "pause"}
-      const res = await axios.post(`timer/operation/${timerId}`,data)
-      console.log("log pause data on backend." , res.data)
-      dispatch(forceRendering())
+  const logPause = async (timerId) => {
+    try {
+      const data = { operation: "pause" };
+      const res = await axios.post(`timer/operation/${timerId}`, data);
+      console.log("log pause data on backend.", res.data);
+      dispatch(forceRendering());
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-      console.log(err)
-    }
-  }
+  };
 
-  const logStop = async(timerId) => {
-    try{
-      const data = {operation : "stop"}
-      const res = await axios.post(`timer/operation/${timerId}`,data)
-      console.log("log stop(reset) data on backend." , res.data)
-      dispatch(forceRendering())
+  const logStop = async (timerId) => {
+    try {
+      const data = { operation: "stop" };
+      const res = await axios.post(`timer/operation/${timerId}`, data);
+      console.log("log stop(reset) data on backend.", res.data);
+      dispatch(forceRendering());
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-      console.log(err)
-    }
-  }
+  };
 
   return (
     <Box className="time-container" sx={{ flexGrow: 1 }}>
+      <Grid
+        container
+        className={click % 20 === 0 && click !== 0 ? "img-bomb" : ""}
+        position={"sticky"}
+        ml={"32px"}
+        mb={"10px"}
+        width={766}
+        height={60}
+        bgcolor={"#003366"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        color={"white"}
+        zIndex={4}
+        fontSize={"1.3rem"}
+        onClick={() => {
+          setClick(click + 1);
+        }}
+      >
+        <p>{`지금까지 공부한 시간 :  00:00:00`}</p>
+      </Grid>
       <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
         <Grid item xs={8}>
           {storeTimerArray.map((obj, idx) => {
@@ -221,19 +232,18 @@ export default function TimerContainer({ timerList, id }) {
                 type={obj.type}
                 WatchId={obj.id}
                 initTime={obj.initTime}
-                load = {load}
+                load={load}
               />
             );
           })}
-          {timerList.length < 10 && (
+          {storeTimerArray.length < 10 && (
             <Button
               variant="contained"
               className="btn-create-timer"
               sx={{
-                width: "775px",
-                ml: 3.8,
+                width: "770px",
+                ml: "30px",
                 mb: 2,
-                border: "8px solid #376f94",
                 borderRadius: 4,
                 bgcolor: "#376f94",
                 fontSize: 30,
@@ -259,10 +269,9 @@ export default function TimerContainer({ timerList, id }) {
           >
             <Stack xs={8}>
               <Grid item>
-                <TransitionsModal createWatch={createTimer} />
+                <TransitionsModal input={timerInput} setInput={setTimerInput} createTimer={createTimer} />
               </Grid>
-              <Grid item>
-              </Grid>
+              <Grid item></Grid>
             </Stack>
 
             <Stack xs={2}>

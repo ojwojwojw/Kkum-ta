@@ -7,11 +7,8 @@ class signupService {
     this.userRepository = new UserRepository();
     this.encryptService = new EncryptService();
   }
-  async signup_local(id, password, email, provider) {
-    const userIdInfo = await this.userRepository.getUserByIdAndProvider(
-      id,
-      "local"
-    );
+  async signup_local(id, password, email) {
+    const userIdInfo = await this.userRepository.getUserById(id);
     if (userIdInfo !== null) {
       return new LoginDto(false, "ID already exists");
     }
@@ -24,7 +21,7 @@ class signupService {
       password,
       salt
     );
-    this.userRepository.insertUser(id, salt, hashedPw, email, provider);
+    this.userRepository.insertUser(id, salt, hashedPw, email);
     return new LoginDto(true, `Welcome ${id}!`);
   }
   async signup_sns(id, provider) {
