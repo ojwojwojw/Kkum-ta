@@ -14,6 +14,7 @@ class UserRepository extends Repository {
         hashedPw CHAR(88) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         email VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         provider VARCHAR(20) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+        refresh_token VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         PRIMARY KEY (user_key) USING BTREE
       )
       COLLATE='utf8mb4_general_ci'
@@ -62,6 +63,16 @@ class UserRepository extends Repository {
     return rows[0];
   }
 
+  async getIdByEmail(email) {
+    const sql = "SELECT id FROM user_tbl WHERE email= ?";
+    const params = [email];
+    const [rows] = await this.query(sql, params);
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows[0];
+  }
+
   async getUserByRefreshToken(refreshToken) {
     const sql = "SELECT * FROM user_tbl WHERE refresh_token= ?";
     const params = [refreshToken];
@@ -74,8 +85,8 @@ class UserRepository extends Repository {
 
   async insertUser(id, salt, hashedPw, email) {
     const sql =
-      "INSERT INTO user_tbl(id, salt, hashedPw, email) VALUES (?, ?, ?, ?)";
-    const params = [id, salt, hashedPw, email];
+      "INSERT INTO user_tbl(id, salt, hashedPw, email, provider) VALUES (?, ?, ?, ?, ?)";
+    const params = [id, salt, hashedPw, email, "local"];
     await this.query(sql, params);
     return true;
   }
@@ -88,7 +99,8 @@ class UserRepository extends Repository {
   }
 
   async updateRefreshToken(id, provider, refreshToken) {
-    const sql = "UPDATE timer.user_tbl SET refresh_token = ? WHERE id = ? AND provider = ?";
+    const sql =
+      "UPDATE user_tbl SET refresh_token = ? WHERE id = ? AND provider = ?";
     const params = [refreshToken, id, provider];
     await this.query(sql, params);
     return true;

@@ -3,10 +3,10 @@ const passport = require("passport");
 exports.isLoggedIn = (req, res, next) => {
   passport.authenticate("jwt", { session: false }, (err, user) => {
     if (err) {
-      res.status(404).json(err);
+      return res.status(500).json({ status: "internal server error" });
     }
     if (!user) {
-      return res.status(200).json({ message: "Token expired!" });
+      return res.status(401).json({ status: "unauthorized" });
     } else {
       next();
     }
@@ -16,12 +16,12 @@ exports.isLoggedIn = (req, res, next) => {
 exports.isNotLoggedIn = (req, res, next) => {
   passport.authenticate("jwt", { session: false }, (err, user) => {
     if (err) {
-      res.status(404).json(err);
+      return res.status(500).json({ status: "internal server error" });
     }
     if (!user) {
       next();
     } else {
-      res.status(200).json("Logged in!");
+      return res.status(401).json({ status: "unauthorized" });
     }
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 };
