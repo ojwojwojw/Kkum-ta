@@ -31,6 +31,11 @@ class LoginRepository extends Repository{
             return rows.insertId;
         }
     }
+    async insertUserId(id, user_id){
+        const sql = `UPDATE device_key SET user_key=? WHERE login_key=?`;
+        const params = [user_id, id];
+        await this.query(sql, params);
+    }
     async getDeviceKeyById(id){
         const sql = `SELECT device_key FROM login_tbl WHERE login_key=?`;
         const params = [id];
