@@ -4,11 +4,8 @@ const RandomDeviceKeyService = require("./service/randomDeviceKeyServiceRandexpI
 
 class Global {
     static #userRepository = null;
-<<<<<<< HEAD
     static #loginRepository = null;
     static #randomDeviceKeyService = null;
-=======
->>>>>>> develop
     static async getUserRepository(){
         if(!Global.#userRepository){
             Global.#userRepository = new UserRepository();
