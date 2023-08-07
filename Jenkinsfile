@@ -33,7 +33,7 @@ pipeline {
                     cd ./device/frontend/
                     ls -al
                     docker build --platform linux/arm64/v8 -t ${docker_repo}:front-server-for-raspberry-0.1 .
-                    docker push ${docker_repo}:front-sevrer-for-raspberry-0.1
+                    docker push ${docker_repo}:front-server-for-raspberry-0.1
                 '''
             }
         }
@@ -42,7 +42,7 @@ pipeline {
                 sh '''
                     cd ./device/backend/
                     docker build --platform linux/arm64/v8 -t ${docker_repo}:back-server-0.1 .
-                    docker push ${docker_repo}:back-sevrer-for-raspberry-0.1
+                    docker push ${docker_repo}:back-server-for-raspberry-0.1
                 '''
             }
         }
