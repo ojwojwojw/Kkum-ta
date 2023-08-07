@@ -160,5 +160,4 @@ export default class BasicTimer {
   getCurIter() {
     return this.#curIter;
   }
-
 }
