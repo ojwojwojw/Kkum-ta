@@ -10,7 +10,66 @@ pipeline {
         nodejs "node18"
     }
     stages {
-        stage('test ssh') {
+        stage('Build React App') {
+            steps {
+                sh '''
+                    cd ./device/frontend/
+                    npm install
+                    CI=false npm run build
+                '''
+            }
+        }
+        stage('Build Node Server') {
+            steps {
+                sh '''
+                    cd ./device/backend/
+                    npm install
+                '''
+            }
+        }
+        stage('Build React App Image') {
+            steps {
+                sh '''
+                    cd ./device/frontend/
+                    docker build -t ${docker_repo}:front-server-for-raspberry-0.1 .
+                    docker push ${docker_repo}:front-sevrer-for-raspberry-0.1
+                '''
+            }
+        }
+        stage('Build Node Server Image') {
+            steps {
+                sh '''
+                    cd ./device/backend/
+                    docker build -t ${docker_repo}:back-server-0.1 .
+                    docker push ${docker_repo}:back-sevrer-for-raspberry-0.1
+                '''
+            }
+        }
+        // stage('Deploy React App Image') {
+        //     steps {
+        //         sh '''
+        //             docker stop front-app
+        //             docker run -d --name front-app1 -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-server-0.1
+        //             docker rm front-app
+        //             docker stop front-app1
+        //             docker rename front-app1 front-app
+        //             docker start front-app
+        //         '''
+        //     }
+        // }
+        // stage('Deploy Node Server Image') {
+        //     steps {
+        //         sh '''
+        //             docker stop back-server
+        //             docker run -d --name back-server1 -p 8085:8085 --network=web-network --volumes-from back-server gugaro/kkumta:back-server-0.1
+        //             docker rm back-server
+        //             docker stop back-server1
+        //             docker rename back-server1 back-server
+        //             docker start back-server
+        //         '''
+        //     }
+        // }
+        stage('deploy over ssh') {
             steps {
                 sshPublisher(
                     publishers: [
@@ -20,7 +79,21 @@ pipeline {
                                 sshTransfer(
                                     cleanRemote: false, 
                                     excludes: '', 
-                                    execCommand: 'ls -al', 
+                                    execCommand: '''
+                                        docker stop front-app
+                                        docker run -d --name front-app1 -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-server-for-raspberry-0.1
+                                        docker rm front-app
+                                        docker stop front-app1
+                                        docker rename front-app1 front-app
+                                        docker start front-app
+
+                                        docker stop back-server
+                                        docker run -d --name back-server1 -p 8085:8085 --network=web-network --volumes-from back-server gugaro/kkumta:back-server-for-raspberry-0.1
+                                        docker rm back-server
+                                        docker stop back-server1
+                                        docker rename back-server1 back-server
+                                        docker start back-server
+                                    ''', 
                                     execTimeout: 120000, 
                                     flatten: false, 
                                     makeEmptyDirs: false, 
@@ -38,66 +111,7 @@ pipeline {
                 )
             }
         }
-    //     stage('Build React App') {
-    //         steps {
-    //             sh '''
-    //                 cd ./device/frontend/
-    //                 npm install
-    //                 CI=false npm run build
-    //             '''
-    //         }
-    //     }
-    //     stage('Build Node Server') {
-    //         steps {
-    //             sh '''
-    //                 cd ./device/backend/
-    //                 npm install
-    //             '''
-    //         }
-    //     }
-    //     stage('Build React App Image') {
-    //         steps {
-    //             sh '''
-    //                 cd ./device/frontend/
-    //                 docker build -t ${docker_repo}:front-server-for-raspberry-0.1 .
-    //                 docker push ${docker_repo}:front-sevrer-for-raspberry-0.1
-    //             '''
-    //         }
-    //     }
-    //     stage('Build Node Server Image') {
-    //         steps {
-    //             sh '''
-    //                 cd ./device/backend/
-    //                 docker build -t ${docker_repo}:back-server-0.1 .
-    //                 docker push ${docker_repo}:back-sevrer-for-raspberry-0.1
-    //             '''
-    //         }
-    //     }
-    //     stage('Deploy React App Image') {
-    //         steps {
-    //             sh '''
-    //                 docker stop front-app
-    //                 docker run -d --name front-app1 -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-server-0.1
-    //                 docker rm front-app
-    //                 docker stop front-app1
-    //                 docker rename front-app1 front-app
-    //                 docker start front-app
-    //             '''
-    //         }
-    //     }
-    //     stage('Deploy Node Server Image') {
-    //         steps {
-    //             sh '''
-    //                 docker stop back-server
-    //                 docker run -d --name back-server1 -p 8085:8085 --network=web-network --volumes-from back-server gugaro/kkumta:back-server-0.1
-    //                 docker rm back-server
-    //                 docker stop back-server1
-    //                 docker rename back-server1 back-server
-    //                 docker start back-server
-    //             '''
-    //         }
-    //     }
-    // }
+    }
     // post {
     //     success {
     //     	script {
@@ -121,5 +135,5 @@ pipeline {
     //             )
     //         }
     //     }
-    }
+    // }
 }
