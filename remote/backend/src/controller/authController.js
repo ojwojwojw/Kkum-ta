@@ -96,8 +96,13 @@ authRouter.get("/kakao/callback", (req, res, next) => {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      const res_user = { id: user.id, email: user.email };
-      return res.status(200).json({ user: res_user, accessToken: accessToken });
+      const res_user = {
+        id: user.id,
+        provider: user.provider,
+      };
+      return res
+        .status(200)
+        .json({ status: "ok", user: res_user, accessToken: accessToken });
     }
   )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
@@ -133,8 +138,13 @@ authRouter.get("/google/callback", (req, res, next) => {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      const res_user = { id: user.id, email: user.email };
-      return res.status(200).json({ user: res_user, accessToken: accessToken });
+      const res_user = {
+        id: user.id,
+        provider: user.provider,
+      };
+      return res
+        .status(200)
+        .json({ status: "ok", user: res_user, accessToken: accessToken });
     }
   )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
@@ -153,8 +163,12 @@ authRouter.post("/refresh", (req, res) => {
     req.body.id,
     req.body.provider
   );
-  if (!refresh.result)
+  if (!refresh.result) {
+    if (refresh.err == "jwt expired") {
+      return res.status(401).json({ status: "unauthorized" });
+    }
     return res.status(500).json({ status: "internal server error" });
+  }
   return res
     .status(200)
     .json({ status: "ok", accessToken: refresh.accessToken });
@@ -167,13 +181,13 @@ authRouter.post("/SearchID", async (req, res) => {
   }
 
   const id = await searchService.SearchID(email);
-  return res.json(id);
+  return res.status(200).json({ status: "ok", id: id });
 });
 
 authRouter.post("/signout", isLoggedIn, async (req, res) => {
   const userRepository = new UserRepository();
   if (!req.cookies.refreshToken) {
-    return res.json({ message: "Invaild requests" });
+    return res.status(401).json({ status: "unauthorized" });
   }
   const user = await userRepository.getUserByRefreshToken(
     req.cookies.refreshToken
@@ -182,7 +196,7 @@ authRouter.post("/signout", isLoggedIn, async (req, res) => {
   res.clearCookie("refreshToken");
   res.clearCookie("connect.sid");
   res.session = null;
-  return res.json("signout!");
+  return res.status(200).json({ status: "ok" });
 });
 
 module.exports = authRouter;

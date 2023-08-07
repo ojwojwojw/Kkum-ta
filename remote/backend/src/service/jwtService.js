@@ -34,7 +34,7 @@ class jwtService {
     try {
       const myToken = jwt.verify(token, process.env.JWT_SECRET);
       if (myToken == "jwt expired") {
-        return { message: "expired" };
+        return { result: false, err: myToken };
       }
 
       const accessToken = this.#getAccessToken(id, provider);
