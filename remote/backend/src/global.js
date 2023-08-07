@@ -1,11 +1,13 @@
 const LoginRepository = require("./repository/loginRepository");
 const UserRepository = require("./repository/userRepository");
 const RandomDeviceKeyService = require("./service/randomDeviceKeyServiceRandexpImpl");
+const DeviceService = require('./service/deviceService');
 
 class Global {
     static #userRepository = null;
     static #loginRepository = null;
     static #randomDeviceKeyService = null;
+    static #deviceService = null;
     static async getUserRepository(){
         if(!Global.#userRepository){
             Global.#userRepository = new UserRepository();
@@ -25,6 +27,12 @@ class Global {
             Global.#randomDeviceKeyService = new RandomDeviceKeyService();
         }
         return Global.#randomDeviceKeyService;
+    }
+    static async getDeviceService(){
+        if(!Global.#deviceService){
+            Global.#deviceService = new DeviceService(await Global.getLoginRepository());
+        }
+        return Global.#deviceService;
     }
 }
 
