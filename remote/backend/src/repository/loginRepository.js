@@ -39,11 +39,43 @@ class LoginRepository extends Repository{
         return rows[0].device_key;
     }
     async getIdByDeviceKey(device_key){
+        if(device_key === null) return null;
         const sql = `SELECT login_key FROM login_tbl WHERE device_key=?`;
         const params = [device_key];
         const [rows] = await this.query(sql, params);
         if(rows.length === 0) return null;
         return rows[0].login_key;
+    }
+    async getIdByUserId(user_id){
+        if(user_id === null) return null;
+        const sql = `SELECT login_key FROM login_tbl WHERE user_key=?`;
+        const params = [user_id];
+        const [rows] = await this.query(sql, params);
+        if(rows.length === 0) return null;
+        return rows[0].login_key;
+    }
+    async getUserIdById(id){
+        const sql = `SELECT user_key FROM login_tbl WHERE login_key=?`;
+        const params = [id];
+        const [rows] = await this.query(sql, params);
+        if(rows.length === 0) return null;
+        return rows[0].user_key;
+    }
+    async getDeviceKeyByUserId(user_id){
+        if(user_id === null) return null;
+        const sql = `SELECT device_key FROM login_tbl WHERE user_key=?`;
+        const params=[user_id];
+        const [rows] = await this.query(sql, params);
+        if(rows.length === 0) return null;
+        return rows[0].user_key;
+    }
+    async getUserIdByDeviceKey(device_key){
+        if(device_key === null) return null;
+        const sql = `SELECT user_id FROM login_tbl WHERE device_key=?`;
+        const params=[device_key];
+        const [rows] = await this.query(sql, params);
+        if(rows.length === 0) return null;
+        return rows[0].user_key;
     }
 }
 
