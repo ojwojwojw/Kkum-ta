@@ -9,6 +9,7 @@ const PORT = 8090;
 
 const authController = require("./src/controller/authController");
 const devController = require("./src/controller/devController");
+const logController = require("./src/controller/logController");
 
 passportConfig(passport);
 
@@ -38,5 +39,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/auth", authController);
 app.use("/dev", devController);
+app.use("/log", logController);
 
 app.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
