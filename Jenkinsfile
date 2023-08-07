@@ -5,7 +5,7 @@ pipeline {
         docker_repo = "gugaro/kkumta"
         docker_key = credentials("Docker_Hub_Key")
         docker_image = ''
-        ssh_target_host = "teamone@192.168.100.245"
+        env.TARGET_HOST = "teamone@192.168.100.245"
     }
     agent any
     tools {
@@ -55,6 +55,55 @@ pipeline {
                 '''
             }
         }
+        stage('SSH Deploy'){
+            steps {
+                sshPublisher(
+                    publishers: 
+                    [
+                        sshPublisherDesc(
+                            configName: 'Raspberry', 
+                            transfers: 
+                                [
+                                    sshTransfer(
+                                        cleanRemote: false, 
+                                        excludes: '', 
+                                        execCommand: '''
+                                            docker pull ${docker_repo}:front-server-for-raspberry-0.1;
+                                            docker pull ${docker_repo}:back-server-for-raspberry-0.1;
+
+                                            docker stop front-app;
+                                            docker run -d --name front-app1 -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-server-for-raspberry-0.1;
+                                            docker rm front-app;
+                                            docker stop front-app1;
+                                            docker rename front-app1 front-app;
+                                            docker start front-app;
+
+                                            docker stop back-server;
+                                            docker run -d --name back-server1 -p 8085:8085 --network=web-network --volumes-from back-server gugaro/kkumta:back-server-for-raspberry-0.1;
+                                            docker rm back-server;
+                                            docker stop back-server1;
+                                            docker rename back-server1 back-server;
+                                            docker start back-server;
+                                        ''', 
+                                        execTimeout: 120000, 
+                                        flatten: false, 
+                                        makeEmptyDirs: false, 
+                                        noDefaultExcludes: false, 
+                                        patternSeparator: '[, ]+', 
+                                        remoteDirectory: '/home/teamone', 
+                                        remoteDirectorySDF: false, 
+                                        removePrefix: '', 
+                                        sourceFiles: ''
+                                    )
+                                ], 
+                            usePromotionTimestamp: false, 
+                            useWorkspaceInPromotion: false, 
+                            verbose: true
+                        )
+                    ]
+                )
+            }
+        }
         // stage('Deploy React App Image') {
         //     steps {
         //         sh '''
@@ -81,44 +130,7 @@ pipeline {
         // }
         stage('deploy over ssh') {
             steps {
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'Raspberry', 
-                            transfers: [
-                                sshTransfer(
-                                    cleanRemote: false, 
-                                    excludes: '', 
-                                    execCommand: '''
-                                        docker stop front-app
-                                        docker run -d --name front-app1 -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-server-for-raspberry-0.1
-                                        docker rm front-app
-                                        docker stop front-app1
-                                        docker rename front-app1 front-app
-                                        docker start front-app
-
-                                        docker stop back-server
-                                        docker run -d --name back-server1 -p 8085:8085 --network=web-network --volumes-from back-server gugaro/kkumta:back-server-for-raspberry-0.1
-                                        docker rm back-server
-                                        docker stop back-server1
-                                        docker rename back-server1 back-server
-                                        docker start back-server
-                                    ''', 
-                                    execTimeout: 120000, 
-                                    flatten: false, 
-                                    makeEmptyDirs: false, 
-                                    noDefaultExcludes: false, 
-                                    patternSeparator: '[, ]+', 
-                                    remoteDirectory: '', 
-                                    remoteDirectorySDF: false, 
-                                    removePrefix: '', 
-                                    sourceFiles: ''
-                                    )
-                                ], 
-                            usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false
-                        )
-                    ]
-                )
+                sshagent(credentials: ['Raspberry-C101'])
             }
         }
     }
