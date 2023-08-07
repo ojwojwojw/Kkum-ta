@@ -11,7 +11,7 @@ pipeline {
     }
     stages {
         stage('test ssh') {
-            script {
+            steps {
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
