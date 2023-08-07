@@ -29,7 +29,7 @@ pipeline {
         }
         stage('Login') {
             steps {
-                sh 'docker login -u $docker_key'
+                sh 'echo $docker_key'
             }
         }
         stage('Build React App Image') {
