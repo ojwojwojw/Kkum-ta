@@ -1,8 +1,11 @@
 const express = require("express");
 const passport = require("passport");
+const jwtService = require("../service/jwtService");
+const jwt = new jwtService();
 const loginService = require("../service/signupService");
 const loginApp = new loginService();
-const { isLoggedIn, isNotLoggedIn } = require("../service/loginService");
+const UserRepository = require("../repository/userRepository");
+const { isLoggedIn, isNotLoggedIn } = require("../service/authService");
 
 const authRouter = express.Router();
 
@@ -14,15 +17,13 @@ authRouter.post("/", (req, res) => {
   res.status(200).send("POST userRouter /");
 });
 
-authRouter.get("/check", async (req, res) => {
-  if (req.session.user_id)
-    return res.status(200).json({ id: req.session.user_id });
-  else
-    return res.status(200).json({ id: null, message: "Please sign in first!" });
+authRouter.get("/check", isLoggedIn, (req, res) => {
+  console.log(req.headers.authorization.split("Bearer ")[1]);
+  return res.status(200).json("check");
 });
 
 authRouter.get("/signin", isNotLoggedIn, (req, res, next) => {
-  passport.authenticate("local", (authError, user, info) => {
+  passport.authenticate("local", async (authError, user, info) => {
     if (authError) {
       console.error(authError);
       return next(authError);
@@ -31,13 +32,19 @@ authRouter.get("/signin", isNotLoggedIn, (req, res, next) => {
       res.status(500);
       return res.send(info.message);
     }
-    return req.login(user, (loginError) => {
-      if (loginError) {
-        console.error(loginError);
-        return next(loginError);
-      }
-      return res.redirect("/test/login");
+    const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
+    const userRepository = new UserRepository();
+    await userRepository.updateRefreshToken(
+      user.id,
+      user.provider,
+      refreshToken
+    );
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
     });
+    const res_user = { id: user.id, email: user.email };
+    return res.status(200).json({ user: res_user, accessToken: accessToken });
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
 
@@ -55,47 +62,103 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
 authRouter.get(
   "/kakao",
   isNotLoggedIn,
-  passport.authenticate("kakao", { prompt: "select_account" })
+  passport.authenticate("kakao", { session: false, prompt: "select_account" })
 );
 
-authRouter.get(
-  "/kakao/callback",
-  passport.authenticate("kakao", {
-    failureRedirect: "/", // kakaoStrategy에서 실패한다면 실행
-  }),
-  // kakaoStrategy에서 성공한다면 콜백 실행
-  (req, res) => {
-    res.redirect("/test/login");
-  }
-);
+authRouter.get("/kakao/callback", (req, res, next) => {
+  passport.authenticate(
+    "kakao",
+    {
+      failureRedirect: "/", // googleStrategy에서 실패한다면 실행
+    },
+    async (err, user) => {
+      const { accessToken, refreshToken } = jwt.getTokens(
+        user.id,
+        user.provider
+      );
+      const userRepository = new UserRepository();
+      await userRepository.updateRefreshToken(
+        user.id,
+        user.provider,
+        refreshToken
+      );
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+      const res_user = { id: user.id, email: user.email };
+      return res.status(200).json({ user: res_user, accessToken: accessToken });
+    }
+  )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
+});
 
 authRouter.get(
   "/google",
   isNotLoggedIn,
   passport.authenticate("google", {
+    session: false,
     scope: ["profile"],
     prompt: "select_account",
   })
 );
 
-authRouter.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: "/", // googleStrategy에서 실패한다면 실행
-  }),
-  // googleStrategy에서 성공한다면 콜백 실행
-  (req, res) => {
-    res.redirect("/test/login");
+authRouter.get("/google/callback", (req, res, next) => {
+  passport.authenticate(
+    "google",
+    {
+      failureRedirect: "/", // googleStrategy에서 실패한다면 실행
+    },
+    async (err, user) => {
+      const { accessToken, refreshToken } = jwt.getTokens(
+        user.id,
+        user.provider
+      );
+      const userRepository = new UserRepository();
+      await userRepository.updateRefreshToken(
+        user.id,
+        user.provider,
+        refreshToken
+      );
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+      const res_user = { id: user.id, email: user.email };
+      return res.status(200).json({ user: res_user, accessToken: accessToken });
+    }
+  )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
+});
+
+authRouter.get("/refresh", (req, res) => {
+  const id = req.body.id;
+  const pw = req.body.password;
+  if (!id || !pw) {
+    return res.status(400).json({ message: "Invaild requests" });
   }
-);
+  if (!req.cookies.refreshToken) {
+    return res.json({ message: "Invaild requests" });
+  }
+  const message = jwt.refresh(
+    req.cookies.refreshToken,
+    req.body.id,
+    req.body.provider
+  );
+  return res.json(message);
+});
 
 authRouter.get("/signout", isLoggedIn, async (req, res) => {
-  req.logout((err) => {
-    if (err) throw err;
-    req.session.destroy();
-    res.clearCookie("connect.sid");
-    res.redirect("/test/signout");
-  });
+  const userRepository = new UserRepository();
+  if (!req.cookies.refreshToken) {
+    return res.json({ message: "Invaild requests" });
+  }
+  const user = await userRepository.getUserByRefreshToken(
+    req.cookies.refreshToken
+  );
+  userRepository.updateRefreshToken(user.id, user.provider, "");
+  res.clearCookie("refreshToken");
+  res.clearCookie("connect.sid");
+  res.session = null;
+  return res.json("signout!");
 });
 
 module.exports = authRouter;

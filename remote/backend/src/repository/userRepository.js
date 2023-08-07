@@ -1,11 +1,11 @@
-const Repository = require('./repository');
+const Repository = require("./repository");
 
-class UserRepository extends Repository{
+class UserRepository extends Repository {
   constructor() {
     super();
   }
 
-  async init(){
+  async init() {
     const sql = `
       CREATE TABLE user_tbl (
         user_key INT(11) NOT NULL AUTO_INCREMENT,
@@ -18,7 +18,7 @@ class UserRepository extends Repository{
       )
       COLLATE='utf8mb4_general_ci'
       ENGINE=InnoDB
-      `
+      `;
     await this.query(sql, []);
   }
 
@@ -29,7 +29,7 @@ class UserRepository extends Repository{
   async getUserById(id) {
     try {
       const conn = await this.pool.getConnection();
-      const sql = "SELECT * FROM login_tbl WHERE id = ?";
+      const sql = "SELECT * FROM user_tbl WHERE id = ?";
       const params = [id];
       const [rows, fields] = await conn.execute(sql, params);
       conn.release();
@@ -62,10 +62,20 @@ class UserRepository extends Repository{
     return rows[0];
   }
 
-  async insertUser(id, salt, hashedPw, email, provider) {
+  async getUserByRefreshToken(refreshToken) {
+    const sql = "SELECT * FROM user_tbl WHERE refresh_token= ?";
+    const params = [refreshToken];
+    const [rows] = await this.query(sql, params);
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows[0];
+  }
+
+  async insertUser(id, salt, hashedPw, email) {
     const sql =
-      "INSERT INTO user_tbl(id, salt, hashedPw, email, provider) VALUES (?, ?, ?, ?, ?)";
-    const params = [id, salt, hashedPw, email, provider];
+      "INSERT INTO user_tbl(id, salt, hashedPw, email) VALUES (?, ?, ?, ?)";
+    const params = [id, salt, hashedPw, email];
     await this.query(sql, params);
     return true;
   }
@@ -77,19 +87,17 @@ class UserRepository extends Repository{
     return true;
   }
 
-  async deleteUserById(id) {
-      const sql = "DELETE FROM user_tbl WHERE id = ?";
-      const params = [id];
-      return this.query(sql, params);
+  async updateRefreshToken(id, provider, refreshToken) {
+    const sql = "UPDATE timer.user_tbl SET refresh_token = ? WHERE id = ? AND provider = ?";
+    const params = [refreshToken, id, provider];
+    await this.query(sql, params);
+    return true;
   }
 
-  async findUserIdByEmail(userEmail) {
-    try {
-      const sql = "SELECT id FROM timer.login_tbl WHERE email = ?";
-      const params = [userEmail];
-    } catch(err) {
-      console.log(err);
-    }
+  async deleteUserById(id) {
+    const sql = "DELETE FROM user_tbl WHERE id = ?";
+    const params = [id];
+    return this.query(sql, params);
   }
 }
 
