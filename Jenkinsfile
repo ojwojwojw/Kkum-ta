@@ -35,27 +35,42 @@ pipeline {
                 '''
             }
         }
-        stage('Build React App - Device') {
+        stage('Build React App - Web') {
             steps {
                 sh '''
-                    cd ./remote/frontend/
+                    cd ./remote/back/
                     npm install
-                    CI=false npm run build
                 '''
             }
         }
-        stage('Build React App Image') {
+        stage('Build React App Image - Device') {
             steps {
                 sh '''
                     cd ./device/frontend/
+                    docker build -t ${docker_repo}:front-device-0.1 .
+                '''
+            }
+        }
+        stage('Build Node Server Image - Device') {
+            steps {
+                sh '''
+                    cd ./device/backend/
+                    docker build -t ${docker_repo}:back-device-0.1 .
+                '''
+            }
+        }
+        stage('Build React App Image - Web') {
+            steps {
+                sh '''
+                    cd ./remote/frontend/
                     docker build -t ${docker_repo}:front-server-0.1 .
                 '''
             }
         }
-        stage('Build Node Server Image') {
+        stage('Build Node Server Image - Web') {
             steps {
                 sh '''
-                    cd ./device/backend/
+                    cd ./remote/backend/
                     docker build -t ${docker_repo}:back-server-0.1 .
                 '''
             }
@@ -81,6 +96,30 @@ pipeline {
                     docker stop back-server1
                     docker rename back-server1 back-server
                     docker start back-server
+                '''
+            }
+        }
+        stage('Deploy Web Front Image') {
+            steps {
+                sh '''
+                    docker stop front-web-app
+                    docker run -d --name front-web-app1 -p 3005:3005 --network=web-network --volumes-from front-web-app gugaro/kkumta:front-server-0.1
+                    docker rm front-web-app
+                    docker stop front-web-app1
+                    docker rename front-web-app1 front-web-app
+                    docker start front-web-app
+                '''
+            }
+        }
+        stage('Deploy Web Back Image') {
+            steps {
+                sh '''
+                    docker stop back-web-server
+                    docker run -d --name back-web-server1 -p 8090:8090 --network=web-network --volumes-from back-web-server gugaro/kkumta:back-server-0.1
+                    docker rm back-web-server
+                    docker stop back-web-server1
+                    docker rename back-web-server1 back-web-server
+                    docker start back-web-server
                 '''
             }
         }
