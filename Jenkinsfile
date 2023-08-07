@@ -38,7 +38,7 @@ pipeline {
         stage('Build Node Server - Web') {
             steps {
                 sh '''
-                    cd ./remote/back/
+                    cd ./remote/backend/
                     npm install
                 '''
             }
