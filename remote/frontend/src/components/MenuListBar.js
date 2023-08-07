@@ -28,7 +28,7 @@ export default function MenuListBar() {
       component="nav"
       aria-labelledby="nested-list-subheader"
     >
-      <ListItemButton component={Link} to="/reports">
+      <ListItemButton component={Link} to="/report">
         <ListItemIcon>
           <BarChartIcon />
         </ListItemIcon>

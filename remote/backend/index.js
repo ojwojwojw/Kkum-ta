@@ -16,6 +16,22 @@ app.use(session({
     resave: true,
     saveUninitialized: true,
 }));
+
+const debug = (req, res, next)=>{
+    const beginTime = Date.now();
+    originalJSON = res.json;
+    res.json = function(data) {
+        console.log(req.method + " " + req.path + ", body:" + JSON.stringify(req.body) + ", query:" + JSON.stringify(req.query));
+        console.log(`\t${JSON.stringify(data)}`);
+        console.log(`ellapsed time: ${Date.now() - beginTime} ms\n`);
+        originalJSON.call(this, data);
+    }
+    next();
+};
+
+app.use(debug);
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: false }));

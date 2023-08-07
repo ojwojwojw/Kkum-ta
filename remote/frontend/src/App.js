@@ -4,7 +4,8 @@ import MenuListBar from "./components/MenuListBar";
 import Login from "./components/login";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { Grid, Button, Menu, MenuItem } from "@mui/material";
-import reportPage from "./pages/reportPage";
+import ReportPage from "./pages/reportPage";
+import SignupPage from "./pages/signupPage";
 
 function App() {
   const [isAthenticated, setIsAthenticated] = useState(true);
@@ -70,7 +71,8 @@ function App() {
             Component={!isAthenticated ? Login : MenuListBar}
           ></Route>
           <Route exact path="login" Component={Login} />
-          <Route exact path="reports" Component={reportPage} />
+          <Route exact path="report" Component={ReportPage} />
+          <Route exact path="signup" Component={SignupPage}/>
         </Routes>
       </div>
     </BrowserRouter>

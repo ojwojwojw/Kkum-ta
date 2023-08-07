@@ -1,13 +1,13 @@
 import React from "react"
 import MenuListBar from "../components/MenuListBar"
 
-const reportPage = ()=>{
+const ReportPage = ()=>{
     return(
         <div>
-            <MenuListBar></MenuListBar>
             <h1>this is reportPage.</h1>
+            <MenuListBar/>
         </div>
     )
 }
 
-export default reportPage
+export default ReportPage
