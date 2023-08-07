@@ -77,6 +77,12 @@ class LoginRepository extends Repository{
         if(rows.length === 0) return null;
         return rows[0].user_key;
     }
+
+    async deleteById(user_id){
+        const sql = `DELETE FROM login_tbl WHERE user_key=?`;
+        const params = [user_id];
+        return this.query(sql, params);
+    }
 }
 
 module.exports = LoginRepository;
