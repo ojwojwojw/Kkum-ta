@@ -31,6 +31,7 @@ pipeline {
             steps {
                 sh '''
                     cd ./device/frontend/
+                    ls -al
                     docker build --platform linux/arm/v8 -t ${docker_repo}:front-server-for-raspberry-0.1 .
                     docker push ${docker_repo}:front-sevrer-for-raspberry-0.1
                 '''
