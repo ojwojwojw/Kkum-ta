@@ -3,8 +3,11 @@ const ComponentRepository = require('./repository/componentRepository');
 const GroupRepository = require('./repository/groupRepository');
 const StopwatchRepository = require('./repository/stopwatchRepository');
 const TimerRepository = require('./repository/timerRepository');
+const DeviceRepository = require('./repository/deviceRepository');
 const ComponentService = require('./service/componentService');
 const ComponentLogService = require('./service/componentLogService');
+const DeviceService = require('./service/deviceService');
+
 
 class Global {
     static #componentRepository = null;
@@ -12,8 +15,10 @@ class Global {
     static #stopwatchRepository = null;
     static #timerRepository = null;
     static #componentLogRepository = null;
+    static #deviceRepository = null;
     static #componentService = null;
     static #componentLogService = null;
+    static #deviceService = null;
 
     static async getComponentRepository() {
         if (!Global.#componentRepository) {
@@ -54,6 +59,13 @@ class Global {
         return Global.#componentLogRepository;
     }
 
+    static async getDeviceRepository(){
+        if(!Global.#deviceRepository){
+            Global.#deviceRepository = new DeviceRepository();
+        }
+        return Global.#deviceRepository;
+    }
+
     static async getComponentService() {
         if(!Global.#componentService){
             Global.#componentService = new ComponentService(
@@ -75,6 +87,13 @@ class Global {
 
     static async getComponentLogService(){
         return Global.#componentLogService ??= new ComponentLogService(await Global.getComponentLogRepository());
+    }
+
+    static async getDeviceService(){
+        if(!Global.#deviceService){
+            Global.#deviceService = new DeviceService(await Global.getDeviceRepository());
+        }
+        return Global.#deviceService;
     }
 }
 
