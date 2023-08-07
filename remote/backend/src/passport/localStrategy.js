@@ -25,12 +25,12 @@ module.exports = () => {
             return;
           }
           const salt = userInfo.salt;
-          const hashedPW = userInfo.hashedPW;
+          const hashedPw = userInfo.hashedPw;
           const challenge = await encryptService.getHashedPassword(
             password,
             salt
           );
-          if (hashedPW === challenge) {
+          if (hashedPw === challenge) {
             done(null, userInfo);
           } else {
             done(null, false, { message: "비밀번호가 일치하지 않습니다." });

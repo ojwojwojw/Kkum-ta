@@ -2,9 +2,9 @@ FROM node:18
 
 WORKDIR /app
 
-RUN mkdir ./server_device
+RUN mkdir ./server
 
-WORKDIR ./server_device
+WORKDIR ./server
 
 COPY ./package*.json ./
 
@@ -12,6 +12,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8085
+EXPOSE 8090
 
 CMD ["npm", "start"]
