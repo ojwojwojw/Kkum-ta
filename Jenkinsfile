@@ -9,7 +9,7 @@ pipeline {
         nodejs "node18"
     }
     stages {
-        stage('Build React App') {
+        stage('Build React App - Device') {
             steps {
                 sh '''
                     cd ./device/frontend/
@@ -18,11 +18,29 @@ pipeline {
                 '''
             }
         }
-        stage('Build Node Server') {
+        stage('Build Node Server - Device') {
             steps {
                 sh '''
                     cd ./device/backend/
                     npm install
+                '''
+            }
+        }
+        // stage('Build React App - Web') {
+        //     steps {
+        //         sh '''
+        //             cd ./remote/frontend/
+        //             npm install
+        //             CI=false npm run build
+        //         '''
+        //     }
+        // }
+        stage('Build React App - Device') {
+            steps {
+                sh '''
+                    cd ./remote/frontend/
+                    npm install
+                    CI=false npm run build
                 '''
             }
         }
