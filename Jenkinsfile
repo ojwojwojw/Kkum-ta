@@ -14,9 +14,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['Raspberry']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ${ssh_target_host} '
-                        ls -al
-                        '
+                        ssh -o StrictHostKeyChecking=no ${ssh_target_host} "1"
                     '''
                 }
             }
