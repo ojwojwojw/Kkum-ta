@@ -4,6 +4,8 @@ const jwtService = require("../service/jwtService");
 const jwt = new jwtService();
 const loginService = require("../service/signupService");
 const loginApp = new loginService();
+const SearchService = require("../service/searchService");
+const searchService = new SearchService();
 const UserRepository = require("../repository/userRepository");
 const { isLoggedIn, isNotLoggedIn } = require("../service/authService");
 
@@ -22,15 +24,14 @@ authRouter.get("/check", isLoggedIn, (req, res) => {
   return res.status(200).json("check");
 });
 
-authRouter.get("/signin", isNotLoggedIn, (req, res, next) => {
+authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", async (authError, user, info) => {
     if (authError) {
-      console.error(authError);
-      return next(authError);
+      return res.status(500).json({ status: "internal server error" });
     }
     if (!user) {
-      res.status(500);
-      return res.send(info.message);
+      res.status(400);
+      return res.json({ status: "bad request" });
     }
     const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
     const userRepository = new UserRepository();
@@ -43,8 +44,14 @@ authRouter.get("/signin", isNotLoggedIn, (req, res, next) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    const res_user = { id: user.id, email: user.email };
-    return res.status(200).json({ user: res_user, accessToken: accessToken });
+    const res_user = {
+      id: user.id,
+      email: user.email,
+      provider: user.provider,
+    };
+    return res
+      .status(200)
+      .json({ status: "ok", user: res_user, accessToken: accessToken });
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
 
@@ -53,9 +60,12 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
   const pw = req.body.password;
   const email = req.body.email;
   if (!id || !pw || !email) {
-    return res.status(400).json({ message: "Invaild requests" });
+    return res.status(400).json({ status: "bad request" });
   }
-  const signUpResult = await loginApp.signup_local(id, pw, email, "local");
+  const signUpResult = await loginApp.signup_local(id, pw, email);
+  if (signUpResult.get_status === "conflict") {
+    return res.status(409).json(signUpResult);
+  }
   return res.status(200).json(signUpResult);
 });
 
@@ -86,8 +96,13 @@ authRouter.get("/kakao/callback", (req, res, next) => {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      const res_user = { id: user.id, email: user.email };
-      return res.status(200).json({ user: res_user, accessToken: accessToken });
+      const res_user = {
+        id: user.id,
+        provider: user.provider,
+      };
+      return res
+        .status(200)
+        .json({ status: "ok", user: res_user, accessToken: accessToken });
     }
   )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
@@ -123,33 +138,56 @@ authRouter.get("/google/callback", (req, res, next) => {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      const res_user = { id: user.id, email: user.email };
-      return res.status(200).json({ user: res_user, accessToken: accessToken });
+      const res_user = {
+        id: user.id,
+        provider: user.provider,
+      };
+      return res
+        .status(200)
+        .json({ status: "ok", user: res_user, accessToken: accessToken });
     }
   )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
 
-authRouter.get("/refresh", (req, res) => {
+authRouter.post("/refresh", (req, res) => {
   const id = req.body.id;
-  const pw = req.body.password;
-  if (!id || !pw) {
-    return res.status(400).json({ message: "Invaild requests" });
+  const provider = req.body.provider;
+  if (!id || !provider) {
+    return res.status(400).json({ status: "bad request" });
   }
   if (!req.cookies.refreshToken) {
-    return res.json({ message: "Invaild requests" });
+    return res.status(401).json({ status: "unauthorized" });
   }
-  const message = jwt.refresh(
+  const refresh = jwt.refresh(
     req.cookies.refreshToken,
     req.body.id,
     req.body.provider
   );
-  return res.json(message);
+  if (!refresh.result) {
+    if (refresh.err == "jwt expired") {
+      return res.status(401).json({ status: "unauthorized" });
+    }
+    return res.status(500).json({ status: "internal server error" });
+  }
+  return res
+    .status(200)
+    .json({ status: "ok", accessToken: refresh.accessToken });
 });
 
-authRouter.get("/signout", isLoggedIn, async (req, res) => {
+authRouter.post("/SearchID", async (req, res) => {
+  const email = req.body.email;
+  if (!email) {
+    return res.status(400).json({ message: "Invaild requests" });
+  }
+
+  const id = await searchService.SearchID(email);
+  return res.status(200).json({ status: "ok", id: id });
+});
+
+authRouter.post("/signout", isLoggedIn, async (req, res) => {
   const userRepository = new UserRepository();
   if (!req.cookies.refreshToken) {
-    return res.json({ message: "Invaild requests" });
+    return res.status(401).json({ status: "unauthorized" });
   }
   const user = await userRepository.getUserByRefreshToken(
     req.cookies.refreshToken
@@ -158,7 +196,7 @@ authRouter.get("/signout", isLoggedIn, async (req, res) => {
   res.clearCookie("refreshToken");
   res.clearCookie("connect.sid");
   res.session = null;
-  return res.json("signout!");
+  return res.status(200).json({ status: "ok" });
 });
 
 module.exports = authRouter;
