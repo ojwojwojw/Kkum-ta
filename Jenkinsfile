@@ -5,7 +5,6 @@ pipeline {
         docker_repo = "gugaro/kkumta"
         docker_key = credentials("Docker_Hub_Key")
         docker_image = ''
-        env.TARGET_HOST = "teamone@192.168.100.245"
     }
     agent any
     tools {
