@@ -5,7 +5,7 @@ class jwtService {
   constructor() {
     this.userRepository = new UserRepository();
   }
-  getAccessToken(id, provider) {
+  #getAccessToken(id, provider) {
     const accesstoken = jwt.sign(
       { user_id: id, provider: provider },
       process.env.JWT_SECRET,
@@ -24,7 +24,7 @@ class jwtService {
   }
 
   getTokens(id, provider) {
-    const accessToken = this.getAccessToken(id, provider);
+    const accessToken = this.#getAccessToken(id, provider);
     const refreshToken = this.#getRefreshToken();
 
     return { accessToken, refreshToken };
@@ -36,13 +36,11 @@ class jwtService {
       if (myToken == "jwt expired") {
         return { message: "expired" };
       }
-  
-      console.log({ id: id, provider: provider });
-  
-      const accessToken = this.getAccessToken(id, provider);
-      return { token: accessToken };
+
+      const accessToken = this.#getAccessToken(id, provider);
+      return { result: true, accessToken: accessToken };
     } catch (err) {
-      return { message: err };
+      return { result: false, err: err };
     }
   }
 }
