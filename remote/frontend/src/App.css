@@ -1,5 +1,5 @@
 .App {
-  min-height: 700px;
+  min-height: 570px;
   text-align: center;
   background-color: rgb(233, 233, 233);
 }
@@ -43,11 +43,3 @@ a:-webkit-any-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
