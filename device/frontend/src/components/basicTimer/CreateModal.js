@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { Grid,Box,Modal,Fade,Button,Backdrop } from "@mui/material";
+import { Grid, Box, Modal, Fade, Button, Backdrop } from "@mui/material";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { forceRendering } from "../../redux/timerSlice";
 
 const style = {
   position: "absolute",
@@ -29,7 +30,7 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
   const [sec, setSec] = useState(0);
 
   useEffect(() => {
-    setInput(hour * 3600 + min * 60 + sec);
+    setInput((hour * 3600 + min * 60 + sec) * 1000);
   });
 
   let arr100 = Array.from({ length: 100 }, (v, i) =>
@@ -39,7 +40,20 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Create watch</Button>
+      <Button
+        sx={{
+          width: "765px",
+          ml: "30px",
+          mb: 2,
+          borderRadius: 4,
+          bgcolor: "#376f94",
+          fontSize: 30,
+          pb: 0,
+        }}
+        onClick={handleOpen}
+      >
+        +
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -54,7 +68,7 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
         }}
       >
         <Fade in={open}>
-          <Box sx={style}>
+          <Box sx={style} className="modal-box">
             <Grid container justifyContent={"center"} alignItems={"center"}>
               <Grid item xs={2}>
                 <Swiper
@@ -66,8 +80,8 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
                     setHour(obj.realIndex);
                   }}
                 >
-                  {arr100.map((hour) => (
-                    <SwiperSlide>{hour}</SwiperSlide>
+                  {arr100.map((hour, idx) => (
+                    <SwiperSlide key={"hour"}>{hour}</SwiperSlide>
                   ))}
                 </Swiper>
               </Grid>
@@ -84,8 +98,8 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
                     setMin(obj.realIndex);
                   }}
                 >
-                  {arr60.map((min) => (
-                    <SwiperSlide>{min}</SwiperSlide>
+                  {arr60.map((min, idx) => (
+                    <SwiperSlide key={"min"}>{min}</SwiperSlide>
                   ))}
                 </Swiper>
               </Grid>
@@ -102,8 +116,8 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
                     setSec(obj.realIndex);
                   }}
                 >
-                  {arr60.map((sec) => (
-                    <SwiperSlide>{sec}</SwiperSlide>
+                  {arr60.map((sec, idx) => (
+                    <SwiperSlide key={"sec"}>{sec}</SwiperSlide>
                   ))}
                 </Swiper>
               </Grid>
@@ -116,9 +130,9 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
             >
               <Button
                 onClick={() => {
-                  var maxIter=1
-                  setInput(hour * 3600 + min * 60 + sec);
-                  createTimer(input*1000, maxIter)
+                  var maxIter = 1;
+                  setInput((hour * 3600 + min * 60 + sec) * 1000);
+                  createTimer(input, maxIter);
                   console.log(input);
                   setHour(0);
                   setMin(0);

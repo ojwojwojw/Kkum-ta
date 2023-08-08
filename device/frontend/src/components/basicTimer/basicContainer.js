@@ -11,7 +11,7 @@ import { Grid, Box, Stack, Button } from "@mui/material";
 export default function TimerContainer({ timerList, id }) {
   const dispatch = useDispatch();
   const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
-  const [timerInput,setTimerInput] = useState(0);
+  const [timerInput, setTimerInput] = useState(0);
   const [click, setClick] = useState(0);
 
   useEffect(() => {
@@ -35,7 +35,6 @@ export default function TimerContainer({ timerList, id }) {
     };
   }, []);
 
-
   useEffect(() => {
     console.log("timer container useEffect storeTimerArray");
     forceAllStart();
@@ -51,9 +50,6 @@ export default function TimerContainer({ timerList, id }) {
   //   }
   // },[])
 
-  
-
- 
   // // 타이머 스톱워치 생성 함수 리팩토링(중복 제거 후 타입으로 구분)
   // function createBasicWatch(type, idx) {
   //   if (timerList.length >= 10) return;
@@ -117,10 +113,10 @@ export default function TimerContainer({ timerList, id }) {
   //그룹이동 랜더링 관련
   function forceAllStart() {
     storeTimerArray.forEach((item) => {
-      if(item.isRunning === true){
-        console.log('조건문 안에 들어오나?')
-        item.timer.pause()
-        item.timer.start()
+      if (item.isRunning === true) {
+        console.log("조건문 안에 들어오나?");
+        item.timer.pause();
+        item.timer.start();
       }
     });
 
@@ -138,12 +134,17 @@ export default function TimerContainer({ timerList, id }) {
       res.data.map((item, idx) => {
         const timer = new BasicTimer();
         timer.load(item);
-        tempTimerList.push({"id": item.id, "type": item.type, isRunning : item.isRunning ,"timer": timer });
-        return null
-      });   
-      console.log(tempTimerList)
-      dispatch(fetchData(tempTimerList))
-      dispatch(forceRendering())
+        tempTimerList.push({
+          id: item.id,
+          type: item.type,
+          isRunning: item.isRunning,
+          timer: timer,
+        });
+        return null;
+      });
+      console.log(tempTimerList);
+      dispatch(fetchData(tempTimerList));
+      dispatch(forceRendering());
     } catch (error) {
       console.log("Error Occured During Fetch: ", error);
     }
@@ -152,15 +153,22 @@ export default function TimerContainer({ timerList, id }) {
   //타이머 Create
   const createTimer = async (initTime, maxIter) => {
     try {
-      const data = { type: "timer", initTime: [initTime], maxIter: maxIter };
+      const data = { type: "timer", initTime: [initTime, 0], maxIter: maxIter };
       const res = await axios.post(`timer/?group_id=${id}`, data);
       console.log(res.data);
-      const timer = new BasicTimer(initTime={initTime});
-      dispatch(create({"id": res.data.id, "type": "timer", isRunning: false ,"timer": timer }))
-      dispatch(forceRendering())
-    }
-    catch (error){
-      console.log(error)
+      const timer = new BasicTimer();
+      dispatch(
+        create({
+          id: res.data.id,
+          type: "timer",
+          initTime: initTime,
+          isRunning: false,
+          timer: timer,
+        })
+      );
+      dispatch(forceRendering());
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -204,6 +212,7 @@ export default function TimerContainer({ timerList, id }) {
         container
         className={click % 20 === 0 && click !== 0 ? "img-bomb" : ""}
         position={"sticky"}
+        top={"100px"}
         ml={"32px"}
         mb={"10px"}
         width={766}
@@ -236,7 +245,17 @@ export default function TimerContainer({ timerList, id }) {
               />
             );
           })}
-          {storeTimerArray.length < 10 && (
+          <Grid item className="btn-create-timer">
+            {storeTimerArray.length < 10 && id === 0 && (
+              <TransitionsModal
+                input={timerInput}
+                setInput={setTimerInput}
+                createTimer={() => createTimer(timerInput, 1)}
+              />
+            )}
+          </Grid>
+
+          {/* {storeTimerArray.length < 10 && (
             <Button
               variant="contained"
               className="btn-create-timer"
@@ -253,11 +272,10 @@ export default function TimerContainer({ timerList, id }) {
             >
               +
             </Button>
-          )}
+          )} */}
         </Grid>
         <Grid item xs={4}>
           <Stack
-            container
             top={"80px"}
             width={"140px"}
             height={"480px"}
@@ -268,19 +286,23 @@ export default function TimerContainer({ timerList, id }) {
             alignItems={"center"}
           >
             <Stack xs={8}>
-              <Grid item>
-                <TransitionsModal input={timerInput} setInput={setTimerInput} createTimer={createTimer} />
-              </Grid>
+              {/* <Grid item>
+                <TransitionsModal
+                  input={timerInput}
+                  setInput={setTimerInput}
+                  createTimer={createTimer}
+                />
+              </Grid> */}
               <Grid item></Grid>
             </Stack>
 
             <Stack xs={2}>
-              <Button variant="outlined" onClick={() => load()}>
+              {/* <Button variant="outlined" onClick={() => load()}>
                 불러오기
               </Button>
               <Button variant="outlined" onClick={() => save()}>
                 저장하기
-              </Button>
+              </Button> */}
             </Stack>
             <Stack xs={2}>
               <Grid item>
