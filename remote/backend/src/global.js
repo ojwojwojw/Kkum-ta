@@ -9,7 +9,7 @@ class Global {
 
     static async getDeviceRepository(){
         if(!Global.#deviceRepository){
-            Global.#deviceRepository = new DeviceRepository(await Global.getRandomDeviceKeyService());
+            Global.#deviceRepository = new DeviceRepository();
         }
         return Global.#deviceRepository;
     }

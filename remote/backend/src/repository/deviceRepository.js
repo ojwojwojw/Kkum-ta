@@ -2,9 +2,8 @@ const Repository = require('./repository');
 const Randexp = require('randexp');
 
 class DeviceRepository extends Repository{
-    constructor(randomDeviceKeyService){
+    constructor(){
         super();
-        this.randomDeviceKeyService = randomDeviceKeyService;
     }
     async init(){
         const sql = `CREATE TABLE IF NOT EXISTS device_tbl (
