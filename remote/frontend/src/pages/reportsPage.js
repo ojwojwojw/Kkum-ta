@@ -31,7 +31,7 @@ export default function ReportPage() {
 
   return (
     <Box m={"20px"}>
-      <Grid>
+      <Grid container>
         <Grid
           container
           border={"4px solid #acacac"}
@@ -42,7 +42,8 @@ export default function ReportPage() {
           alignItems={"center"}
           bgcolor={"white"}
         >
-          <Grid item xs={2.2}>
+          <Grid item xs={2}>
+            {/* 토글 버튼(일,주,월) */}
             <ToggleButtonGroup
               orientation="vertical"
               value={view}
@@ -72,7 +73,8 @@ export default function ReportPage() {
               </ToggleButton>
             </ToggleButtonGroup>
           </Grid>
-          <Grid item xs={4.5}>
+          <Grid item xs={3}>
+            {/* 버튼에 따른 그래프(barChart) */}
             {handle === "day" && (
               <Grid>
                 <BarChart
@@ -140,7 +142,8 @@ export default function ReportPage() {
               </Grid>
             )}
           </Grid>
-          <Grid item xs={4.5}>
+          <Grid item xs={3}>
+            {/* 버튼에 따른 그래프(PieChart) */}
             {handle === "day" && (
               <Grid>
                 <PieChart
@@ -224,25 +227,20 @@ export default function ReportPage() {
       </Grid>
       <Grid container>
         <Grid
-          item
-          xs={12}
+          container
           border={"4px solid #acacac"}
           borderRadius={"10px"}
           minHeight={"220px"}
           m={"10px"}
           p={"10px"}
           bgcolor={"white"}
+          justifyContent={"center"}
+          alignItems={"center"}
         >
-          잔디심을 곳
-          <Grid
-            container
-            mt="20px"
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <Stack container direction={"vertical"}>
+          <Grid item mt="20px">
+            <Stack direction={"row"}>
               {groundY.map((row, yIndex) => (
-                <Stack container key={yIndex}>
+                <Stack key={yIndex}>
                   {groundX.map((col, xIndex) => {
                     const day = yIndex * 7 + xIndex + 1;
                     return day <= dateOfYear ? (

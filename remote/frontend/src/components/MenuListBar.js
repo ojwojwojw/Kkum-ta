@@ -28,7 +28,7 @@ export default function MenuListBar() {
           left: 0,
           position: "fixed",
           width: "200px",
-          minHeight: "520px",
+          minHeight: "100dvh",
           bgcolor: "background.paper",
           justifyContent: "center",
           alignItems: "center",
