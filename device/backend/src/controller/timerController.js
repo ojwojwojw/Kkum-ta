@@ -10,7 +10,10 @@ let componentService, componentLogService;
 })();
 
 timerRouter.get("/", async (req, res) => {
-  const group_id = req.query.group_id;
+  if(Object.is(parseInt(req.query.group_id), NaN)){
+    return res.status(400).json({status:"invalid parameter"});
+  }
+  const group_id = parseInt(req.query.group_id);
   if(group_id){
     res.status(200).json(componentService.getByGroup(parseInt(group_id)));
     return;
@@ -22,6 +25,9 @@ timerRouter.get("/", async (req, res) => {
 });
 
 timerRouter.get("/:id", async (req, res) => {
+  if(Object.is(parseInt(req.params.id), NaN)){
+    return res.status(400).json({status:"invalid parameter"});
+  }
   const id = parseInt(req.params.id);
   const item = componentService.getById(id);
   if(item === null){
@@ -35,6 +41,9 @@ timerRouter.get("/:id", async (req, res) => {
 });
 
 timerRouter.delete("/:id", async (req, res) => {
+  if(Object.is(parseInt(req.params.id), NaN)){
+    return res.status(400).json({status:"invalid parameter"});
+  }
   const id = parseInt(req.params.id);
   const result = await componentService.deleteById(id);
   if(result.ok){
@@ -48,6 +57,9 @@ timerRouter.delete("/:id", async (req, res) => {
 });
 
 timerRouter.put("/:id", async (req, res)=>{
+  if(Object.is(parseInt(req.params.id), NaN)){
+    return res.status(400).json({status:"invalid parameter"});
+  }
   const id = parseInt(req.params.id);
   const initTime = req.body.initTime;
   const result = await componentService.putInitTime(id, initTime);
@@ -80,12 +92,15 @@ timerRouter.post("/", async (req, res) => {
       await componentLogService.log(id, "created");
       return;
     default:
-      res.status(404).json({ status: "not found" });
+      res.status(404).json({ status: `Invalid type ${type}` });
       return;
   }
 });
 
 timerRouter.post("/operation/:id", async (req, res) => {
+  if(Object.is(parseInt(req.params.id), NaN)){
+    return res.status(400).json({status:`invalid parameter id(${id})`});
+  }
   const id = parseInt(req.params.id);
   const operation = req.body.operation;
   if(operation === "tag"){
