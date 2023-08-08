@@ -237,11 +237,6 @@ export default function BasicTimerComponent({
           </IconButton>
         </Grid>
       </Grid>
-
-      {/* 넘패드 컴포넌트로 분리 */}
-      {/* {type === "timer" && (
-        <Numpad input={input} setInput={setInput} WatchId={WatchId} />
-      )} */}
     </StyledTimerContainer>
   );
 }

@@ -81,21 +81,20 @@
 }
 
 .swiper {
-  height: 3rem;
-  font-size: 2.5rem;
-  width: 4rem;
+  width: 8dvw;
   text-align: center;
 }
 
 .swiper-wrapper {
-  font-size: 2.5rem;
+  font-size: 11dvh;
 }
 
 .swiper-initialized {
-  height: 3rem;
+  height: 13dvh;
 }
 
 .modal-box {
+  text-align: center;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

@@ -253,25 +253,6 @@ export default function TimerContainer({ timerList, id }) {
               />
             )}
           </Grid>
-
-          {/* {storeTimerArray.length < 10 && (
-            <Button
-              variant="contained"
-              className="btn-create-timer"
-              sx={{
-                width: "770px",
-                ml: "30px",
-                mb: 2,
-                borderRadius: 4,
-                bgcolor: "#376f94",
-                fontSize: 30,
-                pb: 0,
-              }}
-              onClick={createTimer}
-            >
-              +
-            </Button>
-          )} */}
         </Grid>
         <Grid item xs={4}>
           <Stack
@@ -283,25 +264,6 @@ export default function TimerContainer({ timerList, id }) {
             direction={"column"}
             justifyContent={"flex-end"}
           >
-            {/* <Stack xs={8}>
-              <Grid item>
-                <TransitionsModal
-                  input={timerInput}
-                  setInput={setTimerInput}
-                  createTimer={createTimer}
-                />
-              </Grid>
-              <Grid item></Grid>
-            </Stack> */}
-
-            {/* <Stack xs={2}>
-              <Button variant="outlined" onClick={() => load()}>
-                불러오기
-              </Button>
-              <Button variant="outlined" onClick={() => save()}>
-                저장하기
-              </Button>
-            </Stack> */}
             <Stack xs={2}>
               <Grid item>
                 <Button
