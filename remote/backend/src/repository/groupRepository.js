@@ -24,7 +24,7 @@ class gruopRepository extends Repository {
         await this.query(sql, params);
     }
     async insertGruop(lkey, name) {
-        const sql = `INSERT INTO group_tbl (login_key, name, last_update) VALUES (?, ?, CURTIME())`;
+        const sql = `INSERT INTO group_tbl (login_key, name) VALUES (?, ?)`;
         const params = [lkey, name];
         await this.query(sql, params);
     }
