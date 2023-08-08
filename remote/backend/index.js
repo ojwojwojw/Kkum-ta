@@ -13,9 +13,16 @@ const devController = require("./src/controller/devController");
 
 passportConfig(passport);
 
+const whitelist = ["http://localhost:3000"];
 const corsOptions = {
-  origin: "*", // 출처 허용 옵션
-  credential: true, // 사용자 인증이 필요한 리소스(쿠키 등) 접근
+  credentials: true,
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
 };
 
 app.use(cors(corsOptions));
