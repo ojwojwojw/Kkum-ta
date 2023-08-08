@@ -79,7 +79,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop front-app
-                    docker run -d --name front-app1 -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-device-0.1
+                    docker run -d --name front-app1 -p 3000:3000 --network=web-network --volumes-from front-app --volume /etc/letsencrypt:/etc/letsencrypt --volume /var/www/letsencrypt:/var/www/letsencrypt gugaro/kkumta:front-device-0.1
                     docker rm front-app
                     docker stop front-app1
                     docker rename front-app1 front-app
