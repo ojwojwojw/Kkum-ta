@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .App-logo {
@@ -90,4 +94,11 @@
 
 .swiper-initialized {
   height: 3rem;
+}
+
+.modal-box {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
