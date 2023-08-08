@@ -21,7 +21,7 @@ export default function MenuListBar() {
   };
 
   return (
-    <Grid item xs={2}>
+    <Grid item xs={2} className="side-bar" zIndex={999}>
       <List
         sx={{
           top: "50px",

@@ -82,10 +82,9 @@ export default class BasicTimer {
 
   // 타이머를 초기화하는 함수
   // initTime list에 0:공부 1:휴식으로 나누어 입력
-  reset(initTime, study, maxIter) {
+  reset() {
     clearInterval(this.#counter);
-    if (initTime != null) this.#initTime[study] = initTime;
-    if (maxIter != null) this.#maxIter = maxIter;
+
     this.#isRunning = false;
     this.#remainTime = this.#initTime[0];
     this.#curIter = 0;
@@ -160,5 +159,4 @@ export default class BasicTimer {
   getCurIter() {
     return this.#curIter;
   }
-
 }
