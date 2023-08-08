@@ -8,9 +8,20 @@ import ReportPage from "./pages/reportsPage";
 import GroupPage from "./pages/groupPage";
 import SignupPage from "./pages/signupPage";
 import Login from "./components/login";
-import { UseSelector } from "react-redux/es/hooks/useSelector";
+import { useSelector} from "react-redux/es/hooks/useSelector";
+
+
+
+
+
+
+
+
 
 function App() {
+  
+
+  // const isAthenticated = useSelector(state => state.auth.isAthenticated)
   const [isAthenticated, setIsAthenticated] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
 

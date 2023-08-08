@@ -5,12 +5,17 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useDispatch } from "react-redux";
 import { loadName, loadRefresh } from "../redux/authSlice";
+import cookie from 'react-cookies';
+import Test from "./accessTokenTest";
+
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setUserPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const newAccessToken = localStorage.getItem("accessToken") 
+  const [data, setData] = useState(newAccessToken)
 
   //로그인 요청
   const submitSignIn = async () => {
@@ -28,15 +33,39 @@ export default function Login() {
     console.log(res.data)
     localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
     dispatch(loadName(res.data.user.id)) //redux에 유저아이디 저장
-    const cookies = document.cookie;
-    console.log(cookies)
-    dispatch(loadRefresh(cookies)) //redux에 refesh 토큰 저장
+    //refresh 토큰 쿠키에서 꺼내기 
+
+    // console.log('쿠키:',cookie.load('refreshToken'))
+    // const cookie = cookie.load('refreshToken')
+    // dispatch(loadRefresh(cookie)) //redux에 refesh 토큰 저장
     navigate('/')
 
   }
     catch (err) {
     console.log(err)
     console.log(userData)
+  }
+}
+
+
+//로그아웃 요청
+const submitSignout = async () => {
+  
+  const userData = {
+    "id": username,
+    "password": password,
+  };
+  try {
+    const res = await axios.post('http://localhost:8090/auth/signout', userData, {  //배포를 위해서라도 프록시 설정 해야함.
+      headers: {
+        Authorization: `Bearer ${data}` // 액세스 토큰을 Authorization 헤더에 설정하는 방법
+      },
+      withCredentials: true
+    })
+  console.log(res.data)
+  }
+    catch (err) {
+    console.log(err)
   }
 }
 
@@ -122,6 +151,8 @@ return (
           >
             <img src={process.env.PUBLIC_URL + '/images/kakao-logo.png'} className="logo-img" alt="Kakao-logo" />
           </IconButton>
+          <Test/> 
+          {/* test용 태그 */}
         </Grid>
       </Stack>
     </Grid>
