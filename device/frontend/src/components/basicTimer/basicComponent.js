@@ -63,7 +63,7 @@ export default function BasicTimerComponent({
   // 현재 공부중인지를 검사하는 변수
   const [isStudy, setIsStudy] = useState(0);
 
-  console.log("init:", initTime);
+  // console.log("init:", initTime);
 
   useEffect(() => {
     if (WatchId) {
@@ -89,7 +89,7 @@ export default function BasicTimerComponent({
       timer.setProgress = null;
       console.log("basic timer componenet destructor");
     };
-  }, []);
+  }, [timer]);
 
   function toggle() {
     isRunning ? timer.pause() : timer.start();
@@ -104,9 +104,9 @@ export default function BasicTimerComponent({
   //   removeTimer(WatchId);
   // }
 
-  function resetInitTime(initTime, study, maxIter) {
-    timer.reset(initTime * 1000, study, maxIter);
-    updateTimer(initTime * 1000); //최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
+  function resetInitTime() {
+    timer.reset();
+    // updateTimer(initTime * 1000); //최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop(); //api 요청으로 백엔드에 리셋 기록 남기기
     dispatch(forceRendering());
   }
@@ -121,10 +121,9 @@ export default function BasicTimerComponent({
       console.log("res", res.data);
       dispatch(deleteTimer(timerId));
       dispatch(forceRendering());
-      // dispatch(forceRendering())
     } catch (error) {
       console.log("occured error during delete request.", error);
-      const timerId = WatchId;
+      // const timerId = WatchId;
       //  console.log(timerId)
     }
   };
@@ -140,7 +139,7 @@ export default function BasicTimerComponent({
       console.log("log start data on backend.", res.data);
       const endTime = Date.now();
       const requestDuration = endTime - startTime;
-      // console.log("요청-응답 시간:", requestDuration, "밀리초");
+      console.log("요청-응답 시간:", requestDuration, "밀리초");
     } catch (err) {
       console.log(err);
     }
@@ -188,13 +187,8 @@ export default function BasicTimerComponent({
       className={type === "timer" ? "watch timer" : "watch stopWatch"}
     >
       <StyledTimerBackground className="progress-bar" progress={progress} />
-      <Grid
-        container
-        xs={100}
-        justifyContent={"center"}
-        alignContent={"center"}
-      >
-        <Grid xs={1}>
+      <Grid container justifyContent={"center"} alignContent={"center"}>
+        <Grid item xs={1}>
           <h2>{idx + 1}</h2>
         </Grid>
 
@@ -223,9 +217,7 @@ export default function BasicTimerComponent({
             className={remainTime === 0 ? "btn set" : "btn reset"}
             color="warning"
             // 최대값이 99:59:59가 되도록 제한
-            onClick={() =>
-              resetInitTime(input > 359999 ? 359999 : input, isStudy, 0)
-            }
+            onClick={() => resetInitTime()}
           >
             {remainTime === 0 ? (
               <SettingsIcon fontSize="large" />
@@ -234,9 +226,8 @@ export default function BasicTimerComponent({
             )}
           </Button>
         </Grid>
-        <Grid>
+        <Grid item>
           <IconButton
-            ton
             aria-label="delete"
             variant="text"
             color="error"
@@ -249,9 +240,9 @@ export default function BasicTimerComponent({
       </Grid>
 
       {/* 넘패드 컴포넌트로 분리 */}
-      {type === "timer" && (
+      {/* {type === "timer" && (
         <Numpad input={input} setInput={setInput} WatchId={WatchId} />
-      )}
+      )} */}
     </StyledTimerContainer>
   );
 }
