@@ -1,7 +1,7 @@
 .time-container {
   position: relative;
   padding-top: 0;
-  top: 100px;
+  top: 25dvh;
   left: 0px;
   width: 770px;
   height: 470px;
@@ -9,23 +9,7 @@
 }
 
 .btn-controller {
-  top: 80px;
   right: 15px;
-  bottom: 10px;
-  width: 140px;
-  height: 480px;
-  margin: 20px;
-}
-
-.btn-controller Button {
-  width: 180px;
-  height: 65px;
-  padding: 25px;
-  margin: 10px;
-  margin-left: 0;
-  margin-right: 14px;
-  font-size: 1.4rem;
-  font-weight: 600;
 }
 
 .img-bomb {
