@@ -23,10 +23,11 @@ const SignupPage = () => {
           'Content-Type' : 'application/x-www-form-urlencoded',
         },
       })
+      navigate('/login') //로그인 페이지로 이동
       console.log(res.data)
-      navigate("/");
     }
     catch(err){
+     
       console.log(err)
       console.log(userData)
     }
