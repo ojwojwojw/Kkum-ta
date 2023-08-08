@@ -1,8 +1,8 @@
 .watch {
   display: flex;
   left: 20px;
-  width: 750px;
-  height: 170px;
+  width: 67dvw;
+  height: 26dvh;
   margin: 10px;
   border-radius: 20px;
 }
@@ -19,7 +19,8 @@
 }
 
 .time {
-  font-size: 5rem;
+  font-size: 13.5dvh;
+  font-weight: 500;
 }
 
 .micro {
@@ -29,9 +30,9 @@
 .timerButton > button {
   margin: 10px;
   padding: 10px;
-  height: 80px;
-  width: 80px;
-  border: 8px solid;
+  height: 14dvh;
+  width: 8dvw;
+  border: 14px solid;
   box-shadow: 2px 2px 3px gray;
   border-radius: 50%;
   text-align: center;
@@ -59,6 +60,6 @@
   background-color: rgb(212, 212, 212);
 }
 
-.timerButton .MuiButtonBase-root:hover{
-  background-color: white;
+.timerButton .MuiButtonBase-root:hover {
+  background-color: rgb(212, 212, 212);
 }
