@@ -211,18 +211,17 @@ export default function TimerContainer({ timerList, id }) {
       <Grid
         container
         className={click % 20 === 0 && click !== 0 ? "img-bomb" : ""}
-        position={"sticky"}
+        position={"fixed"}
         top={"100px"}
         ml={"32px"}
-        mb={"10px"}
-        width={766}
-        height={60}
+        width={"68dvw"}
+        height={"13dvh"}
         bgcolor={"#003366"}
         justifyContent={"center"}
         alignItems={"center"}
         color={"white"}
         zIndex={4}
-        fontSize={"1.3rem"}
+        fontSize={"4.3dvh"}
         onClick={() => {
           setClick(click + 1);
         }}
@@ -277,38 +276,47 @@ export default function TimerContainer({ timerList, id }) {
         <Grid item xs={4}>
           <Stack
             top={"80px"}
-            width={"140px"}
-            height={"480px"}
+            width={"20dvw"}
+            height={"82dvh"}
             position={"fixed"}
             className="btn-controller"
             direction={"column"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
+            justifyContent={"flex-end"}
           >
-            <Stack xs={8}>
-              {/* <Grid item>
+            {/* <Stack xs={8}>
+              <Grid item>
                 <TransitionsModal
                   input={timerInput}
                   setInput={setTimerInput}
                   createTimer={createTimer}
                 />
-              </Grid> */}
+              </Grid>
               <Grid item></Grid>
-            </Stack>
+            </Stack> */}
 
-            <Stack xs={2}>
-              {/* <Button variant="outlined" onClick={() => load()}>
+            {/* <Stack xs={2}>
+              <Button variant="outlined" onClick={() => load()}>
                 불러오기
               </Button>
               <Button variant="outlined" onClick={() => save()}>
                 저장하기
-              </Button> */}
-            </Stack>
+              </Button>
+            </Stack> */}
             <Stack xs={2}>
               <Grid item>
                 <Button
                   variant="contained"
                   color="success"
+                  sx={{
+                    right: "2dvw",
+                    minWidth: "18dvw",
+                    minHeight: "13dvh",
+                    fontSize: "3.5dvh",
+                    fontWeight: "bold",
+                    borderRadius: "20px",
+                    m: "10px",
+                    mr: "25px",
+                  }}
                   onClick={() => allStart()}
                 >
                   전체 시작
@@ -318,6 +326,16 @@ export default function TimerContainer({ timerList, id }) {
                 <Button
                   variant="contained"
                   color="warning"
+                  sx={{
+                    right: "2dvw",
+                    minWidth: "18dvw",
+                    minHeight: "13dvh",
+                    fontSize: "3.5dvh",
+                    fontWeight: "bold",
+                    borderRadius: "20px",
+                    m: "10px",
+                    mr: "25px",
+                  }}
                   onClick={() => allPause()}
                 >
                   전체 정지
@@ -327,6 +345,16 @@ export default function TimerContainer({ timerList, id }) {
                 <Button
                   variant="contained"
                   color="error"
+                  sx={{
+                    right: "2dvw",
+                    minWidth: "18dvw",
+                    minHeight: "13dvh",
+                    fontSize: "3.5dvh",
+                    fontWeight: "bold",
+                    borderRadius: "20px",
+                    m: "10px",
+                    mr: "25px",
+                  }}
                   onClick={() => allReset()}
                 >
                   전체 초기화

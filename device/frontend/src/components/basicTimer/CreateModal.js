@@ -42,12 +42,14 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
     <div>
       <Button
         sx={{
-          width: "765px",
+          width: "68dvw",
+          height: "10dvh",
           ml: "30px",
           mb: 2,
           borderRadius: 4,
           bgcolor: "#376f94",
-          fontSize: 30,
+          color: "white",
+          fontSize: "8dvh",
           pb: 0,
         }}
         onClick={handleOpen}
