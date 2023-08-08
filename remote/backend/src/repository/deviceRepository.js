@@ -1,4 +1,5 @@
 const Repository = require('./repository');
+const Randexp = require('randexp');
 
 class DeviceRepository extends Repository{
     constructor(randomDeviceKeyService){
@@ -19,7 +20,15 @@ class DeviceRepository extends Repository{
         await this.query(sql, params);
     }
     async getNewDeviceSerial(){
-        throw new Error("Not Implemented");
+        const sql = `INSERT IGNORE INTO device_tbl (device_serial) VALUES (?)`;
+        const randexp = new Randexp(/^[0-9A-Za-z]{8}$/)
+        while(true){
+            let key = randexp.gen();
+            let [rows] = await this.query(sql, [key]);
+            if(rows.affectedRows === 1){
+                return key;
+            }
+        }
     }
 }
 
