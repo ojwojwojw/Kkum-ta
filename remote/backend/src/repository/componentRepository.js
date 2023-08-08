@@ -31,7 +31,21 @@ class componentRepository extends Repository {
     async findAllComponentByGroupKey(group_key) {
         const sql = `SELECT * FROM component_tbl WHERE group_key = ?`;
         const params = [group_key];
-        const rows = await this.query(sql, params);
+        const [rows] = await this.query(sql, params);
+        return rows[0];
+    }
+    
+    async findAllComponentByUserId(user_id) {
+        const sql = `
+            SELECT user_tbl.id, component_tbl.component_type, component_tbl.init_time, component_tbl.maxIter
+            FROM user_tbl 
+            JOIN login_tbl ON user_tbl.user_key = login_tbl.user_key 
+            JOIN group_tbl ON login_tbl.login_key = group_tbl.login_key
+            JOIN component_tbl ON group_tbl.group_key = component_tbl.group_key
+            WHERE user_tbl.id = ?
+        `;
+        const params = [user_id];
+        const [rows] = await this.query(sql, params);
         return rows[0];
     }
 
