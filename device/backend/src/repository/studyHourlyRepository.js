@@ -11,7 +11,8 @@ class StudyHourlyRepository extends Repository{
             hour INT(11) NOT NULL DEFAULT 0,
             portion FLOAT NOT NULL DEFAULT 0,
             PRIMARY KEY (component_key, date, hour) USING BTREE,
-            INDEX component_key_date (component_key, date) USING BTREE
+            INDEX component_key_date (component_key, date) USING BTREE,
+            INDEX date(date) USING BTREE
         )
         COLLATE='utf8mb4_general_ci'
         ENGINE=InnoDB

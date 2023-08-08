@@ -7,7 +7,7 @@ class UserRepository extends Repository {
 
   async init() {
     const sql = `
-      CREATE TABLE user_tbl (
+      CREATE TABLE IF NOT EXISTS user_tbl (
         user_key INT(11) NOT NULL AUTO_INCREMENT,
         id VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         salt CHAR(64) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
@@ -15,7 +15,10 @@ class UserRepository extends Repository {
         email VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         provider VARCHAR(20) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         refresh_token VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-        PRIMARY KEY (user_key) USING BTREE
+        device_key INT(11) NULL DEFAULT NULL,
+        PRIMARY KEY (user_key) USING BTREE,
+        INDEX FK_user_tbl_device_tbl (device_key) USING BTREE,
+        CONSTRAINT FK_user_tbl_device_tbl FOREIGN KEY (device_key) REFERENCES device_tbl(device_key) ON UPDATE NO ACTION ON DELETE SET NULL
       )
       COLLATE='utf8mb4_general_ci'
       ENGINE=InnoDB
