@@ -53,7 +53,7 @@
 
 .MuiTabs-root {
   position: fixed;
-  width: 800px;
+  width: 100dvw;
   padding-left: 30px;
   padding-top: 30px;
   padding-bottom: 0;
@@ -64,39 +64,37 @@
 
 .MuiTabs-root .MuiTab-root {
   margin: 2px;
-  width: 150px;
-  height: 60px;
-  /* border: 6px solid #376f94; */
-  /* border-bottom: 4px solid #376f94; */
-  background-color: #e9ebff;
-  font-size: 1.1rem;
+  width: 13.4dvw;
+  height: 9.5dvh;
+  background-color: #85b4e2;
+  color: rgb(0, 0, 0);
+  font-size: 3dvh;
   font-weight: 700;
-  /* border-radius: 10px; */
+  border-radius: 10px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.custom-tabs a:hover {
-  margin-top: 0;
-  height: 24px;
-  background-color: #ffffff;
+.MuiTabs-root .MuiTab-root.Mui-selected {
+  background-color: #003366;
+  color: white;
 }
+
 .swiper {
-  height: 3rem;
-  font-size: 2.5rem;
-  width: 4rem;
+  width: 8dvw;
   text-align: center;
 }
 
 .swiper-wrapper {
-  font-size: 2.5rem;
+  font-size: 11dvh;
 }
 
 .swiper-initialized {
-  height: 3rem;
+  height: 13dvh;
 }
 
 .modal-box {
+  text-align: center;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
