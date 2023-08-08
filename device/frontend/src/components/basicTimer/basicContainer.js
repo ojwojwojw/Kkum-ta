@@ -276,7 +276,6 @@ export default function TimerContainer({ timerList, id }) {
         </Grid>
         <Grid item xs={4}>
           <Stack
-            container
             top={"80px"}
             width={"140px"}
             height={"480px"}
