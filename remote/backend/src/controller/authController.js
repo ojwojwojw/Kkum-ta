@@ -8,6 +8,8 @@ const SearchService = require("../service/searchService");
 const searchService = new SearchService();
 const MailverifyService = require("../service/mailverifyService");
 const mailApp = new MailverifyService();
+const UpdateService = require("../service/updateService");
+const updateService = new UpdateService();
 const UserRepository = require("../repository/userRepository");
 const { isLoggedIn, isNotLoggedIn } = require("../service/authService");
 
@@ -201,7 +203,7 @@ authRouter.post("/email", async (req, res) => {
   if (!result.result) return res.status(400).json({ status: "bad request" });
   res.cookie("emailcode", result.emailcode, {
     httpOnly: true,
-    maxAge: 3* 60 * 1000,
+    maxAge: 3 * 60 * 1000,
   });
   return res.status(200).json({ status: "ok" });
 });
@@ -215,9 +217,32 @@ authRouter.post("/verifycode", async (req, res) => {
   }
 
   const result = await mailApp.verify(emailcode, email, code);
+  if (!result.result) return res.status(400).json({ status: "bad request" });
+  res.clearCookie("emailcode");
+  const accessToken = jwt.getToken(email);
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    maxAge: 3 * 60 * 1000,
+  });
+  return res.status(200).json({ status: "ok", id: result.id });
+});
+
+authRouter.post("/changePW", async (req, res) => {
+  const id = req.body.id;
+  const password = req.body.password;
+  const email = req.body.email;
+  const accessToken = req.cookies.accessToken;
+  if (!password || !email || email.indexOf("@") === -1 || !accessToken) {
+    return res.status(400).json({ status: "bad request" });
+  }
+
+  const result = jwt.verify(accessToken, email);
   if (!result) return res.status(400).json({ status: "bad request" });
+  res.clearCookie("accessToken");
+  const update = updateService.updatePw(id, password);
+  if (!update) return res.status(400).json({ status: "bad request" });
   return res.status(200).json({ status: "ok" });
-})
+});
 
 authRouter.post("/signout", isLoggedIn, async (req, res) => {
   const userRepository = new UserRepository();

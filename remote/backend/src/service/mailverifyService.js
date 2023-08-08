@@ -18,7 +18,6 @@ class MailverifyService {
       const user = await this.userRepository.getUserByIdAndEmail(id, email);
       if (!user) return { result: false, err: "no user" };
       const salt = crypto.randomBytes(3).toString("HEX");
-      console.log({salt: salt});
       const mailOptions = {
         from: "tjdalsdl19@gmail.com",
         to: email,
@@ -29,7 +28,6 @@ class MailverifyService {
       const emailcode = crypto
         .pbkdf2Sync(email, salt, 97, 66, "sha512")
         .toString("base64");
-      console.log({emailcode: emailcode});
       return { result: true, emailcode: emailcode };
     } catch (err) {
       console.log(err);
@@ -41,8 +39,12 @@ class MailverifyService {
     const challenge = crypto
       .pbkdf2Sync(email, code, 97, 66, "sha512")
       .toString("base64");
-    if (emailcode === challenge) return true;
-    return false;
+    if (emailcode !== challenge) return { result: false, err: "not match" };
+    const id = await this.userRepository.getIdByEmail(email);
+    if (!id) {
+      return { result: false, err: "no data" };
+    }
+    return { result: true, id: id };
   }
 }
 

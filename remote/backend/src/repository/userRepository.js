@@ -116,6 +116,20 @@ class UserRepository extends Repository {
     return true;
   }
 
+  async updateSalt(id, salt) {
+    const sql = "UPDATE user_tbl SET salt = ? WHERE id = ?";
+    const params = [salt, id];
+    await this.query(sql, params);
+    return true;
+  }
+
+  async updatePw(id, hashedPw) {
+    const sql = "UPDATE user_tbl SET hashedPw = ? WHERE id = ?";
+    const params = [hashedPw, id];
+    await this.query(sql, params);
+    return true;
+  }
+
   async deleteUserById(id) {
     const sql = "DELETE FROM user_tbl WHERE id = ?";
     const params = [id];
