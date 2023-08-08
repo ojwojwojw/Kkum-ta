@@ -6,6 +6,10 @@ const loginService = require("../service/signupService");
 const loginApp = new loginService();
 const SearchService = require("../service/searchService");
 const searchService = new SearchService();
+const MailverifyService = require("../service/mailverifyService");
+const mailApp = new MailverifyService();
+const UpdateService = require("../service/updateService");
+const updateService = new UpdateService();
 const UserRepository = require("../repository/userRepository");
 const { isLoggedIn, isNotLoggedIn } = require("../service/authService");
 
@@ -30,8 +34,7 @@ authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
       return res.status(500).json({ status: "internal server error" });
     }
     if (!user) {
-      res.status(400);
-      return res.json({ status: "bad request" });
+      return res.status(400).json({ status: "bad request" });
     }
     const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
     const userRepository = new UserRepository();
@@ -59,7 +62,7 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
   const id = req.body.id;
   const pw = req.body.password;
   const email = req.body.email;
-  if (!id || !pw || !email) {
+  if (!id || !pw || !email || email.indexOf("@") === -1) {
     return res.status(400).json({ status: "bad request" });
   }
   const signUpResult = await loginApp.signup_local(id, pw, email);
@@ -174,14 +177,71 @@ authRouter.post("/refresh", (req, res) => {
     .json({ status: "ok", accessToken: refresh.accessToken });
 });
 
-authRouter.post("/SearchID", async (req, res) => {
+authRouter.post("/searchId", async (req, res) => {
   const email = req.body.email;
   if (!email) {
-    return res.status(400).json({ message: "Invaild requests" });
+    return res.status(400).json({ status: "bad request" });
   }
 
-  const id = await searchService.SearchID(email);
-  return res.status(200).json({ status: "ok", id: id });
+  const result = await searchService.SearchID(email);
+  if (!result.result) {
+    if (result.err === "no data") {
+      return res.status(400).json({ status: "bad request" });
+    }
+    return res.status(500).json({ status: "internal server error" });
+  }
+  return res.status(200).json({ status: "ok", id: result.id });
+});
+
+authRouter.post("/email", async (req, res) => {
+  const id = req.body.id;
+  const email = req.body.email;
+  if (!id || !email || email.indexOf("@") === -1) {
+    return res.status(400).json({ status: "bad request" });
+  }
+  const result = await mailApp.sendMail(id, email);
+  if (!result.result) return res.status(400).json({ status: "bad request" });
+  res.cookie("emailcode", result.emailcode, {
+    httpOnly: true,
+    maxAge: 3 * 60 * 1000,
+  });
+  return res.status(200).json({ status: "ok" });
+});
+
+authRouter.post("/verifycode", async (req, res) => {
+  const email = req.body.email;
+  const code = req.body.code;
+  const emailcode = req.cookies.emailcode;
+  if (!email || !code) {
+    return res.status(400).json({ status: "bad request" });
+  }
+
+  const result = await mailApp.verify(emailcode, email, code);
+  if (!result.result) return res.status(400).json({ status: "bad request" });
+  res.clearCookie("emailcode");
+  const accessToken = jwt.getToken(email);
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    maxAge: 3 * 60 * 1000,
+  });
+  return res.status(200).json({ status: "ok", id: result.id });
+});
+
+authRouter.post("/changePW", async (req, res) => {
+  const id = req.body.id;
+  const password = req.body.password;
+  const email = req.body.email;
+  const accessToken = req.cookies.accessToken;
+  if (!password || !email || email.indexOf("@") === -1 || !accessToken) {
+    return res.status(400).json({ status: "bad request" });
+  }
+
+  const result = jwt.verify(accessToken, email);
+  if (!result) return res.status(400).json({ status: "bad request" });
+  res.clearCookie("accessToken");
+  const update = updateService.updatePw(id, password);
+  if (!update) return res.status(400).json({ status: "bad request" });
+  return res.status(200).json({ status: "ok" });
 });
 
 authRouter.post("/signout", isLoggedIn, async (req, res) => {
