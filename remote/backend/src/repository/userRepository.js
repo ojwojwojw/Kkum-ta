@@ -53,6 +53,16 @@ class UserRepository extends Repository {
     return rows[0];
   }
 
+  async getUserByIdAndEmail(id, email) {
+    const sql = "SELECT * FROM user_tbl WHERE id = ? AND email = ?";
+    const params = [id, email];
+    const [rows] = await this.query(sql, params);
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows[0];
+  }
+
   async getUserByEmail(email) {
     const sql = "SELECT * FROM user_tbl WHERE email= ?";
     const params = [email];
@@ -102,6 +112,20 @@ class UserRepository extends Repository {
     const sql =
       "UPDATE user_tbl SET refresh_token = ? WHERE id = ? AND provider = ?";
     const params = [refreshToken, id, provider];
+    await this.query(sql, params);
+    return true;
+  }
+
+  async updateSalt(id, salt) {
+    const sql = "UPDATE user_tbl SET salt = ? WHERE id = ?";
+    const params = [salt, id];
+    await this.query(sql, params);
+    return true;
+  }
+
+  async updatePw(id, hashedPw) {
+    const sql = "UPDATE user_tbl SET hashedPw = ? WHERE id = ?";
+    const params = [hashedPw, id];
     await this.query(sql, params);
     return true;
   }
