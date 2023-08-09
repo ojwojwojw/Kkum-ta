@@ -71,14 +71,14 @@ pipeline {
                                             docker pull ${docker_repo}:back-server-for-raspberry-0.1;
 
                                             docker stop front-app;
-                                            docker run -d --name front-app1 --restart=always -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-server-for-raspberry-0.1;
+                                            docker run -d --name front-app1 --restart=always --network=host --volumes-from front-app gugaro/kkumta:front-server-for-raspberry-0.1;
                                             docker rm front-app;
                                             docker stop front-app1;
                                             docker rename front-app1 front-app;
                                             docker start front-app;
 
                                             docker stop back-server;
-                                            docker run -d --name back-server1 --restart=always -p 8085:8085 --network=web-network --volumes-from back-server gugaro/kkumta:back-server-for-raspberry-0.1;
+                                            docker run -d --name back-server1 --restart=always --network=host --volumes-from back-server gugaro/kkumta:back-server-for-raspberry-0.1;
                                             docker rm back-server;
                                             docker stop back-server1;
                                             docker rename back-server1 back-server;
