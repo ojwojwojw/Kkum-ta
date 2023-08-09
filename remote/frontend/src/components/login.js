@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
 import { Box, Grid, Stack, Button, IconButton, Input } from "@mui/material";
 import "./login.css";
@@ -11,19 +10,11 @@ import { loginState ,logoutState} from "../redux/authSlice";
 import AccessTest from "./accessTokenTest";
 import RefreshTest from "./refreshTokenTest";
 import FindPasswordPage from "../pages/findPasswordPage";
-=======
-import React ,{useState} from "react";
-import { Box, Grid, Stack, Button, IconButton, Input } from "@mui/material";
-import "./login.css";
-import { Link , useNavigate } from "react-router-dom";
-import axios from 'axios';
->>>>>>> 33a5f6bb4e46afb755c8601c35a0d632ceaecaad
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setUserPassword] = useState("");
   const navigate = useNavigate();
-<<<<<<< HEAD
   const dispatch = useDispatch();
   const newAccessToken = localStorage.getItem("accessToken") 
   const [accessToken, setAccessToken] = useState(newAccessToken)
@@ -91,40 +82,9 @@ return (
     <Grid
       container
       className="login-form"
-=======
-
-  //로그인 요청
-  const submitSignIn = async () => {
-    const userData = {
-      "id" : username,
-      "pw" : password,
-    };
-    try{
-      const res = await axios.get('http://localhost:8080/auth/signin',userData ,{  //배포를 위해서라도 프록시 설정 해야함.
-        headers: {
-          'Content-Type' : 'application/x-www-form-urlencoded',
-        },
-      })
-      console.log(res.data)
-      
-
-    }
-    catch(err){
-      console.log(err)
-      console.log(userData)
-    }
-  }
-  
-  
-  
-  return (
-    <Box
-      display={"flex"}
->>>>>>> 33a5f6bb4e46afb755c8601c35a0d632ceaecaad
       justifyContent={"center"}
       alignItems={"center"}
     >
-<<<<<<< HEAD
       <Stack>
         <Grid item xs={12} className="input-form">
           <Grid item xs={12}>
@@ -144,55 +104,6 @@ return (
               value={password}
               onChange={(e) => setUserPassword(e.target.value)}
             ></Input>
-=======
-      <Grid
-        container
-        className="login-form"
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
-        <Stack>
-          <Grid item xs={12} className="input-form">
-            <Grid item xs={12}>
-              <Input
-                className="login-input"
-                type="text"
-                placeholder="ID"
-                value = {username}
-                onChange={(e) => setUsername(e.target.value)}
-              ></Input>
-            </Grid>
-            <Grid item xs={12}>
-              <Input
-                className="login-input"
-                type="text"
-                placeholder="PASSWORD"
-                value = {password}
-                onChange={(e) => setUserPassword(e.target.value)}
-              ></Input>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} className="btn-form">
-            <Grid item>
-              <Button 
-                variant="contained"
-                color="success"
-                sx={{ minWidth: "200px", m: "4px", p: "6px" }}
-                onClick={submitSignIn}
-              >
-                로그인
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                component={Link} to="/signup"
-                variant="contained"
-                sx={{ minWidth: "200px", m: "4px", p: "6px" }}
-              >
-                회원가입
-              </Button>
-            </Grid>
->>>>>>> 33a5f6bb4e46afb755c8601c35a0d632ceaecaad
           </Grid>
         </Grid>
         <Grid item xs={12} className="btn-form">
