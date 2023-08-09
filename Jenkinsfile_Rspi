@@ -1,0 +1,108 @@
+pipeline {
+    environment {
+        docker_id = "gugaro"
+        docker_pwd = "dckr_pat_N-GhpuHyw5i7r8pzRaoAGd0Pj88"
+        docker_repo = "gugaro/kkumta"
+        docker_key = credentials("Docker_Hub_Key")
+        docker_image = ''
+    }
+    agent any
+    tools {
+        nodejs "node18"
+    }
+    stages {
+        stage('Build React App') {
+            steps {
+                sh '''
+                    cd ./device/frontend/
+                    npm install
+                    CI=false npm run build
+                '''
+            }
+        }
+        stage('Build Node Server') {
+            steps {
+                sh '''
+                    cd ./device/backend/
+                    npm install
+                '''
+            }
+        }
+        stage('Build React App Image') {
+            steps {
+                sh '''
+                    cd ./device/frontend/
+                    ls -al
+                    docker build --platform linux/arm64/v8 -t ${docker_repo}:front-server-for-raspberry-0.1 .
+                '''
+            }
+        }
+        stage('Build Node Server Image') {
+            steps {
+                sh '''
+                    cd ./device/backend/
+                    docker build --platform linux/arm64/v8 -t ${docker_repo}:back-server-for-raspberry-0.1 .
+                '''
+            }
+        }
+        stage('Push All Images') {
+            steps {
+                sh '''
+                    docker login -u ${docker_id} -p ${docker_pwd}
+                    docker push ${docker_repo}:front-server-for-raspberry-0.1
+                    docker push ${docker_repo}:back-server-for-raspberry-0.1
+                '''
+            }
+        }
+        stage('SSH Pull Images'){
+            steps {
+                sshPublisher(
+                    publishers: 
+                    [
+                        sshPublisherDesc(
+                            configName: 'Raspberry', 
+                            transfers: 
+                                [
+                                    sshTransfer(
+                                        cleanRemote: false, 
+                                        excludes: '', 
+                                        execCommand: '''
+                                            docker login -u gugaro -p dckr_pat_N-GhpuHyw5i7r8pzRaoAGd0Pj88
+                                            docker pull gugaro/kkumta:front-server-for-raspberry-0.1;
+                                            docker pull gugaro/kkumta:back-server-for-raspberry-0.1;
+
+                                            docker stop front-app;
+                                            docker run -d --name front-app1 --restart=always -p 3000:3000 --network=device-network --volumes-from front-app gugaro/kkumta:front-server-for-raspberry-0.1;
+                                            docker rm front-app;
+                                            docker stop front-app1;
+                                            docker rename front-app1 front-app;
+                                            docker start front-app;
+
+                                            docker stop back-server;
+                                            docker run -d --name back-server1 --restart=always -p 8085:8085 --network=device-network --volumes-from back-server gugaro/kkumta:back-server-for-raspberry-0.1;
+                                            docker rm back-server;
+                                            docker stop back-server1;
+                                            docker rename back-server1 back-server;
+                                            docker start back-server;
+                                        ''', 
+                                        execTimeout: 120000, 
+                                        flatten: false, 
+                                        makeEmptyDirs: false, 
+                                        noDefaultExcludes: false, 
+                                        patternSeparator: '[, ]+', 
+                                        remoteDirectory: '/home/teamone', 
+                                        remoteDirectorySDF: false, 
+                                        removePrefix: '', 
+                                        sourceFiles: ''
+                                    )
+                                ], 
+                            usePromotionTimestamp: false, 
+                            useWorkspaceInPromotion: false, 
+                            verbose: true
+                        )
+                    ]
+                )
+            }
+        }
+    }
+}

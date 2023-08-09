@@ -14,6 +14,6 @@ COPY ./default.conf /etc/nginx/conf.d/
 
 COPY ./nginx.conf /etc/nginx/
 
-EXPOSE 3005
+EXPOSE 80 443
 
 CMD ["nginx", "-g", "daemon off;"]

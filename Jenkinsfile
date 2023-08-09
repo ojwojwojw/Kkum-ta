@@ -79,7 +79,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop front-app
-                    docker run -d --name front-app1 -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-device-0.1
+                    docker run -d --name front-app1 -p 3000:3000 --network=device-network --volumes-from front-app gugaro/kkumta:front-device-0.1
                     docker rm front-app
                     docker stop front-app1
                     docker rename front-app1 front-app
@@ -91,7 +91,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop back-server
-                    docker run -d --name back-server1 -p 8085:8085 --network=web-network --volumes-from back-server gugaro/kkumta:back-device-0.1
+                    docker run -d --name back-server1 --network=device-network --volumes-from back-server gugaro/kkumta:back-device-0.1
                     docker rm back-server
                     docker stop back-server1
                     docker rename back-server1 back-server
@@ -103,7 +103,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop front-web-app
-                    docker run -d --name front-web-app1 -p 3005:3005 --network=web-network --volumes-from front-web-app gugaro/kkumta:front-server-0.1
+                    docker run -d --name front-web-app1 -p 80:80 -p 443:443 --network=web-network --volume /etc/letsencrypt:/etc/letsencrypt --volume /var/www/letsencrypt:/var/www/letsencrypt --volumes-from front-web-app gugaro/kkumta:front-server-0.1
                     docker rm front-web-app
                     docker stop front-web-app1
                     docker rename front-web-app1 front-web-app
@@ -115,7 +115,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop back-web-server
-                    docker run -d --name back-web-server1 -p 8090:8090 --network=web-network --volumes-from back-web-server gugaro/kkumta:back-server-0.1
+                    docker run -d --name back-web-server1 --network=web-network --volumes-from back-web-server gugaro/kkumta:back-server-0.1
                     docker rm back-web-server
                     docker stop back-web-server1
                     docker rename back-web-server1 back-web-server

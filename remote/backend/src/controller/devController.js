@@ -3,11 +3,10 @@ const Global = require('../global');
 const devRouter = express.Router();
 
 (async()=>{
-    deviceService = await Global.getDeviceService();
+    deviceRepository = await Global.getDeviceRepository();
 })();
 
 devRouter.post('/register', async (req, res)=>{
-    const {device_key} = await deviceService.insertDevice();
-    return res.json({id:device_key});
+    return res.json({id: await deviceRepository.getNewDeviceSerial()});
 });
 module.exports = devRouter;
