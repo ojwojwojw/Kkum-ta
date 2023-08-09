@@ -54,7 +54,7 @@ pipeline {
                 '''
             }
         }
-        stage('SSH Deploy'){
+        stage('SSH Pull Images'){
             steps {
                 sshPublisher(
                     publishers: 
@@ -67,8 +67,9 @@ pipeline {
                                         cleanRemote: false, 
                                         excludes: '', 
                                         execCommand: '''
-                                            docker pull ${docker_repo}:front-server-for-raspberry-0.1;
-                                            docker pull ${docker_repo}:back-server-for-raspberry-0.1;
+                                            docker login -u gugaro -p dckr_pat_N-GhpuHyw5i7r8pzRaoAGd0Pj88
+                                            docker pull gugaro/kkumta:front-server-for-raspberry-0.1;
+                                            docker pull gugaro/kkumta:back-server-for-raspberry-0.1;
 
                                             docker stop front-app;
                                             docker run -d --name front-app1 --restart=always --network=host --volumes-from front-app gugaro/kkumta:front-server-for-raspberry-0.1;
