@@ -21,6 +21,6 @@ const debug = (req, res, next)=>{
 app.use(debug);
 
 const timerController = require("./src/controller/timerMemoryController");
-app.use('/timer', timerController);
+app.use('/timer_page/timer', timerController);
 
 module.exports = app;
