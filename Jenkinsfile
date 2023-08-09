@@ -79,7 +79,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop front-app
-                    docker run -d --name front-app1 -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-device-0.1
+                    docker run -d --name front-app1 -p 3000:3000 --network=device-network --volumes-from front-app gugaro/kkumta:front-device-0.1
                     docker rm front-app
                     docker stop front-app1
                     docker rename front-app1 front-app
@@ -91,7 +91,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop back-server
-                    docker run -d --name back-server1 --network=web-network --volumes-from back-server gugaro/kkumta:back-device-0.1
+                    docker run -d --name back-server1 --network=device-network --volumes-from back-server gugaro/kkumta:back-device-0.1
                     docker rm back-server
                     docker stop back-server1
                     docker rename back-server1 back-server
