@@ -267,7 +267,7 @@ authRouter.post("/verifycode", async (req, res) => {
   return res.status(200).json({ status: "ok", id: result.id });
 });
 
-authRouter.post("/changePW", async (req, res) => {
+authRouter.put("/changePW", async (req, res) => {
   const id = req.body.id;
   const password = req.body.password;
   const email = req.body.email;
