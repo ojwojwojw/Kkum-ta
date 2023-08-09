@@ -274,6 +274,7 @@ authRouter.post("/changePW", async (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
   const accessToken = req.cookies.accessToken;
+  console.log('왜안됨?',id,password,email,accessToken)
   if (!password || !email || email.indexOf("@") === -1 || !accessToken) {
     return res.status(400).json({ status: "bad request" });
   }
