@@ -28,8 +28,7 @@ class ComponentService {
       }
     })
   }
-  async createTimer(initTimes, maxIter, group_id=0) {
-    if(maxIter === undefined) maxIter = 1;
+  async createTimer(initTimes, maxIter=1, group_id=0) {
     const promise = this.timerRepository.create(initTimes, maxIter, group_id);
     const timerService = new TimerService(initTimes, maxIter, group_id);
     timerService.id = await promise;
