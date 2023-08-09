@@ -1,6 +1,5 @@
 class TimerComponentService{
     constructor(id, group, initTime, maxIter){
-        console.log({id, group, initTime, maxIter});
         //initTime: array of Integers
         this.id = id;
         this.group = group;

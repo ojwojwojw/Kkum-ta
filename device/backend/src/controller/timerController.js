@@ -9,8 +9,8 @@ let timerService;
 })();
 
 timerRouter.get("/", async (req, res) => {
-  if(Object.is(parseInt(req.query.group_id), NaN)){
-    return res.status(400).json({status:"invalid parameter"});
+  if(req.query.group_id !== undefined && Object.is(parseInt(req.query.group_id), NaN)){
+    return res.status(400).json({status:`invalid parameter: group_id(${req.query.group_id}`});
   }
   const group_id = parseInt(req.query.group_id);
   if(group_id){
@@ -25,7 +25,7 @@ timerRouter.get("/", async (req, res) => {
 
 timerRouter.get("/:id", async (req, res) => {
   if(Object.is(parseInt(req.params.id), NaN)){
-    return res.status(400).json({status:"invalid parameter"});
+    return res.status(400).json({status:`invalid parameter id(${id})`});
   }
   const id = parseInt(req.params.id);
   const item = timerService.getById(id);
