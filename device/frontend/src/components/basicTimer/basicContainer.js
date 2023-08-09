@@ -7,12 +7,15 @@ import "./basicContainer.css";
 import { useDispatch, useSelector } from "react-redux";
 import { create, fetchData, forceRendering } from "../../redux/timerSlice";
 import { Grid, Box, Stack, Button } from "@mui/material";
+import StopwatchComponent from "./stopwatchComponent";
 
 export default function TimerContainer({ timerList, id }) {
   const dispatch = useDispatch();
   const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
   const [timerInput, setTimerInput] = useState(0);
   const [click, setClick] = useState(0);
+
+  const [isGroupRunning, setIsGroupRunning] = useState(false);
 
   useEffect(() => {
     console.log("timer container constructor");
@@ -208,26 +211,10 @@ export default function TimerContainer({ timerList, id }) {
 
   return (
     <Box className="time-container" sx={{ flexGrow: 1 }}>
-      <Grid
-        container
-        className={click % 20 === 0 && click !== 0 ? "img-bomb" : ""}
-        position={"fixed"}
-        top={"100px"}
-        ml={"32px"}
-        width={"68dvw"}
-        height={"13dvh"}
-        bgcolor={"#003366"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        color={"white"}
-        zIndex={4}
-        fontSize={"4.3dvh"}
-        onClick={() => {
-          setClick(click + 1);
-        }}
-      >
-        <p>{`지금까지 공부한 시간 :  00:00:00`}</p>
-      </Grid>
+      <StopwatchComponent
+        isGroupRunning={isGroupRunning}
+        setIsGroupRunning={setIsGroupRunning}
+      />
       <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
         <Grid item xs={8}>
           {storeTimerArray.map((obj, idx) => {

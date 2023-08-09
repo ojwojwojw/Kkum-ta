@@ -1,20 +1,20 @@
 export default class BasicStopwatch {
-  #counter
-  #curTime
-  #initTime
-  #beginTime
-  #isRunning
+  #counter;
+  #curTime;
+  #initTime;
+  #beginTime;
+  #isRunning;
   #limitTime;
   constructor() {
-    this.#curTime = 0;                             // 현재 지난 시간
-    this.#initTime = 0;                            // 스탑워치 초기 시간
-    this.#beginTime = 0;                           // 스탑워치 시작 시각
-    this.#limitTime = 360000 * 1000 - 1;           // 스탑워치 시간 한계
-    this.#isRunning = false;                       // 스탑워치 동작 여부
+    this.#curTime = 0; // 현재 지난 시간
+    this.#initTime = 0; // 스탑워치 초기 시간
+    this.#beginTime = 0; // 스탑워치 시작 시각
+    this.#limitTime = 360000 * 1000 - 1; // 스탑워치 시간 한계
+    this.#isRunning = false; // 스탑워치 동작 여부
 
-    this.setCurTime = null;                        // 현재 지난 시간 state setter
-    this.setIsRunning = null;                      // 동작 여부 state setter
-    console.log("basic stopwatch constructor")
+    this.setCurTime = null; // 현재 지난 시간 state setter
+    this.setIsRunning = null; // 동작 여부 state setter
+    // console.log("basic stopwatch constructor")
   }
 
   // 스탑워치 카운터 죽이기
@@ -74,8 +74,8 @@ export default class BasicStopwatch {
   }
 
   load(obj) {
-    this.#curTime = obj.curTime;    
-    this.#initTime = obj.initTime;  
+    this.#curTime = obj.curTime;
+    this.#initTime = obj.initTime;
     this.#beginTime = obj.beginTime;
     this.#limitTime = obj.limitTime;
     this.#isRunning = obj.isRunning;
@@ -86,11 +86,11 @@ export default class BasicStopwatch {
 
   save() {
     return {
-      curTime: this.#curTime,  
-      initTime: this.#initTime, 
+      curTime: this.#curTime,
+      initTime: this.#initTime,
       beginTime: this.#beginTime,
       limitTime: this.#limitTime,
       isRunning: this.#isRunning,
-    }
+    };
   }
 }
