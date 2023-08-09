@@ -19,21 +19,6 @@ class GroupRepository extends Repository{
         await this.query(sql, params);
         await this.query("INSERT IGNORE INTO group_tbl(group_key) VALUES(0), (1), (2), (3), (4)", []);
     }
-    createGroup(name=null){
-        if(name === null){
-            const sql = `INSERT IGNORE INTO group_tbl VALUES();`
-            const params = [];
-            return this.query(sql, params);
-        }
-        else{
-            const sql = `INSERT INTO group_tbl(name) VALUES(?)`;
-            const params = [name];
-            return this.query(sql, params);
-        }
-    }
-    async getDefaultId(){
-        throw "NotImplemented";
-    }
     getAll(){
         const sql = "SELECT * FROM group_tbl";
         const params = [];
@@ -41,14 +26,6 @@ class GroupRepository extends Repository{
     }
     getById(id){
         const sql = "SELECT * FROM group_tbl WHERE group_key=?";
-        const params = [id];
-        return this.query(sql, params);
-    }
-    delete(id){
-        if(id === 0){
-            throw "Cannot delete default group!";
-        }
-        const sql = "DELETE FROM group_tbl WHERE group_key=?";
         const params = [id];
         return this.query(sql, params);
     }

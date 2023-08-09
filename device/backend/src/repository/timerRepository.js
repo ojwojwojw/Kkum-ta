@@ -36,7 +36,7 @@ class TimerRepository extends Repository{
         return this.query(sql, []);
     }
     async insert(group_key=0, init_time, max_iter){
-        const sql = `INSERT INTO timer_tbl(group_key, init_time, max_iter) VALUES(?, ?, ?, ?, ?)`;
+        const sql = `INSERT INTO timer_tbl(group_key, init_time, max_iter) VALUES(?, ?, ?)`;
         const params = [group_key, JSON.stringify(init_time), max_iter];
         const [rows] = await this.query(sql, params);
         return rows.insertId;
