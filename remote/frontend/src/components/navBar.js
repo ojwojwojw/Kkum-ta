@@ -5,9 +5,9 @@ import { Box, Grid, Button, Menu, MenuItem } from "@mui/material";
 import ReportPage from "../pages/reportsPage";
 import GroupPage from "../pages/groupPage";
 import SignupPage from "../pages/signupPage";
+import Login from "./login";
 
 export default function NavBar() {
-  const [isAthenticated, setIsAthenticated] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const open = Boolean(anchorEl);
@@ -35,33 +35,30 @@ export default function NavBar() {
         </Grid>
         <Grid item xs={10}></Grid>
         <Grid item xs={1}>
-          {isAthenticated ? (
-            <>
-              <Button
-                id="user-button"
-                aria-controls={open ? "user-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-              >
-                UserName
-              </Button>
-              <Menu
-                id="user-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "user-button",
-                }}
-              >
-                <MenuItem onClick={handleClose}>MyPage</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <Link to="/login">Login</Link>
-          )}
+          <Link to="/login" Component={Login}>
+            Login
+          </Link>
+          <Button
+            id="user-button"
+            aria-controls={open ? "user-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+          >
+            UserName
+          </Button>
+          <Menu
+            id="user-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "user-button",
+            }}
+          >
+            <MenuItem onClick={handleClose}>MyPage</MenuItem>
+            <MenuItem onClick={handleClose}>Logout</MenuItem>
+          </Menu>
         </Grid>
       </Grid>
       <Grid
@@ -75,6 +72,7 @@ export default function NavBar() {
         <Grid item xs={10}>
           <Routes>
             <Route exact path="/" Component={""} />
+            <Route exact path="/login" Component={Login} />
             <Route exact path="/reports" Component={ReportPage} />
             <Route exact path="/group1" Component={GroupPage} />
             <Route exact path="/group2" Component={GroupPage} />
