@@ -12,7 +12,7 @@ const FindPasswordPage = () => {
     const sendCode = async () => {
         const data = { "id": username, "email": email }
         try {
-            const res = await axios.put('http://localhost:8090/auth/email', data, {
+            const res = await axios.post('http://localhost:8090/auth/email', data, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
@@ -50,7 +50,7 @@ const FindPasswordPage = () => {
         console.log(data)
         try {
             // console.log(data)
-            const res = await axios.post('http://localhost:8090/auth/changePW', data, {
+            const res = await axios.put('http://localhost:8090/auth/changePW', data, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },

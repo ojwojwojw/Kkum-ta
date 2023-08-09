@@ -3,12 +3,14 @@ import "./App.css";
 import { BrowserRouter } from "react-router-dom";
 import NavBar from "./components/navBar";
 import Login from "./components/login";
+import { useState } from "react";
+import { useSelector } from "react-redux/es/hooks/useSelector";
 
 function App() {
-  const [isAthenticated, setIsAthenticated] = useState(true);
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   return (
     <div className="App">
-      <BrowserRouter>{isAthenticated ? <NavBar /> : <Login />}</BrowserRouter>
+      <BrowserRouter>{isAuthenticated ? <NavBar /> : <Login />}</BrowserRouter>
     </div>
   );
 }

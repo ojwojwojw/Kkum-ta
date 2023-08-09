@@ -117,7 +117,9 @@ authRouter.get(
     session: false,
     scope: ["profile"],
     prompt: "select_account",
-  })
+  }), (req, res) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  }
 );
 
 authRouter.get("/google/callback", (req, res, next) => {
