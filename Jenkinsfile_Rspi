@@ -67,6 +67,7 @@ pipeline {
                                         cleanRemote: false, 
                                         excludes: '', 
                                         execCommand: '''
+                                            docker login -u gugaro -p dckr_pat_N-GhpuHyw5i7r8pzRaoAGd0Pj88
                                             docker pull gugaro/kkumta:front-server-for-raspberry-0.1;
                                             docker pull gugaro/kkumta:back-server-for-raspberry-0.1;
 
