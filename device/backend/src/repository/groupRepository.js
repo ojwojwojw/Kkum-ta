@@ -10,6 +10,7 @@ class GroupRepository extends Repository{
             group_key INT(11) NOT NULL,
             name VARCHAR(50) NULL DEFAULT '기본' COLLATE 'utf8mb4_general_ci',
             last_update TIMESTAMP NULL DEFAULT current_timestamp(),
+            stopwatch_time INT(11) NOT NULL DEFAULT '0',
             PRIMARY KEY (group_key) USING BTREE
         )
         COLLATE='utf8mb4_general_ci'
@@ -54,6 +55,11 @@ class GroupRepository extends Repository{
     rename(id, name){
         const sql = "UPDATE group_tbl SET name=? WHERE group_key=?";
         const params=[name, id];
+        return this.query(sql, params);
+    }
+    setStopwatchTime(id, miliseconds){
+        const sql = "UPDATE group_tbl SET stopwatch_time=? WHERE group_key=?";
+        const params = [miliseconds, id];
         return this.query(sql, params);
     }
 }

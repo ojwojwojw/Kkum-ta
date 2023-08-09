@@ -6,8 +6,8 @@ class ComponentLogRepository extends Repository {
   }
   async init() {
     const sql = `
-    CREATE TABLE IF NOT EXISTS component_log_tbl (
-      component_log_key INT(11) NOT NULL AUTO_INCREMENT,
+    CREATE TABLE IF NOT EXISTS stopwatch_log_tbl (
+      log_key INT(11) NOT NULL AUTO_INCREMENT,
       group_key INT(11) NOT NULL,
       operation VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',
       log_time DATETIME(3) NOT NULL DEFAULT current_timestamp(3),
