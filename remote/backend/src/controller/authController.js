@@ -153,9 +153,11 @@ authRouter.post("/refresh", (req, res) => {
   const id = req.body.id;
   const provider = req.body.provider;
   if (!id || !provider) {
+    console.log({id: id, provider: provider});
     return res.status(400).json({ status: "bad request" });
   }
   if (!req.cookies.refreshToken) {
+    console.log(req.cookies)
     return res.status(401).json({ status: "unauthorized" });
   }
   const refresh = jwt.refresh(

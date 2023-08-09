@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 
-const Test = () => {
+const AccessTest = () => {
     const newData = localStorage.getItem("accessToken") 
     const [data, setData] = useState(newData)
 
@@ -29,4 +29,4 @@ const Test = () => {
     )
 }
 
-export default Test
+export default AccessTest

@@ -4,10 +4,12 @@ import "./login.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useDispatch } from "react-redux";
-import { loadName, loadRefresh } from "../redux/authSlice";
-import cookie from 'react-cookies';
-import Test from "./accessTokenTest";
+import { loginState ,logoutState} from "../redux/authSlice";
 
+//일단 loginPage에서 테스트 하는 기능들
+import AccessTest from "./accessTokenTest";
+import RefreshTest from "./refreshTokenTest";
+import FindPasswordPage from "../pages/findPasswordPage";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -15,8 +17,8 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const newAccessToken = localStorage.getItem("accessToken") 
-  const [data, setData] = useState(newAccessToken)
-
+  const [accessToken, setAccessToken] = useState(newAccessToken)
+ 
   //로그인 요청
   const submitSignIn = async () => {
     const userData = {
@@ -32,18 +34,15 @@ export default function Login() {
       })
     console.log(res.data)
     localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
-    dispatch(loadName(res.data.user.id)) //redux에 유저아이디 저장
-    //refresh 토큰 쿠키에서 꺼내기 
-
-    // console.log('쿠키:',cookie.load('refreshToken'))
-    // const cookie = cookie.load('refreshToken')
-    // dispatch(loadRefresh(cookie)) //redux에 refesh 토큰 저장
+    dispatch(loginState({ "id" : res.data.user.id , 
+                          "provider" : res.data.user.provider ,
+                          "email" : res.data.user.email, })) //redux에 유저데이터 저장
+    
     navigate('/')
-
   }
     catch (err) {
-    console.log(err)
-    console.log(userData)
+    console.log("occur error while login.",err)
+    // console.log(userData)
   }
 }
 
@@ -58,11 +57,13 @@ const submitSignout = async () => {
   try {
     const res = await axios.post('http://localhost:8090/auth/signout', userData, {  //배포를 위해서라도 프록시 설정 해야함.
       headers: {
-        Authorization: `Bearer ${data}` // 액세스 토큰을 Authorization 헤더에 설정하는 방법
+        Authorization: `Bearer ${accessToken}` // 액세스 토큰을 Authorization 헤더에 설정하는 방법
       },
       withCredentials: true
     })
-  console.log(res.data)
+  localStorage.removeItem("accessToken");  //로컬 스토리지 비우기
+  console.log(res.data) 
+  dispatch(logoutState())  //redux state 반영하기
   }
     catch (err) {
     console.log(err)
@@ -151,11 +152,17 @@ return (
           >
             <img src={process.env.PUBLIC_URL + '/images/kakao-logo.png'} className="logo-img" alt="Kakao-logo" />
           </IconButton>
-          <Test/> 
-          {/* test용 태그 */}
         </Grid>
       </Stack>
     </Grid>
+    {/* 여기는 기능 test용 태그입니다. 추후 재배치 예정 */}
+    <Grid>
+      <AccessTest/> 
+      <RefreshTest/>
+      <button onClick={submitSignout}>로그아웃 test</button>
+      <FindPasswordPage/>
+    </Grid>
+    {/* 여기는 기능 test용 태그입니다. 추후 재배치 예정 */}
   </Box>
 );
 }

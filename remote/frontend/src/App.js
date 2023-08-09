@@ -13,11 +13,6 @@ import { useSelector} from "react-redux/es/hooks/useSelector";
 
 
 
-
-
-
-
-
 function App() {
   
 
@@ -33,7 +28,6 @@ function App() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
 
   return (
     <BrowserRouter>
