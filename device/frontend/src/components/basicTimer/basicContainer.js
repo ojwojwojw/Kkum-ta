@@ -13,7 +13,6 @@ export default function TimerContainer({ timerList, id }) {
   const dispatch = useDispatch();
   const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
   const [timerInput, setTimerInput] = useState(0);
-  const [click, setClick] = useState(0);
 
   const [isGroupRunning, setIsGroupRunning] = useState(false);
 
@@ -43,48 +42,15 @@ export default function TimerContainer({ timerList, id }) {
     forceAllStart();
   }, [storeTimerArray]); // storeTimerArray가 변경될 때마다 forceAllStart 호출
 
-  // useEffect(()=>{
-  //   const groupRender = setTimeout(()=>{
-  //     forceAllStart();
-  //   },1000)
-
-  //   return () =>{
-  //     clearTimeout(groupRender)
-  //   }
-  // },[])
-
-  // // 타이머 스톱워치 생성 함수 리팩토링(중복 제거 후 타입으로 구분)
-  // function createBasicWatch(type, idx) {
-  //   if (timerList.length >= 10) return;
-
-  //   const newWatch = {
-  //     id: Date.now(),
-  //     type: type,
-  //     timer: type === "timer" ? new BasicTimer() : new BasicStopwatch(),
-  //   };
-  //   // console.log(newWatch);
-  //   setDummy((prev) => {
-  //     timerList.splice(timerList.length, 0, newWatch);
-  //     return prev + 1;
+  // function remove(id) {
+  //   if (timerList.length === 0) return;
+  //   let deleteIdx = 0;
+  //   timerList.forEach((obj, idx) => {
+  //     if (obj.id === id) {
+  //       deleteIdx = idx;
+  //     }
   //   });
-  //   return newWatch.id;
   // }
-
-  function remove(id) {
-    if (timerList.length === 0) return;
-    let deleteIdx = 0;
-    timerList.forEach((obj, idx) => {
-      if (obj.id === id) {
-        deleteIdx = idx;
-      }
-    });
-
-    //   setDummy((prev) => {
-    //     timerList[deleteIdx].timer.pause(); // clearInterval 을 위해 반드시 호출 !!
-    //     timerList.splice(deleteIdx, 1);
-    //     return prev + 1;
-    //   });
-  }
 
   function save() {
     // time, init
@@ -214,6 +180,7 @@ export default function TimerContainer({ timerList, id }) {
       <StopwatchComponent
         isGroupRunning={isGroupRunning}
         setIsGroupRunning={setIsGroupRunning}
+        storeTimerArray={storeTimerArray}
       />
       <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
         <Grid item xs={8}>

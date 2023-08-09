@@ -21,7 +21,7 @@ export default class BasicStopwatch {
   #killCounter() {
     clearInterval(this.#counter);
     this.#isRunning = false;
-    this.#curTime = this.#limitTime;
+    this.#curTime = 0;
 
     // setter
     if (this.setIsRunning != null) this.setIsRunning(false);
