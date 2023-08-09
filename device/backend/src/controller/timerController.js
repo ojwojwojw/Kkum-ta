@@ -3,10 +3,9 @@ const Global = require("../global");
 const timerRouter = express.Router();
 
 
-let componentService, componentLogService;
+let componentService;
 (async()=>{
   componentService = await Global.getComponentService();
-  componentLogService = await Global.getComponentLogService();
 })();
 
 timerRouter.get("/", async (req, res) => {
@@ -48,7 +47,6 @@ timerRouter.delete("/:id", async (req, res) => {
   const result = await componentService.deleteById(id);
   if(result.ok){
     res.status(200).json({ status: "ok" });
-    await componentLogService.log(id, "deleted");
     return;
   } else{
     res.status(404).json({status:"not found"});
@@ -65,7 +63,6 @@ timerRouter.put("/:id", async (req, res)=>{
   const result = await componentService.putInitTime(id, initTime);
   if(result.ok){
     res.status(200).json({status:"ok"});
-    await componentLogService.log(id, "fix");
     return;
   }
   else{
@@ -84,12 +81,10 @@ timerRouter.post("/", async (req, res) => {
     case "timer":
       id = await componentService.createTimer(initTime, maxIter, parseInt(group_id));
       res.status(200).json({ status: "ok", id: id });
-      await componentLogService.log(id, "created");
       return;
     case "stopwatch":
       id = await componentService.createStopwatch(initTime, parseInt(group_id));
       res.status(200).json({ status: "ok", id: id });
-      await componentLogService.log(id, "created");
       return;
     default:
       res.status(404).json({ status: `Invalid type ${type}` });
@@ -106,7 +101,6 @@ timerRouter.post("/operation/:id", async (req, res) => {
   if(operation === "tag"){
     const { next } = componentService.tag(id);
     res.json({ status: "ok", next });
-    await componentLogService.log(id, "tag");
     return;
   }
   let result;
@@ -115,7 +109,6 @@ timerRouter.post("/operation/:id", async (req, res) => {
       result = componentService.start(id);
       if(result.ok){
         res.status(200).json({ status: "ok" });
-        await componentLogService.log(id, "start");
         return;
       }
       else{
@@ -126,7 +119,6 @@ timerRouter.post("/operation/:id", async (req, res) => {
       result = componentService.pause(id);
       if(result.ok){
         res.status(200).json({ status: "ok" });
-        await componentLogService.log(id, "pause");
         return;
       }
       else{
@@ -137,7 +129,6 @@ timerRouter.post("/operation/:id", async (req, res) => {
       result = componentService.stop(id);
       if(result.ok){
         res.status(200).json({ status: "ok" });
-        await componentLogService.log(id, "stop");
         return;
       }
       else{
