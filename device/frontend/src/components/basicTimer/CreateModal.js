@@ -11,13 +11,13 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "400px",
-  height: "150px",
+  width: "40dvw",
+  height: "36dvh",
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  border: "1px solid #003366",
   borderRadius: "20px",
   boxShadow: 24,
-  p: 4,
+  p: "5dvh",
 };
 
 export default function TransitionsModal({ input, setInput, createTimer }) {
@@ -42,12 +42,14 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
     <div>
       <Button
         sx={{
-          width: "765px",
+          width: "68dvw",
+          height: "10dvh",
           ml: "30px",
           mb: 2,
           borderRadius: 4,
           bgcolor: "#376f94",
-          fontSize: 30,
+          color: "white",
+          fontSize: "8dvh",
           pb: 0,
         }}
         onClick={handleOpen}
@@ -69,7 +71,11 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
       >
         <Fade in={open}>
           <Box sx={style} className="modal-box">
-            <Grid container justifyContent={"center"} alignItems={"center"}>
+            <Grid
+              container
+              justifyContent={"space-evenly"}
+              alignItems={"center"}
+            >
               <Grid item xs={2}>
                 <Swiper
                   direction={"vertical"}
@@ -80,12 +86,12 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
                     setHour(obj.realIndex);
                   }}
                 >
-                  {arr100.map((hour) => (
-                    <SwiperSlide>{hour}</SwiperSlide>
+                  {arr100.map((hour, idx) => (
+                    <SwiperSlide key={"hour"}>{hour}</SwiperSlide>
                   ))}
                 </Swiper>
               </Grid>
-              <Grid item xs={1} textAlign={"center"} fontSize={"35px"}>
+              <Grid item xs={1} textAlign={"center"} fontSize={"10dvh"}>
                 :
               </Grid>
               <Grid item xs={2}>
@@ -98,12 +104,12 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
                     setMin(obj.realIndex);
                   }}
                 >
-                  {arr60.map((min) => (
-                    <SwiperSlide>{min}</SwiperSlide>
+                  {arr60.map((min, idx) => (
+                    <SwiperSlide key={"min"}>{min}</SwiperSlide>
                   ))}
                 </Swiper>
               </Grid>
-              <Grid item xs={1} textAlign={"center"} fontSize={"35px"}>
+              <Grid item xs={1} textAlign={"center"} fontSize={"10dvh"}>
                 :
               </Grid>
               <Grid item xs={2}>
@@ -116,8 +122,8 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
                     setSec(obj.realIndex);
                   }}
                 >
-                  {arr60.map((sec) => (
-                    <SwiperSlide>{sec}</SwiperSlide>
+                  {arr60.map((sec, idx) => (
+                    <SwiperSlide key={"sec"}>{sec}</SwiperSlide>
                   ))}
                 </Swiper>
               </Grid>
@@ -129,6 +135,16 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
               alignItems={"flex-end"}
             >
               <Button
+                sx={{
+                  fontSize: "3.5dvh",
+                  top: "10dvh",
+                  right: "1dvw",
+                  p: "dvh",
+                  pr: "4dvh",
+                  pl: "4dvh",
+                }}
+                variant="contained"
+                color="success"
                 onClick={() => {
                   var maxIter = 1;
                   setInput((hour * 3600 + min * 60 + sec) * 1000);

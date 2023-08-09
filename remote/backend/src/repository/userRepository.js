@@ -7,7 +7,7 @@ class UserRepository extends Repository {
 
   async init() {
     const sql = `
-      CREATE TABLE user_tbl (
+      CREATE TABLE IF NOT EXISTS user_tbl (
         user_key INT(11) NOT NULL AUTO_INCREMENT,
         id VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         salt CHAR(64) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
@@ -15,7 +15,10 @@ class UserRepository extends Repository {
         email VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         provider VARCHAR(20) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         refresh_token VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-        PRIMARY KEY (user_key) USING BTREE
+        device_key INT(11) NULL DEFAULT NULL,
+        PRIMARY KEY (user_key) USING BTREE,
+        INDEX FK_user_tbl_device_tbl (device_key) USING BTREE,
+        CONSTRAINT FK_user_tbl_device_tbl FOREIGN KEY (device_key) REFERENCES device_tbl(device_key) ON UPDATE NO ACTION ON DELETE SET NULL
       )
       COLLATE='utf8mb4_general_ci'
       ENGINE=InnoDB
@@ -46,6 +49,16 @@ class UserRepository extends Repository {
   async getUserByIdAndProvider(id, provider) {
     const sql = "SELECT * FROM user_tbl WHERE id = ? AND provider = ?";
     const params = [id, provider];
+    const [rows] = await this.query(sql, params);
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows[0];
+  }
+
+  async getUserByIdAndEmail(id, email) {
+    const sql = "SELECT * FROM user_tbl WHERE id = ? AND email = ?";
+    const params = [id, email];
     const [rows] = await this.query(sql, params);
     if (rows.length === 0) {
       return null;
@@ -106,10 +119,37 @@ class UserRepository extends Repository {
     return true;
   }
 
+  async updateSalt(id, salt) {
+    const sql = "UPDATE user_tbl SET salt = ? WHERE id = ?";
+    const params = [salt, id];
+    await this.query(sql, params);
+    return true;
+  }
+
+  async updatePw(id, hashedPw) {
+    const sql = "UPDATE user_tbl SET hashedPw = ? WHERE id = ?";
+    const params = [hashedPw, id];
+    await this.query(sql, params);
+    return true;
+  }
+
   async deleteUserById(id) {
     const sql = "DELETE FROM user_tbl WHERE id = ?";
     const params = [id];
     return this.query(sql, params);
+  }
+
+  async updateDeviceKey(id, provider, device_serial){
+    const getDevicekeySQL = "SELECT device_key FROM device_tbl WHERE device_serial=?";
+    const [device_key_row] = await this.query(getDevicekeySQL, [device_serial]);
+    if(device_key_row.length === 0){
+      return null;
+    }
+    const device_key = device_key_row[0].device_key;
+    const dropSQL = "UPDATE user_tbl SET device_key=NULL WHERE device_key=?";
+    const updateSQL = "UPDATE user_tbl SET device_key=? WHERE id=? AND provider=?";
+    await this.query(dropSQL, [device_key]);
+    await this.query(updateSQL, [device_key, id, provider]);
   }
 }
 

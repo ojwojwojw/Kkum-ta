@@ -5,7 +5,7 @@ class DeviceRepository extends Repository{
         super();
     }
     async init(){
-        const sql = `CREATE TABLE device_tbl (
+        const sql = `CREATE TABLE IF NOT EXISTS device_tbl (
             device_key INT(11) NOT NULL DEFAULT '0',
             device_serial CHAR(8) NULL DEFAULT NULL COLLATE 'utf8mb4_bin',
             PRIMARY KEY (device_key) USING BTREE

@@ -25,7 +25,7 @@ class signupService {
     return new LoginDto("ok");
   }
   async signup_sns(id, provider) {
-    this.userRepository.insertSNSUser(id, provider);
+    await this.userRepository.insertSNSUser(id, provider);
     return new LoginDto("ok");
   }
 }

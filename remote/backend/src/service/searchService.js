@@ -6,8 +6,13 @@ class SearchService {
     }
     
     async SearchID(email) {
-        const id = await this.userRepository.getIdByEmail(email);
-        return id;
+        try {
+            const id = await this.userRepository.getIdByEmail(email);
+            if (id === null) return {result:false, id:null};
+            return {result:true, err:"no data"};
+        } catch(err) {
+            return {result:false, err:err};
+        }
     }
 }
 

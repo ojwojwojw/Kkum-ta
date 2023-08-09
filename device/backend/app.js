@@ -20,7 +20,7 @@ const debug = (req, res, next)=>{
 
 app.use(debug);
 
-const timerController = require("./src/controller/timerMemoryController");
+const timerController = require("./src/controller/timerController");
 app.use('/timer', timerController);
 
 module.exports = app;
