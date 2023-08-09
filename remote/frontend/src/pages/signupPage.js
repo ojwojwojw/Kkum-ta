@@ -10,7 +10,6 @@ const SignupPage = () => {
   const [password, setUserPassword] = useState("");
   const navigate = useNavigate()
 
-
   //회원가입 요청
   const submitSignUp = async () => {
     const userData = {
@@ -76,4 +75,3 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
-

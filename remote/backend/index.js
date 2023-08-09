@@ -25,9 +25,14 @@ const corsOptions = {
     }
   },
 };
+<<<<<<< HEAD
 
 app.use(cors(corsOptions));
 
+=======
+
+app.use(cors(corsOptions));
+>>>>>>> 33a5f6bb4e46afb755c8601c35a0d632ceaecaad
 app.use(
   session({
     secret: process.env.SESSION_SECRETE,

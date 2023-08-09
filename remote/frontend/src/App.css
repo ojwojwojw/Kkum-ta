@@ -1,7 +1,6 @@
 .App {
   min-height: 570px;
   text-align: center;
-  background-color: rgb(233, 233, 233);
 }
 
 .App-logo {
@@ -42,4 +41,3 @@ a:-webkit-any-link {
 .App-link {
   color: #61dafb;
 }
-

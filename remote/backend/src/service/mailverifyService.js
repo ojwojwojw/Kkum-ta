@@ -21,7 +21,7 @@ class MailverifyService {
       const mailOptions = {
         from: "tjdalsdl19@gmail.com",
         to: email,
-        subject: "가입 인증 메일",
+        subject: "DreamTimer 인증 메일",
         html: "<h1>인증코드를 입력해주세요 \n\n\n\n\n\n</h1>" + salt,
       };
       await this.transporter.sendMail(mailOptions);
