@@ -1,6 +1,6 @@
 const Repository = require("./repository");
 
-class timerRepository extends Repository{
+class TimerRepository extends Repository{
     constructor(groupRepository){
         super();
         this.groupRepository = groupRepository;
@@ -70,4 +70,4 @@ class timerRepository extends Repository{
     }
 };
 
-module.exports = timerRepository;
+module.exports = TimerRepository;

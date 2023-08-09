@@ -1,6 +1,6 @@
 const Repository = require("./repository");
 
-class ComponentLogRepository extends Repository {
+class StopwatchLogRepository extends Repository {
   constructor() {
     super();
   }
@@ -96,4 +96,4 @@ class ComponentLogRepository extends Repository {
   }
 }
 
-module.exports = ComponentLogRepository;
+module.exports = StopwatchLogRepository;
