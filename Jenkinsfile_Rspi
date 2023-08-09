@@ -67,41 +67,9 @@ pipeline {
                                         cleanRemote: false, 
                                         excludes: '', 
                                         execCommand: '''
-                                            docker pull ${docker_repo}:front-server-for-raspberry-0.1;
-                                            docker pull ${docker_repo}:back-server-for-raspberry-0.1;
-                                        ''', 
-                                        execTimeout: 120000, 
-                                        flatten: false, 
-                                        makeEmptyDirs: false, 
-                                        noDefaultExcludes: false, 
-                                        patternSeparator: '[, ]+', 
-                                        remoteDirectory: '/home/teamone', 
-                                        remoteDirectorySDF: false, 
-                                        removePrefix: '', 
-                                        sourceFiles: ''
-                                    )
-                                ], 
-                            usePromotionTimestamp: false, 
-                            useWorkspaceInPromotion: false, 
-                            verbose: true
-                        )
-                    ]
-                )
-            }
-        }
-        stage("SSH Deploy") {
-            steps {
-                sshPublisher(
-                    publishers: 
-                    [
-                        sshPublisherDesc(
-                            configName: 'Raspberry', 
-                            transfers: 
-                                [
-                                    sshTransfer(
-                                        cleanRemote: false, 
-                                        excludes: '', 
-                                        execCommand: '''
+                                            docker pull gugaro/kkumta:front-server-for-raspberry-0.1;
+                                            docker pull gugaro/kkumta:back-server-for-raspberry-0.1;
+
                                             docker stop front-app;
                                             docker run -d --name front-app1 --restart=always -p 3000:3000 --network=web-network --volumes-from front-app gugaro/kkumta:front-server-for-raspberry-0.1;
                                             docker rm front-app;
