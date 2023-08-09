@@ -75,7 +75,7 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
 authRouter.get(
   "/kakao",
   isNotLoggedIn,
-  passport.authenticate("kakao", { session: false, prompt: "select_account" })
+  passport.authenticate("kakao", { session: false })
 );
 
 authRouter.get("/kakao/callback", (req, res, next) => {
@@ -123,6 +123,46 @@ authRouter.get(
 authRouter.get("/google/callback", (req, res, next) => {
   passport.authenticate(
     "google",
+    {
+      failureRedirect: "/", // googleStrategy에서 실패한다면 실행
+    },
+    async (err, user) => {
+      const { accessToken, refreshToken } = jwt.getTokens(
+        user.id,
+        user.provider
+      );
+      const userRepository = new UserRepository();
+      await userRepository.updateRefreshToken(
+        user.id,
+        user.provider,
+        refreshToken
+      );
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+      const res_user = {
+        id: user.id,
+        provider: user.provider,
+      };
+      return res
+        .status(200)
+        .json({ status: "ok", user: res_user, accessToken: accessToken });
+    }
+  )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
+});
+
+authRouter.get(
+  "/naver",
+  isNotLoggedIn,
+  passport.authenticate("naver", {
+    session: false,
+  })
+);
+
+authRouter.get("/naver/callback", (req, res, next) => {
+  passport.authenticate(
+    "naver",
     {
       failureRedirect: "/", // googleStrategy에서 실패한다면 실행
     },
