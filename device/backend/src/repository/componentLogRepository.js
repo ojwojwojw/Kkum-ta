@@ -9,8 +9,8 @@ class ComponentLogRepository extends Repository {
     CREATE TABLE IF NOT EXISTS component_log_tbl (
       component_log_key INT(11) NOT NULL AUTO_INCREMENT,
       component_key INT(11) NOT NULL,
-      operation VARCHAR(50) NOT NULL,
-      log_time DATETIME(3) NOT NULL DEFAULT current_timestamp(),
+      operation VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',
+      log_time DATETIME(3) NOT NULL DEFAULT current_timestamp(3),
       PRIMARY KEY (component_log_key) USING BTREE,
       INDEX log_time(log_time) USING BTREE
     )

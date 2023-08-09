@@ -10,15 +10,23 @@ const PORT = 8090;
 
 const authController = require("./src/controller/authController");
 const devController = require("./src/controller/devController");
+const logController = require("./src/controller/logController");
 
 passportConfig(passport);
 
-const corsOptions = {
-  origin: "*", // 출처 허용 옵션
-  credential: true, // 사용자 인증이 필요한 리소스(쿠키 등) 접근
-};
+// const whitelist = ["http://localhost:3000"];
+// const corsOptions = {
+//   credentials: true,
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(
   session({
     secret: process.env.SESSION_SECRETE,
@@ -55,5 +63,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/auth", authController);
 app.use("/dev", devController);
+app.use("/log", logController);
 
 app.listen(PORT, () => console.log(`Server listens on port ${PORT}`));

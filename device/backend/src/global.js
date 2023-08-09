@@ -7,6 +7,7 @@ const DeviceRepository = require('./repository/deviceRepository');
 const ComponentService = require('./service/componentService');
 const ComponentLogService = require('./service/componentLogService');
 const DeviceService = require('./service/deviceService');
+const StudyHourlyRepository = require('./repository/studyHourlyRepository');
 
 
 class Global {
@@ -16,6 +17,7 @@ class Global {
     static #timerRepository = null;
     static #componentLogRepository = null;
     static #deviceRepository = null;
+    static #studyHourlyRepository = null;
     static #componentService = null;
     static #componentLogService = null;
     static #deviceService = null;
@@ -83,6 +85,14 @@ class Global {
             await Global.#componentLogRepository.init();
         }
         return Global.#componentLogRepository;
+    }
+
+    static async getStudyHourlyRepository(){
+        if(!Global.#studyHourlyRepository){
+            Global.#studyHourlyRepository = new StudyHourlyRepository();
+            await Global.#studyHourlyRepository.init();
+        }
+        return Global.#studyHourlyRepository;
     }
 
     static async getComponentLogService(){
