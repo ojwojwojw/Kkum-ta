@@ -1,8 +1,6 @@
-class StopwatchService {
-  constructor(initTime, group_id=0) {
-    this.id = 0;
+class StopwatchComponentService {
+  constructor(initTime) {
     this.initTime = initTime;
-    this.group_id= group_id;
     this.curTime = initTime;
     this.isRunning = false;
     this.lastLogTime = Date.now();
@@ -20,9 +18,6 @@ class StopwatchService {
     this.curTime += ellapsedMilliseconds;
     this.isRunning = false;
   }
-  tag() {
-    return { next: null };
-  }
   stop() {
     this.isRunning = false;
     this.curTime = 0;
@@ -31,14 +26,13 @@ class StopwatchService {
   json() {
     const now = Date.now();
     const ellapsedMilliseconds = now - this.lastLogTime;
-    this.curTime += ellapsedMilliseconds;
+    if(this.isRunning){
+      this.curTime += ellapsedMilliseconds;
+    }
     this.lastLogTime = now;
     return {
-      id: this.id,
-      type: "stopwatch",
-      initTime: this.curTime,
-      limitTime: 360000 * 1000 - 1,
-      isRunning: this.isRunning,
+      time: this.curTime,
+      isRunning: this.isRunning
     };
   }
   setInitTime(initTime){
@@ -51,4 +45,4 @@ class StopwatchService {
   }
 }
 
-module.exports = StopwatchService;
+module.exports = StopwatchComponentService;

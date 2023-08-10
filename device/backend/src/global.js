@@ -1,110 +1,106 @@
-const ComponentLogRepository = require('./repository/componentLogRepository');
-const ComponentRepository = require('./repository/componentRepository');
-const GroupRepository = require('./repository/groupRepository');
-const StopwatchRepository = require('./repository/stopwatchRepository');
-const TimerRepository = require('./repository/timerRepository');
-const DeviceRepository = require('./repository/deviceRepository');
-const ComponentService = require('./service/componentService');
-const ComponentLogService = require('./service/componentLogService');
-const DeviceService = require('./service/deviceService');
-const StudyHourlyRepository = require('./repository/studyHourlyRepository');
+const DeviceRepository = require("./repository/deviceRepository");
+const GroupRepository = require("./repository/groupRepository");
+const StopwatchLogRepository = require("./repository/stopwatchLogRepository");
+const StudyHourlyRepository = require("./repository/studyHourlyRepository");
+const TimerRepository = require("./repository/timerRepository");
 
+const DeviceService = require("./service/deviceService");
+const GroupService = require("./service/groupService");
+const TimerService = require("./service/timerService");
+const StopwatchLogService = require("./service/stopwatchLogService");
 
 class Global {
-    static #componentRepository = null;
-    static #groupRepository = null;
-    static #stopwatchRepository = null;
-    static #timerRepository = null;
-    static #componentLogRepository = null;
-    static #deviceRepository = null;
-    static #studyHourlyRepository = null;
-    static #componentService = null;
-    static #componentLogService = null;
-    static #deviceService = null;
+  static #deviceRepository = null;
+  static #groupRepository = null;
+  static #stopwatchLogRepository = null;
+  static #studyHourlyRepository = null;
+  static #timerRepository = null;
 
-    static async getComponentRepository() {
-        if (!Global.#componentRepository) {
-            Global.#componentRepository = new ComponentRepository(await Global.getGroupRepository());
-            await Global.#componentRepository.init();
-        }
-        return Global.#componentRepository;
-    }
+  static #deviceService = null;
+  static #groupService = null;
+  static #timerService = null;
+  static #stopwatchLogService = null;
 
-    static async getGroupRepository() {
-        if (!Global.#groupRepository) {
-            Global.#groupRepository = new GroupRepository();
-            await Global.#groupRepository.init();
-        }
-        return Global.#groupRepository;
+  static async getDeviceRepository() {
+    if (!Global.#deviceRepository) {
+      Global.#deviceRepository = new DeviceRepository();
+      await Global.#deviceRepository.init();
     }
+    return Global.#deviceRepository;
+  }
 
-    static async getStopwatchRepository() {
-        if (!Global.#stopwatchRepository) {
-            Global.#stopwatchRepository = new StopwatchRepository();
-            await Global.#stopwatchRepository.init();
-        }
-        return Global.#stopwatchRepository;
+  static async getGroupRepository() {
+    if (!Global.#groupRepository) {
+      Global.#groupRepository = new GroupRepository();
+      await Global.#groupRepository.init();
     }
+    return Global.#groupRepository;
+  }
 
-    static async getTimerRepository() {
-        if (!Global.#timerRepository) {
-            Global.#timerRepository = new TimerRepository();
-            await Global.#timerRepository.init();
-        }
-        return Global.#timerRepository;
+  static async getStopwatchLogRepository() {
+    if (!Global.#stopwatchLogRepository) {
+      Global.#stopwatchLogRepository = new StopwatchLogRepository();
+      await Global.#stopwatchLogRepository.init();
     }
-    static async getComponentLogRepository(){
-        if(!Global.#componentLogRepository){
-            Global.#componentLogRepository = new ComponentLogRepository();
-            await Global.#componentLogRepository.init();
-        }
-        return Global.#componentLogRepository;
-    }
+    return Global.#stopwatchLogRepository;
+  }
 
-    static async getDeviceRepository(){
-        if(!Global.#deviceRepository){
-            Global.#deviceRepository = new DeviceRepository();
-        }
-        return Global.#deviceRepository;
+  static async getStudyHourlyRepository() {
+    if (!Global.#studyHourlyRepository) {
+      Global.#studyHourlyRepository = new StudyHourlyRepository();
+      await Global.#studyHourlyRepository.init();
     }
+    return Global.#studyHourlyRepository;
+  }
 
-    static async getComponentService() {
-        if(!Global.#componentService){
-            Global.#componentService = new ComponentService(
-                await Global.getComponentRepository(),
-                await Global.getTimerRepository(),
-                await Global.getStopwatchRepository()
-            );
-            await Global.#componentService.init();
-        }
-        return Global.#componentService;
+  static async getTimerRepository() {
+    if (!Global.#timerRepository) {
+      Global.#timerRepository = new TimerRepository(
+        await Global.getGroupRepository()
+      );
+      await Global.#timerRepository.init();
     }
-    static async getComponentLogRepository(){
-        if(!Global.#componentLogRepository){
-            Global.#componentLogRepository = new ComponentLogRepository();
-            await Global.#componentLogRepository.init();
-        }
-        return Global.#componentLogRepository;
-    }
+    return Global.#timerRepository;
+  }
 
-    static async getStudyHourlyRepository(){
-        if(!Global.#studyHourlyRepository){
-            Global.#studyHourlyRepository = new StudyHourlyRepository();
-            await Global.#studyHourlyRepository.init();
-        }
-        return Global.#studyHourlyRepository;
+  static async getDeviceService() {
+    if (!Global.#deviceService) {
+      Global.#deviceService = new DeviceService(
+        await Global.getDeviceRepository()
+      );
     }
+    return Global.#deviceService;
+  }
 
-    static async getComponentLogService(){
-        return Global.#componentLogService ??= new ComponentLogService(await Global.getComponentLogRepository());
+  static async getGroupService() {
+    if (!Global.#groupService) {
+      Global.#groupService = new GroupService(
+        await Global.getGroupRepository(),
+        await Global.getStopwatchLogRepository()
+      );
+      await Global.#groupService.init();
     }
+    return Global.#groupService;
+  }
 
-    static async getDeviceService(){
-        if(!Global.#deviceService){
-            Global.#deviceService = new DeviceService(await Global.getDeviceRepository());
-        }
-        return Global.#deviceService;
+  static async getTimerService() {
+    if (!Global.#timerService) {
+      Global.#timerService = new TimerService(
+        await Global.getTimerRepository()
+      );
+      await Global.#timerService.init();
     }
+    return Global.#timerService;
+  }
+
+  static async getStopwatchLogService() {
+    if (!Global.#stopwatchLogService) {
+      Global.#stopwatchLogService = new StopwatchLogService(
+        await Global.getStopwatchLogRepository()
+      );
+    }
+    return Global.#stopwatchLogService;
+  }
 }
 
 module.exports = Global;

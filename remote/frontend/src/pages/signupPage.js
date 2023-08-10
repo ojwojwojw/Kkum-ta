@@ -18,15 +18,16 @@ const SignupPage = () => {
       "email" : email,
     };
     try{
-      const res = await axios.post('http://localhost:8080/auth/signup',userData ,{  //배포를 위해서라도 프록시 설정 해야함.
+      const res = await axios.post('http://localhost:8090/auth/signup',userData ,{  //배포를 위해서라도 프록시 설정 해야함.
         headers: {
           'Content-Type' : 'application/x-www-form-urlencoded',
         },
       })
+      navigate('/login') //로그인 페이지로 이동
       console.log(res.data)
-      navigate("/");
     }
     catch(err){
+     
       console.log(err)
       console.log(userData)
     }
@@ -35,7 +36,7 @@ const SignupPage = () => {
   return (
     <div className="signup-container">
       <div className="signup-form">
-        <h1>This is signup Page.</h1>
+        <h1>회원가입</h1>
         <form>
           <input
             className="signup-input"

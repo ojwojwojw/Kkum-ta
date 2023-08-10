@@ -117,7 +117,9 @@ authRouter.get(
     session: false,
     scope: ["profile"],
     prompt: "select_account",
-  })
+  }), (req, res) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  }
 );
 
 authRouter.get("/google/callback", (req, res, next) => {
@@ -196,9 +198,11 @@ authRouter.post("/refresh", (req, res) => {
   const id = req.body.id;
   const provider = req.body.provider;
   if (!id || !provider) {
+    console.log({id: id, provider: provider});
     return res.status(400).json({ status: "bad request" });
   }
   if (!req.cookies.refreshToken) {
+    console.log(req.cookies)
     return res.status(401).json({ status: "unauthorized" });
   }
   const refresh = jwt.refresh(
@@ -272,6 +276,7 @@ authRouter.put("/changePW", async (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
   const accessToken = req.cookies.accessToken;
+  console.log('왜안됨?',id,password,email,accessToken)
   if (!password || !email || email.indexOf("@") === -1 || !accessToken) {
     return res.status(400).json({ status: "bad request" });
   }
