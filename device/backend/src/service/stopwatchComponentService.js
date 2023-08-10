@@ -26,14 +26,13 @@ class StopwatchComponentService {
   json() {
     const now = Date.now();
     const ellapsedMilliseconds = now - this.lastLogTime;
-    this.curTime += ellapsedMilliseconds;
+    if(this.isRunning){
+      this.curTime += ellapsedMilliseconds;
+    }
     this.lastLogTime = now;
     return {
-      id: this.id,
-      type: "stopwatch",
-      initTime: this.curTime,
-      limitTime: 360000 * 1000 - 1,
-      isRunning: this.isRunning,
+      time: this.curTime,
+      isRunning: this.isRunning
     };
   }
   setInitTime(initTime){

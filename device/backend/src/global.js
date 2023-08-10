@@ -78,6 +78,7 @@ class Global {
         await Global.getGroupRepository(),
         await Global.getStopwatchLogRepository()
       );
+      await Global.#groupService.init();
     }
     return Global.#groupService;
   }
