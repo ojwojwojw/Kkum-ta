@@ -19,8 +19,13 @@ const options = {
         },
         servers: [
             {
-                url: "http://localhost:8085"
+                url: "http://localhost:8085",
+                description: "로컬호스트 테스트 서버"
             },
+            {
+                url: "http://i9c101.p.ssafy.io:8085",
+                description: "배포 서버"
+            }
         ],
     },
     apis: ["./src/controller/*.js"]
