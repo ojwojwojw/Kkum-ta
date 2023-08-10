@@ -42,27 +42,17 @@ export default function TimerContainer({ timerList, id }) {
     forceAllStart();
   }, [storeTimerArray]); // storeTimerArray가 변경될 때마다 forceAllStart 호출
 
-  // function remove(id) {
-  //   if (timerList.length === 0) return;
-  //   let deleteIdx = 0;
-  //   timerList.forEach((obj, idx) => {
-  //     if (obj.id === id) {
-  //       deleteIdx = idx;
-  //     }
+  // function save() {
+  //   // time, init
+  //   const arr = [];
+  //   timerList.forEach((obj) => {
+  //     const timer = obj.timer;
+  //     const data = timer.save();
+  //     data.type = obj.type;
+  //     arr.push(data);
   //   });
+  //   // console.log(arr);
   // }
-
-  function save() {
-    // time, init
-    const arr = [];
-    timerList.forEach((obj) => {
-      const timer = obj.timer;
-      const data = timer.save();
-      data.type = obj.type;
-      arr.push(data);
-    });
-    // console.log(arr);
-  }
 
   function allStart() {
     storeTimerArray.forEach(({ timer }) => timer.start());

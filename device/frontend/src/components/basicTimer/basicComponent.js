@@ -57,17 +57,18 @@ export default function BasicTimerComponent({
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
   const [progress, setProgress] = useState(timer.getProgress());
-  const [input, setInput] = useState(0);
+  // const [input, setInput] = useState(0);
   const dispatch = useDispatch();
 
   // 현재 공부중인지를 검사하는 변수
-  const [isStudy, setIsStudy] = useState(0);
+  // const [isStudy, setIsStudy] = useState(0);
 
   // console.log("init:", initTime);
 
   useEffect(() => {
     if (WatchId) {
       // console.log("New timer Id:", WatchId);
+      console.log(initTime);
     }
   }, [WatchId]);
 
