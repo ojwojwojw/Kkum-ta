@@ -61,22 +61,25 @@ export default function TimerContainer({ timerList, id }) {
       data.type = obj.type;
       arr.push(data);
     });
-    console.log(arr);
+    // console.log(arr);
   }
 
   function allStart() {
     storeTimerArray.forEach(({ timer }) => timer.start());
     storeTimerArray.forEach((timer) => logStart(timer.id));
+    if (isGroupRunning === false) setIsGroupRunning(true);
   }
 
   function allPause() {
     storeTimerArray.forEach(({ timer }) => timer.pause());
     storeTimerArray.forEach((timer) => logPause(timer.id));
+    if (isGroupRunning === true) setIsGroupRunning(false);
   }
 
   function allReset() {
     storeTimerArray.forEach(({ timer }) => timer.reset());
     storeTimerArray.forEach((timer) => logStop(timer.id));
+    if (isGroupRunning === true) setIsGroupRunning(false);
   }
 
   //그룹이동 랜더링 관련

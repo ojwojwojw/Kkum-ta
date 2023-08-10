@@ -34,7 +34,7 @@ export default class BasicStopwatch {
       this.#curTime = nowTime - this.#beginTime + this.#initTime;
       if (this.#limitTime <= this.#curTime) this.#killCounter();
       if (this.setCurTime != null) this.setCurTime(this.#curTime);
-    }, 0);
+    }, 100);
   }
 
   // 스탑워치 시작
@@ -53,10 +53,12 @@ export default class BasicStopwatch {
     clearInterval(this.#counter);
     this.#isRunning = false;
     const nowTime = new Date().getTime();
-    this.#initTime += nowTime - this.#beginTime;
+    this.#initTime = nowTime - this.#beginTime;
 
     // setter
     if (this.setIsRunning != null) this.setIsRunning(false);
+    if (this.setcurTime != null) this.setCurTime(this.#curTime);
+
     console.log(`pause: ${this.#curTime}`);
   }
 

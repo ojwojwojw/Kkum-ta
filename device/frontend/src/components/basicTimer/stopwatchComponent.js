@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import BasicStopwatch from "../../utility/basic_stopwatch";
 import { Button, Grid } from "@mui/material";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -16,8 +16,8 @@ function StopwatchComponent({
   const stopwatch = useMemo(() => new BasicStopwatch(), []);
 
   useEffect(() => {
-    stopwatch.setCurTime = setCurTime; // BasicStopwatch에서 사용할 state setter 설정
-    stopwatch.setIsRunning = setIsRunning; // BasicStopwatch에서 사용할 state setter 설정
+    stopwatch.setCurTime = setCurTime;
+    stopwatch.setIsRunning = setIsRunning;
     return () => {
       stopwatch.setCurTime = null;
       stopwatch.setIsRunning = null;
@@ -25,9 +25,26 @@ function StopwatchComponent({
   }, [stopwatch]);
 
   useEffect(() => {
-    const groupRunning = storeTimerArray.some((timer) => timer.isRunning);
+    const groupRunning = storeTimerArray.some(
+      (timer) => timer.isRunning === true
+    );
     setIsGroupRunning(groupRunning);
   }, [setIsGroupRunning, storeTimerArray]);
+
+  const handleStart = useCallback(() => {
+    stopwatch.start();
+    setIsRunning(true);
+  }, [stopwatch]);
+
+  const handlePause = useCallback(() => {
+    stopwatch.pause();
+    setIsRunning(false);
+  }, [stopwatch]);
+
+  const handleReset = () => {
+    stopwatch.reset();
+    setIsRunning(false);
+  };
 
   useEffect(() => {
     setIsRunning(isGroupRunning);
@@ -36,24 +53,7 @@ function StopwatchComponent({
     } else {
       handlePause();
     }
-  }, [isGroupRunning]);
-
-  const handleStart = () => {
-    stopwatch.start();
-    setIsRunning(true);
-  };
-
-  const handlePause = () => {
-    stopwatch.pause();
-    setIsRunning(false);
-    setCurTime(curTime);
-  };
-
-  const handleReset = () => {
-    stopwatch.reset();
-    setIsRunning(false);
-    setCurTime(0);
-  };
+  }, [isGroupRunning, handlePause, handleStart]);
 
   return (
     <div>
