@@ -8,6 +8,8 @@ const SearchService = require("../service/searchService");
 const searchService = new SearchService();
 const MailverifyService = require("../service/mailverifyService");
 const mailApp = new MailverifyService();
+const KakaoService = require("../service/kakaoService");
+const kakaoClient = new KakaoService();
 const UpdateService = require("../service/updateService");
 const updateService = new UpdateService();
 const UserRepository = require("../repository/userRepository");
@@ -110,48 +112,100 @@ authRouter.get("/kakao/callback", (req, res, next) => {
   )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
 
-authRouter.get(
-  "/google",
-  isNotLoggedIn,
-  passport.authenticate("google", {
-    session: false,
-    scope: ["profile"],
-    prompt: "select_account",
-  }), (req, res) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  }
-);
+// authRouter.get(
+//   "/google",
+//   isNotLoggedIn,
+//   passport.authenticate("google", {
+//     session: false,
+//     scope: ["profile"],
+//     prompt: "select_account",
+//   }),
+//   (req, res) => {
+//     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   }
+// );
 
-authRouter.get("/google/callback", (req, res, next) => {
-  passport.authenticate(
-    "google",
-    {
-      failureRedirect: "/", // googleStrategy에서 실패한다면 실행
-    },
-    async (err, user) => {
-      const { accessToken, refreshToken } = jwt.getTokens(
-        user.id,
-        user.provider
-      );
-      const userRepository = new UserRepository();
-      await userRepository.updateRefreshToken(
-        user.id,
-        user.provider,
-        refreshToken
-      );
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-      const res_user = {
-        id: user.id,
-        provider: user.provider,
-      };
-      return res
-        .status(200)
-        .json({ status: "ok", user: res_user, accessToken: accessToken });
+// authRouter.get("/google/callback", (req, res, next) => {
+//   passport.authenticate(
+//     "google",
+//     {
+//       failureRedirect: "/", // googleStrategy에서 실패한다면 실행
+//     },
+//     async (err, user) => {
+//       const { accessToken, refreshToken } = jwt.getTokens(
+//         user.id,
+//         user.provider
+//       );
+//       const userRepository = new UserRepository();
+//       await userRepository.updateRefreshToken(
+//         user.id,
+//         user.provider,
+//         refreshToken
+//       );
+//       res.cookie("refreshToken", refreshToken, {
+//         httpOnly: true,
+//         maxAge: 24 * 60 * 60 * 1000,
+//       });
+//       const res_user = {
+//         id: user.id,
+//         provider: user.provider,
+//       };
+//       return res
+//         .status(200)
+//         .json({ status: "ok", user: res_user, accessToken: accessToken });
+//     }
+//   )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
+// });
+
+authRouter.get("/kakao/url", (req, res, next) => {
+  const url = kakaoClient.getAuthCodeURL();
+
+  res.status(200).json({
+    url,
+  });
+});
+
+authRouter.post("/kakao/login", async (req, res, next) => {
+  console.log("/login start");
+  try {
+    const code = req.body.code;
+
+    const kakao_access_token = await kakaoClient.getToken(code); // 토큰 받아오기
+    const user = await kakaoClient.getUserData(kakao_access_token.access_token); // 유저 정보 받아오기
+    console.log(user);
+
+    if (!user) {
+      await loginApp.signup_sns(user.id, user.provider);
     }
-  )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
+
+    const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
+    const userRepository = new UserRepository();
+    await userRepository.updateRefreshToken(
+      user.id,
+      user.provider,
+      refreshToken
+    );
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    const res_user = {
+      id: user.id,
+      provider: user.provider,
+    };
+    return res
+      .status(200)
+      .json({ status: "ok", user: res_user, accessToken: accessToken });
+  } catch (error) {
+    console.error(error);
+
+    const errorData = {
+      message: "Internal server error.. :(",
+    };
+    res.status(500).json(errorData);
+  }
+
+  console.log("/login finish");
 });
 
 authRouter.get(
@@ -198,11 +252,11 @@ authRouter.post("/refresh", (req, res) => {
   const id = req.body.id;
   const provider = req.body.provider;
   if (!id || !provider) {
-    console.log({id: id, provider: provider});
+    console.log({ id: id, provider: provider });
     return res.status(400).json({ status: "bad request" });
   }
   if (!req.cookies.refreshToken) {
-    console.log(req.cookies)
+    console.log(req.cookies);
     return res.status(401).json({ status: "unauthorized" });
   }
   const refresh = jwt.refresh(
@@ -276,7 +330,7 @@ authRouter.put("/changePW", async (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
   const accessToken = req.cookies.accessToken;
-  console.log('왜안됨?',id,password,email,accessToken)
+  console.log("왜안됨?", id, password, email, accessToken);
   if (!password || !email || email.indexOf("@") === -1 || !accessToken) {
     return res.status(400).json({ status: "bad request" });
   }
