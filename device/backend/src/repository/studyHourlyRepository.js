@@ -1,11 +1,13 @@
 const Repository = require("./repository");
 
+const version = "v2";
+
 class StudyHourlyRepository extends Repository{
     constructor(){
         super();
     }
     async init(){
-        const sql = `CREATE TABLE IF NOT EXISTS study_hourly_tbl (
+        const sql = `CREATE TABLE IF NOT EXISTS study_hourly_tbl_${version} (
             group_key INT(11) NOT NULL,
             date DATE NOT NULL,
             hour INT(11) NOT NULL DEFAULT 0,
@@ -29,7 +31,7 @@ class StudyHourlyRepository extends Repository{
         if(typeof(portion) !== "number" || portion < 0 || portion > 1){
             throw new Error(`portion is not valid(it should be between 0 and 1) (portion=${portion})`);
         }
-        const sql = `INSERT INTO study_hourly_tbl (group_key, date, hour, portion) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE portion=?;`;
+        const sql = `INSERT INTO study_hourly_tbl_${version} (group_key, date, hour, portion) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE portion=?;`;
         const [rows] = await this.query(sql, [group_key, date, hour, portion, portion]);
         return rows.insertId;
     }
@@ -40,7 +42,7 @@ class StudyHourlyRepository extends Repository{
         if(typeof(hour) !== "number" || hour < 0 || hour > 24){
             throw new Error(`hour is not valid (hour=${hour})`);
         }
-        const sql = `SELECT portion FROM study_hourly_tbl WHERE group_key=? AND date=? AND hour=? ORDER BY hour ASC;`;
+        const sql = `SELECT portion FROM study_hourly_tbl_${version} WHERE group_key=? AND date=? AND hour=? ORDER BY hour ASC;`;
         const params = [group_key, date, hour];
         const [rows] = await this.query(sql, params);
         if(rows.length === 0){
@@ -54,7 +56,7 @@ class StudyHourlyRepository extends Repository{
         if(typeof(date) !== "string" || date.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) === null){
             throw new Error(`date is not valid (date=${date})`);
         }
-        const sql = `SELECT hour, portion FROM study_hourly_tbl WHERE group_key=? AND date=? ORDER BY date ASC;`;
+        const sql = `SELECT hour, portion FROM study_hourly_tbl_${version} WHERE group_key=? AND date=? ORDER BY date ASC;`;
         const params = [group_key, date];
         const [rows] = await this.query(sql, params);
         const result = new Array(24).fill(0);
@@ -70,7 +72,7 @@ class StudyHourlyRepository extends Repository{
         }
         const sql = `
         SELECT DAY(date) AS day, avg(portion) AS portion
-        FROM study_hourly_tbl
+        FROM study_hourly_tbl_${version}
         GROUP BY group_key, date
         HAVING group_key=? AND YEAR(date)=? AND MONTH(date)=?
         ;`
@@ -89,7 +91,7 @@ class StudyHourlyRepository extends Repository{
         }
         const sql = `
         SELECT DATEDIFF(DATE, MAKEDATE(YEAR(DATE), 1)) AS date, avg(portion) AS portion
-        FROM study_hourly_tbl
+        FROM study_hourly_tbl_${version}
         GROUP BY group_key, date
         HAVING group_key=? AND YEAR(date)=?
         ORDER BY date ASC
