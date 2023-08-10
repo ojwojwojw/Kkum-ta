@@ -14,6 +14,7 @@ import { Button, IconButton, Stack } from "@mui/material";
 import axios from "axios";
 import { deleteTimer } from "../../redux/timerSlice";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux/es/hooks/useSelector";
 import {
   forceRendering,
   isRunningTrue,
@@ -54,22 +55,20 @@ export default function BasicTimerComponent({
   initTime,
   load,
 }) {
+  const timeToInput = useSelector(state => state.timer.timeToInput)
+
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
   const [progress, setProgress] = useState(timer.getProgress());
   // const [input, setInput] = useState(0);
   const dispatch = useDispatch();
 
+
   // 현재 공부중인지를 검사하는 변수
   // const [isStudy, setIsStudy] = useState(0);
 
-  // console.log("init:", initTime);
-  useEffect(() => {
-    if (timer) {
-      setRemainTime(initTime);
-    }
-  }, [timer]);
 
+  // 추가하는 순간 기존에 생성되어있던 타이머의 랜더링이 이상해짐
   // useConstructor(() => {
   //   timer.setRemainTime = setRemainTime;
   //   timer.setIsRunning = setIsRunning;
@@ -233,9 +232,9 @@ export default function BasicTimerComponent({
               <CloseIcon sx={{ fontSize: "5dvh" }} />
             </IconButton>
             <UpdateModal
-              input={remainTime}
-              setInput={setRemainTime}
+              WatchId = {WatchId}
               updateTimer={updateTimer}
+              // timer = {timer}
             />
           </Stack>
         </Grid>
