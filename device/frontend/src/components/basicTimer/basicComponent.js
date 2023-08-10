@@ -55,7 +55,11 @@ export default function BasicTimerComponent({
   initTime,
   load,
 }) {
-  const timeToInput = useSelector(state => state.timer.timeToInput)
+  const timeToInsert = useSelector((state) => state.timer.timeToInsert);
+
+  useEffect(() => {
+    setRemainTime(timeToInsert);
+  }, [timeToInsert]);
 
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
@@ -63,10 +67,8 @@ export default function BasicTimerComponent({
   // const [input, setInput] = useState(0);
   const dispatch = useDispatch();
 
-
   // 현재 공부중인지를 검사하는 변수
   // const [isStudy, setIsStudy] = useState(0);
-
 
   // 추가하는 순간 기존에 생성되어있던 타이머의 랜더링이 이상해짐
   // useConstructor(() => {
@@ -229,10 +231,10 @@ export default function BasicTimerComponent({
               color="error"
               onClick={deleteWatch} //remove는 프런트단에서만 삭제됨
             >
-              <CloseIcon sx={{ fontSize: "5dvh" }} />
+              <CloseIcon sx={{ fontSize: "7dvh" }} />
             </IconButton>
             <UpdateModal
-              WatchId = {WatchId}
+              WatchId={WatchId}
               updateTimer={updateTimer}
               // timer = {timer}
             />

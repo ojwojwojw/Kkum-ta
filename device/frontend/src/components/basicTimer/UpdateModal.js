@@ -14,7 +14,11 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { useDispatch } from "react-redux";
-import { setTimeToInsert ,changeInitTimeForInsert ,forceRendering} from "../../redux/timerSlice";
+import {
+  setTimeToInsert,
+  changeInitTimeForInsert,
+  forceRendering,
+} from "../../redux/timerSlice";
 
 const style = {
   position: "absolute",
@@ -30,13 +34,12 @@ const style = {
   p: "5dvh",
 };
 
-export default function UpdateModal({WatchId , updateTimer}) {
+export default function UpdateModal({ WatchId, updateTimer }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const dispatch = useDispatch();
-  const [input, setInput] = useState(0)
-
+  const [input, setInput] = useState(0);
 
   const [hour, setHour] = useState(0);
   const [min, setMin] = useState(0);
@@ -51,19 +54,17 @@ export default function UpdateModal({WatchId , updateTimer}) {
   );
   let arr60 = Array.from({ length: 60 }, (v, i) => String(i).padStart(2, "0"));
 
-
   // //타이머 시간 설정
   // function resetInitTime() {
   //   timer.reset();
   // }
 
   function insertTime(int) {
-    console.log('시발 왜 안찍혀',int)
-    console.log(WatchId)
-    dispatch(setTimeToInsert(int))
-    dispatch(changeInitTimeForInsert({"id": WatchId, "value" : int}))
-    updateTimer(int)
-    dispatch(forceRendering()) //안먹힘
+    console.log("시발 왜 안찍혀", int);
+    console.log(WatchId);
+    dispatch(setTimeToInsert(int));
+    dispatch(changeInitTimeForInsert({ id: WatchId, value: int }));
+    updateTimer(int);
   }
 
   return (
@@ -76,7 +77,7 @@ export default function UpdateModal({WatchId , updateTimer}) {
         }}
         onClick={handleOpen}
       >
-        <SettingsIcon fontSize="large" />
+        <SettingsIcon sx={{ fontSize: "7dvh" }} />
       </IconButton>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -169,7 +170,7 @@ export default function UpdateModal({WatchId , updateTimer}) {
                 color="success"
                 onClick={() => {
                   // setInput((hour * 3600 + min * 60 + sec) * 1000);
-                  insertTime(input)
+                  insertTime(input);
                   // updateTimer(input);
                   // setHour(0);
                   // setMin(0);

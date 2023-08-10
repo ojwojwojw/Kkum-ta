@@ -12,7 +12,6 @@ import StopwatchComponent from "./stopwatchComponent";
 export default function TimerContainer({ timerList, id }) {
   const dispatch = useDispatch();
   const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
-  const [timerInput, setTimerInput] = useState(0);
 
   const [isGroupRunning, setIsGroupRunning] = useState(false);
 
@@ -61,7 +60,8 @@ export default function TimerContainer({ timerList, id }) {
   function allStart() {
     storeTimerArray.forEach(({ timer }) => timer.start());
     storeTimerArray.forEach((timer) => logStart(timer.id));
-    if (isGroupRunning === false) setIsGroupRunning(true);
+    if (isGroupRunning === false && storeTimerArray.length !== 0)
+      setIsGroupRunning(true);
   }
 
   function allPause() {
