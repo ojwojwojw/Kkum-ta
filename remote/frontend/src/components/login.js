@@ -28,7 +28,7 @@ export default function Login() {
       "password": password,
     };
     try {
-      const res = await axios.post('http://localhost:443/auth/signin', userData, {  //배포를 위해서라도 프록시 설정 해야함.
+      const res = await axios.post('https://i9c101.p.ssafy.io:443/auth/signin', userData, {  //배포를 위해서라도 프록시 설정 해야함.
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -72,7 +72,7 @@ export default function Login() {
       "password": password,
     };
     try {
-      const res = await axios.get('http://localhost:443/auth/naver', userData, {  //배포를 위해서라도 프록시 설정 해야함.
+      const res = await axios.get('https://i9c101.p.ssafy.io:443/auth/naver', userData, {  //배포를 위해서라도 프록시 설정 해야함.
       })
       console.log(res.data)
       localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
@@ -97,7 +97,7 @@ export default function Login() {
       "password": password,
     };
     try {
-      const res = await axios.get('http://localhost:443/auth/signin', userData, {  //배포를 위해서라도 프록시 설정 해야함.
+      const res = await axios.get('https://i9c101.p.ssafy.io:443/auth/signin', userData, {  //배포를 위해서라도 프록시 설정 해야함.
       })
       console.log(res.data)
       localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
