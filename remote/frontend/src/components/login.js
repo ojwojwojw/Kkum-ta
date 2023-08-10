@@ -249,6 +249,8 @@ export default function Login() {
         </Stack>
       </Grid>
       <Routes>
+        <Route exact path="/" Component={""} />
+        <Route exact path="/login" Component={""} />
         <Route exact path="/signup" Component={SignupPage} />
         <Route exact path="/findpassword" Component={FindPasswordPage} />
         <Route path="callback" element={<KakaoCallback />} />
