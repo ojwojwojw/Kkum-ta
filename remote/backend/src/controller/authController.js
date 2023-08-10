@@ -10,6 +10,8 @@ const MailverifyService = require("../service/mailverifyService");
 const mailApp = new MailverifyService();
 const KakaoService = require("../service/kakaoService");
 const kakaoClient = new KakaoService();
+const GoogleService = require("../service/googleService");
+const googleClient = new GoogleService();
 const UpdateService = require("../service/updateService");
 const updateService = new UpdateService();
 const UserRepository = require("../repository/userRepository");
@@ -74,44 +76,6 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
   return res.status(200).json(signUpResult);
 });
 
-authRouter.get(
-  "/kakao",
-  isNotLoggedIn,
-  passport.authenticate("kakao", { session: false })
-);
-
-authRouter.get("/kakao/callback", (req, res, next) => {
-  passport.authenticate(
-    "kakao",
-    {
-      failureRedirect: "/", // googleStrategy에서 실패한다면 실행
-    },
-    async (err, user) => {
-      const { accessToken, refreshToken } = jwt.getTokens(
-        user.id,
-        user.provider
-      );
-      const userRepository = new UserRepository();
-      await userRepository.updateRefreshToken(
-        user.id,
-        user.provider,
-        refreshToken
-      );
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-      const res_user = {
-        id: user.id,
-        provider: user.provider,
-      };
-      return res
-        .status(200)
-        .json({ status: "ok", user: res_user, accessToken: accessToken });
-    }
-  )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
-});
-
 // authRouter.get(
 //   "/google",
 //   isNotLoggedIn,
@@ -156,6 +120,59 @@ authRouter.get("/kakao/callback", (req, res, next) => {
 //     }
 //   )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 // });
+
+authRouter.get("/google/url", (req, res, next) => {
+  const url = googleClient.getAuthCodeURL();
+
+  res.status(200).json({
+    url,
+  });
+});
+
+authRouter.post("/google/login", async (req, res, next) => {
+  console.log("/login start");
+  try {
+    const code = req.body.code;
+
+    const google_access_token = await googleClient.getToken(code); // 토큰 받아오기
+    const user = await googleClient.getUserData(
+      google_access_token.access_token
+    ); // 유저 정보 받아오기
+    console.log(user);
+
+    if (!user) {
+      await loginApp.signup_sns(user.id, user.provider);
+    }
+
+    const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
+    const userRepository = new UserRepository();
+    await userRepository.updateRefreshToken(
+      user.id,
+      user.provider,
+      refreshToken
+    );
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    const res_user = {
+      id: user.id,
+      provider: user.provider,
+    };
+    return res
+      .status(200)
+      .json({ status: "ok", user: res_user, accessToken: accessToken });
+  } catch (error) {
+    console.error(error);
+
+    const errorData = {
+      message: "Internal server error.. :(",
+    };
+    res.status(500).json(errorData);
+  }
+
+  console.log("/login finish");
+});
 
 authRouter.get("/kakao/url", (req, res, next) => {
   const url = kakaoClient.getAuthCodeURL();

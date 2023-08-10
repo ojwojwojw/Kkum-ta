@@ -9,6 +9,7 @@ import FindPasswordPage from "../pages/findPasswordPage";
 import { Route, Routes } from "react-router-dom";
 import SignupPage from "../pages/signupPage";
 import KakaoCallback from "./kakaoCallback";
+import GoogleCallback from "./googleCallback";
 
 //일단 loginPage에서 테스트 하는 기능들
 // import AccessTest from "./accessTokenTest";
@@ -99,6 +100,20 @@ export default function Login() {
     } catch (err) {
       console.log("occur error while login.", err);
       // console.log(userData)
+    }
+  };
+
+  const googleURL = async () => {
+    try {
+      const { url } = await (
+        await fetch("http://localhost:8090/auth/google/url")
+      ).json();
+
+      console.log(url); // 응답으로 온 url
+      document.location.href = url;
+    } catch (error) {
+      alert("Function fetchGetURL error!");
+      console.error(error);
     }
   };
 
@@ -211,7 +226,7 @@ export default function Login() {
               sx={{ minWidth: "50px", minHeight: "50px", m: "4px", p: "6px" }}
               className="Google-login"
               edge={false}
-              onClick={googleSignIn}
+              onClick={googleURL}
             >
               <img
                 src={process.env.PUBLIC_URL + "/images/google-logo.png"}
@@ -253,7 +268,8 @@ export default function Login() {
         <Route exact path="/login" Component={""} />
         <Route exact path="/signup" Component={SignupPage} />
         <Route exact path="/findpassword" Component={FindPasswordPage} />
-        <Route path="callback" element={<KakaoCallback />} />
+        <Route path="callback/kakao" element={<KakaoCallback />} />
+        <Route path="callback/google" element={<GoogleCallback />} />
       </Routes>
     </Box>
   );

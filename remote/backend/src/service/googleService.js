@@ -4,25 +4,28 @@ const axios = require("axios");
 class KakaoService {
   constructor() {
     this.userRepository = new UserRepository();
-    this.ID = process.env.KAKAO_ID;
-    this.SECRETE = process.env.KAKAO_CLIENT_SECRETE;
-    this.redirect_URI = "http://localhost:3000/callback/kakao";
+    this.ID = process.env.GOOGLE_ID;
+    this.SECRETE = process.env.GOOGLE_CLIENT_SECRETE;
+    this.redirect_URI = "http://localhost:3000/callback/google";
+    this.SCOPE = "https://www.googleapis.com/auth/userinfo.email";
+    this.prompt = "select_account";
   }
 
   getAuthCodeURL() {
-    return `https://kauth.kakao.com/oauth/authorize?client_id=${this.ID}&redirect_uri=${this.redirect_URI}&response_type=code`;
+    return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.ID}&redirect_uri=${this.redirect_URI}&scope=${this.SCOPE}&prompt=${this.prompt}&response_type=code`;
   }
 
   async getToken(code) {
     const params = {
       client_id: this.ID,
+      client_secret: this.SECRETE,
       code: code,
       grant_type: "authorization_code",
       redirect_uri: this.redirect_URI,
     }; // 필수 parameter만 작성
 
     const { data } = await axios.post(
-      "https://kauth.kakao.com/oauth/token",
+      "https://oauth2.googleapis.com/token",
       params,
       {
         headers: {
@@ -42,18 +45,21 @@ class KakaoService {
   }
 
   async getUserData(token) {
-    const { data } = await axios.get("https://kapi.kakao.com/v2/user/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data } = await axios.get(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    //console.log(data);
+    console.log(data);
     const id = new String(data.id);
 
     const userData = {
       id: id.toString(),
-      provider: "kakao",
+      provider: "google",
     };
 
     return userData;
