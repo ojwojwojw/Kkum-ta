@@ -64,12 +64,12 @@ export default function BasicTimerComponent({
   const [isStudy, setIsStudy] = useState(0);
 
   // console.log("init:", initTime);
-
   useEffect(() => {
-    if (WatchId) {
-      // console.log("New timer Id:", WatchId);
+    if (timer) {
+      setRemainTime(initTime)
     }
-  }, [WatchId]);
+  }, [timer]);
+
 
   // useConstructor(() => {
   //   timer.setRemainTime = setRemainTime;
@@ -79,6 +79,7 @@ export default function BasicTimerComponent({
   // });
 
   useEffect(() => {
+    console.log(remainTime)
     timer.setRemainTime = setRemainTime;
     timer.setIsRunning = setIsRunning;
     timer.setProgress = setProgress;

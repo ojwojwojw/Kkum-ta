@@ -14,7 +14,7 @@ export const timerSlice = createSlice({
     },
     create: (state, action) => {
       console.log("payload:", action.payload);
-      state.timerArray.push(action.payload);
+      state.timerArray = [...state.timerArray, action.payload];
     },
     deleteTimer: (state, action) => {
       state.timerArray = state.timerArray.filter(
