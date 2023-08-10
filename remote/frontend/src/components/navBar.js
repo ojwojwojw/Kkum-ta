@@ -112,8 +112,6 @@ export default function NavBar() {
             <Route exact path="/group3" Component={GroupPage} />
             <Route exact path="/group4" Component={GroupPage} />
             <Route exact path="/group5" Component={GroupPage} />
-            <Route exact path="report" Component={ReportPage} />
-            <Route exact path="signup" Component={SignupPage} />
           </Routes>
         </Grid>
       </Grid>
