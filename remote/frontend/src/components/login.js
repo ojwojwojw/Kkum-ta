@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { Box, Grid, Stack, Button, IconButton, Input } from "@mui/material";
 import "./login.css";
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loginState, logoutState } from "../redux/authSlice";
 import FindPasswordPage from "../pages/findPasswordPage";
-import { Route , Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import SignupPage from "../pages/signupPage";
+import KakaoCallback from "./kakaoCallback";
+import GoogleCallback from "./googleCallback";
+import NaverCallback from "./naverCallback";
+
 //일단 loginPage에서 테스트 하는 기능들
 // import AccessTest from "./accessTokenTest";
 // import RefreshTest from "./refreshTokenTest";
@@ -24,98 +28,80 @@ export default function Login() {
   //로그인 요청
   const submitSignIn = async () => {
     const userData = {
-      "id": username,
-      "password": password,
+      id: username,
+      password: password,
     };
     try {
-      const res = await axios.post('https://i9c101.p.ssafy.io:443/auth/signin', userData, {  //배포를 위해서라도 프록시 설정 해야함.
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        withCredentials: true
-      })
-      console.log(res.data)
-      localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
-      dispatch(loginState({
-        "id": res.data.user.id,
-        "provider": res.data.user.provider,
-        "email": res.data.user.email,
-        "password": password,
-      })) //redux에 유저데이터 저장
-
-      navigate('/')
-    }
-    catch (err) {
-      console.log("occur error while login.", err)
-      // console.log(userData)
-    }
-  }
-
-  //sns 로그인 요청
-  const googleSignIn = async () => {
-    try {
-      const res = await axios.get('https://localhost/auth/google' , {
-        hearder : { 
-          
+      const res = await axios.post(
+        "https://localhost:443/auth/signin",
+        userData,
+        {
+          //배포를 위해서라도 프록시 설정 해야함.
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          withCredentials: true,
         }
-      })
-      console.log(res.data)
-    }
-    catch (err) {
-      console.log("occur error while google login.", err)
-    }
-  }
-  
-  const naverSignIn = async () => {
-    const userData = {
-      "id": username,
-      "password": password,
-    };
-    try {
-      const res = await axios.get('https://i9c101.p.ssafy.io:443/auth/naver', userData, {  //배포를 위해서라도 프록시 설정 해야함.
-      })
-      console.log(res.data)
+      );
+      console.log(res);
       localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
-      dispatch(loginState({
-        "id": res.data.user.id,
-        "provider": res.data.user.provider,
-        "email": res.data.user.email,
-        "password": password,
-      })) //redux에 유저데이터 저장
+      dispatch(
+        loginState({
+          id: res.data.user.id,
+          provider: res.data.user.provider,
+          email: res.data.user.email,
+          password: password,
+        })
+      ); //redux에 유저데이터 저장
 
-      navigate('/')
-    }
-    catch (err) {
-      console.log("occur error while login.", err)
+      navigate("/");
+    } catch (err) {
+      console.log("occur error while login.", err);
       // console.log(userData)
     }
-  }
+  };
 
-  const kakaoSignIn = async () => {
-    const userData = {
-      "id": username,
-      "password": password,
-    };
+  const googleURL = async () => {
     try {
-      const res = await axios.get('https://i9c101.p.ssafy.io:443/auth/signin', userData, {  //배포를 위해서라도 프록시 설정 해야함.
-      })
-      console.log(res.data)
-      localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
-      dispatch(loginState({
-        "id": res.data.user.id,
-        "provider": res.data.user.provider,
-        "email": res.data.user.email,
-        "password": password,
-      })) //redux에 유저데이터 저장
+      const { url } = await (
+        await fetch("http://localhost:8090/auth/google/url")
+      ).json();
 
-      navigate('/')
+      console.log(url); // 응답으로 온 url
+      document.location.href = url;
+    } catch (error) {
+      alert("Function fetchGetURL error!");
+      console.error(error);
     }
-    catch (err) {
-      console.log("occur error while login.", err)
-      // console.log(userData)
-    }
-  }
+  };
 
+  const kakaoURL = async () => {
+    try {
+      const { url } = await (
+        await fetch("http://localhost:8090/auth/kakao/url")
+      ).json();
+
+      console.log(url); // 응답으로 온 url
+      document.location.href = url;
+    } catch (error) {
+      alert("Function fetchGetURL error!");
+      console.error(error);
+    }
+  };
+
+  const naverURL = async () => {
+    try {
+      const { url } = await (
+        await fetch("http://localhost:8090/auth/naver/url")
+      ).json();
+
+      console.log(url); // 응답으로 온 url
+      document.location.href = url;
+    } catch (error) {
+      alert("Function fetchGetURL error!");
+      console.error(error);
+    }
+  };
 
   // //로그아웃 요청 (nav바로 이동)
   // const submitSignout = async () => {
@@ -132,14 +118,13 @@ export default function Login() {
   //       withCredentials: true
   //     })
   //   localStorage.removeItem("accessToken");  //로컬 스토리지 비우기
-  //   console.log(res.data) 
+  //   console.log(res.data)
   //   dispatch(logoutState())  //redux state 반영하기
   //   }
   //     catch (err) {
   //     console.log(err)
   //   }
   // }
-
 
   return (
     <Box
@@ -188,7 +173,8 @@ export default function Login() {
             </Grid>
             <Grid item>
               <Button
-                component={Link} to="/signup"
+                component={Link}
+                to="/signup"
                 variant="contained"
                 sx={{ minWidth: "200px", m: "4px", p: "6px" }}
               >
@@ -197,7 +183,8 @@ export default function Login() {
             </Grid>
             <Grid item>
               <Button
-                component={Link} to="/findpassword"
+                component={Link}
+                to="/findpassword"
                 variant="contained"
                 sx={{ minWidth: "200px", m: "4px", p: "6px" }}
               >
@@ -211,27 +198,39 @@ export default function Login() {
               sx={{ minWidth: "50px", minHeight: "50px", m: "4px", p: "6px" }}
               className="Google-login"
               edge={false}
-              onClick={googleSignIn}
+              onClick={googleURL}
             >
-              <img src={process.env.PUBLIC_URL + '/images/google-logo.png'} className="logo-img" alt="google-logo" />
+              <img
+                src={process.env.PUBLIC_URL + "/images/google-logo.png"}
+                className="logo-img"
+                alt="google-logo"
+              />
             </IconButton>
             <IconButton
               variant="contained"
               sx={{ minWidth: "50px", minHeight: "50px", m: "4px", p: "6px" }}
               className="Naver-login"
               edge={false}
-              onClick={naverSignIn}
+              onClick={naverURL}
             >
-              <img src={process.env.PUBLIC_URL + '/images/naver-logo.png'} className="logo-img" alt="Naver-logo" />
+              <img
+                src={process.env.PUBLIC_URL + "/images/naver-logo.png"}
+                className="logo-img"
+                alt="Naver-logo"
+              />
             </IconButton>
             <IconButton
               variant="contained"
               sx={{ minWidth: "50px", minHeight: "50px", m: "4px", p: "6px" }}
               className="Kakao-login"
-              onClick={kakaoSignIn}
+              onClick={kakaoURL}
               edge={false}
             >
-              <img src={process.env.PUBLIC_URL + '/images/kakao-logo.png'} className="logo-img" alt="Kakao-logo" />
+              <img
+                src={process.env.PUBLIC_URL + "/images/kakao-logo.png"}
+                className="logo-img"
+                alt="Kakao-logo"
+              />
             </IconButton>
           </Grid>
         </Stack>
@@ -241,8 +240,10 @@ export default function Login() {
         <Route exact path="/login" Component={""} />
         <Route exact path="/signup" Component={SignupPage} />
         <Route exact path="/findpassword" Component={FindPasswordPage} />
+        <Route path="callback/kakao" element={<KakaoCallback />} />
+        <Route path="callback/google" element={<GoogleCallback />} />
+        <Route path="callback/naver" element={<NaverCallback />} />
       </Routes>
     </Box>
   );
 }
-
