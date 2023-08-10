@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { loginState } from "../redux/authSlice";
+import { useDispatch } from "react-redux";
 
 function NaverCallback() {
   const [code, setCode] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   /**
    * @description 로그인하기
@@ -27,6 +30,13 @@ function NaverCallback() {
         navigate("/"); // API 호출 성공 시 메인 페이지로 이동
         console.log(response.data);
         localStorage.setItem("accessToken", response.data.accessToken); //로컬스토리지에 토큰 저장
+        dispatch(
+          loginState({
+            id: response.data.user.id,
+            provider: response.data.user.provider,
+            email: null,
+          })
+        );
       } catch (error) {
         alert("Function fetchLogin error!");
         console.error(error);
