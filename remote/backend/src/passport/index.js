@@ -1,6 +1,4 @@
 const local = require("./localStrategy");
-const google = require("./googleStrategy");
-const naver = require("./naverStrategy");
 const jwt = require("./jwtStrategy");
 
 module.exports = (passport) => {
@@ -17,7 +15,5 @@ module.exports = (passport) => {
   });
 
   local();
-  google();
-  naver();
   jwt();
 };
