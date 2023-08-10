@@ -33,7 +33,7 @@ export default function Login() {
     };
     try {
       const res = await axios.post(
-        "https://localhost:443/auth/signin",
+        "http://172.18.0.4:8090/auth/signin",
         userData,
         {
           //배포를 위해서라도 프록시 설정 해야함.
@@ -64,7 +64,7 @@ export default function Login() {
   const googleURL = async () => {
     try {
       const { url } = await (
-        await fetch("https://i9c101.p.ssafy.io:443/auth/google/url")
+        await fetch("http://172.18.0.4:8090/auth/google/url")
       ).json();
 
       console.log(url); // 응답으로 온 url
@@ -78,7 +78,7 @@ export default function Login() {
   const kakaoURL = async () => {
     try {
       const { url } = await (
-        await fetch("https://localhost:443/auth/kakao/url")
+        await fetch("http://172.18.0.4:8090/auth/kakao/url")
       ).json();
 
       console.log(url); // 응답으로 온 url
@@ -92,7 +92,7 @@ export default function Login() {
   const naverURL = async () => {
     try {
       const { url } = await (
-        await fetch("https://localhost:443/auth/naver/url")
+        await fetch("http://172.18.0.4:8090/auth/naver/url")
       ).json();
 
       console.log(url); // 응답으로 온 url
