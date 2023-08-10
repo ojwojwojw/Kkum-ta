@@ -50,7 +50,6 @@ export default function Login() {
           id: res.data.user.id,
           provider: res.data.user.provider,
           email: res.data.user.email,
-          password: password,
         })
       ); //redux에 유저데이터 저장
 
