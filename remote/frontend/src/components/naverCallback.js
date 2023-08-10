@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function GoogleCallback() {
+function NaverCallback() {
   const [code, setCode] = useState("");
   const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ function GoogleCallback() {
     async (code) => {
       try {
         const response = await axios.post(
-          "http://localhost:8090/auth/google/login",
+          "http://localhost:8090/auth/naver/login",
           { code: code },
           {
             //배포를 위해서라도 프록시 설정 해야함.
@@ -56,4 +56,4 @@ function GoogleCallback() {
   return <div className="App">Wait....</div>;
 }
 
-export default GoogleCallback;
+export default NaverCallback;

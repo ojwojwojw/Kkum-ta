@@ -10,6 +10,7 @@ import { Route, Routes } from "react-router-dom";
 import SignupPage from "../pages/signupPage";
 import KakaoCallback from "./kakaoCallback";
 import GoogleCallback from "./googleCallback";
+import NaverCallback from "./naverCallback";
 
 //일단 loginPage에서 테스트 하는 기능들
 // import AccessTest from "./accessTokenTest";
@@ -60,49 +61,6 @@ export default function Login() {
     }
   };
 
-  //sns 로그인 요청
-  const googleSignIn = async () => {
-    try {
-      const res = await axios.get("http://localhost:8090/auth/google", {
-        hearder: {},
-      });
-      console.log(res.data);
-    } catch (err) {
-      console.log("occur error while google login.", err);
-    }
-  };
-
-  const naverSignIn = async () => {
-    const userData = {
-      id: username,
-      password: password,
-    };
-    try {
-      const res = await axios.get(
-        "http://localhost:8090/auth/naver",
-        userData,
-        {
-          //배포를 위해서라도 프록시 설정 해야함.
-        }
-      );
-      console.log(res.data);
-      localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
-      dispatch(
-        loginState({
-          id: res.data.user.id,
-          provider: res.data.user.provider,
-          email: res.data.user.email,
-          password: password,
-        })
-      ); //redux에 유저데이터 저장
-
-      navigate("/");
-    } catch (err) {
-      console.log("occur error while login.", err);
-      // console.log(userData)
-    }
-  };
-
   const googleURL = async () => {
     try {
       const { url } = await (
@@ -121,6 +79,20 @@ export default function Login() {
     try {
       const { url } = await (
         await fetch("http://localhost:8090/auth/kakao/url")
+      ).json();
+
+      console.log(url); // 응답으로 온 url
+      document.location.href = url;
+    } catch (error) {
+      alert("Function fetchGetURL error!");
+      console.error(error);
+    }
+  };
+
+  const naverURL = async () => {
+    try {
+      const { url } = await (
+        await fetch("http://localhost:8090/auth/naver/url")
       ).json();
 
       console.log(url); // 응답으로 온 url
@@ -239,7 +211,7 @@ export default function Login() {
               sx={{ minWidth: "50px", minHeight: "50px", m: "4px", p: "6px" }}
               className="Naver-login"
               edge={false}
-              onClick={naverSignIn}
+              onClick={naverURL}
             >
               <img
                 src={process.env.PUBLIC_URL + "/images/naver-logo.png"}
@@ -270,6 +242,7 @@ export default function Login() {
         <Route exact path="/findpassword" Component={FindPasswordPage} />
         <Route path="callback/kakao" element={<KakaoCallback />} />
         <Route path="callback/google" element={<GoogleCallback />} />
+        <Route path="callback/naver" element={<NaverCallback />} />
       </Routes>
     </Box>
   );

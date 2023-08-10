@@ -1,18 +1,16 @@
 const UserRepository = require("../repository/userRepository");
 const axios = require("axios");
 
-class GoogleService {
+class NaverService {
   constructor() {
     this.userRepository = new UserRepository();
-    this.ID = process.env.GOOGLE_ID;
-    this.SECRETE = process.env.GOOGLE_CLIENT_SECRETE;
-    this.redirect_URI = "http://localhost:3000/callback/google";
-    this.SCOPE = "https://www.googleapis.com/auth/userinfo.email";
-    this.prompt = "select_account";
+    this.ID = process.env.NAVER_ID;
+    this.SECRETE = process.env.NAVER_CLIENT_SECRETE;
+    this.redirect_URI = "http://localhost:3000/callback/naver";
   }
 
   getAuthCodeURL() {
-    return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.ID}&redirect_uri=${this.redirect_URI}&scope=${this.SCOPE}&prompt=${this.prompt}&response_type=code`;
+    return `https://nid.naver.com/oauth2.0/authorize?client_id=${this.ID}&redirect_uri=${this.redirect_URI}&response_type=code`;
   }
 
   async getToken(code) {
@@ -25,7 +23,7 @@ class GoogleService {
     }; // 필수 parameter만 작성
 
     const { data } = await axios.post(
-      "https://oauth2.googleapis.com/token",
+      "https://nid.naver.com/oauth2.0/token",
       params,
       {
         headers: {
@@ -45,25 +43,21 @@ class GoogleService {
   }
 
   async getUserData(token) {
-    const { data } = await axios.get(
-      "https://www.googleapis.com/oauth2/v2/userinfo",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const { data } = await axios.get("https://openapi.naver.com/v1/nid/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     console.log(data);
-    const id = new String(data.id);
 
     const userData = {
-      id: id.toString(),
-      provider: "google",
+      id: data.response.id,
+      provider: "naver",
     };
 
     return userData;
   }
 }
 
-module.exports = GoogleService;
+module.exports = NaverService;
