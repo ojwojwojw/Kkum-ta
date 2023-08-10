@@ -9,7 +9,6 @@ class GroupService{
     async init(){
         const [rows] = await this.groupRepository.getAll();
         rows.forEach((item)=>{
-            console.log(item);
             this.array[item.group_key].setInitTime(item.stopwatch_time);
         })
     }
@@ -27,7 +26,7 @@ class GroupService{
             throw new Error(`Invalid group_id(${group_id})`);
         }
         this.array[group_id].setInitTime(initTime);
-        this.groupRepository.setInitTime(group_id, init_time);
+        this.groupRepository.setStopwatchTime(group_id, initTime);
     }
     start(group_id){
         if(!Number.isInteger(group_id) || group_id < 0 || group_id > 5){
@@ -35,7 +34,7 @@ class GroupService{
         }
         this.array[group_id].start();
         this.stopwatchLogService.log(group_id, "start");
-        this.groupRepository.setInitTime(group_id, getStopwatchTime(group_id));
+        this.groupRepository.setStopwatchTime(group_id, this.getStopwatchTime(group_id));
     }
     pause(group_id){
         if(!Number.isInteger(group_id) || group_id < 0 || group_id > 5){
@@ -43,7 +42,7 @@ class GroupService{
         }
         this.array[group_id].pause();
         this.stopwatchLogService.log(group_id, "pause");
-        this.groupRepository.setInitTime(group_id, getStopwatchTime(group_id));
+        this.groupRepository.setStopwatchTime(group_id, this.getStopwatchTime(group_id));
     }
     stop(group_id){
         if(!Number.isInteger(group_id) || group_id < 0 || group_id > 5){
@@ -51,7 +50,8 @@ class GroupService{
         }
         this.array[group_id].stop();
         this.stopwatchLogService.log(group_id, "stop");
-        this.groupRepository.setInitTime(group_id, getStopwatchTime(group_id));
+        console.log(`this.groupRepository.setStopwatchTime(${group_id}:${typeof(group_id)}, ${getStopwatchTime(group_id)}: ${typeof(getStopwatchTime(group_id))})`);
+        this.groupRepository.setStopwatchTime(group_id, this.getStopwatchTime(group_id));
     }
 }
 

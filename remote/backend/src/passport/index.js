@@ -1,7 +1,4 @@
 const local = require("./localStrategy");
-const kakao = require("./kakaoStrategy");
-const google = require("./googleStrategy");
-const naver = require("./naverStrategy");
 const jwt = require("./jwtStrategy");
 
 module.exports = (passport) => {
@@ -18,8 +15,5 @@ module.exports = (passport) => {
   });
 
   local();
-  kakao();
-  google();
-  naver();
   jwt();
 };
