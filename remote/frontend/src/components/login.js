@@ -8,7 +8,6 @@ import { loginState, logoutState } from "../redux/authSlice";
 import FindPasswordPage from "../pages/findPasswordPage";
 import { Route , Routes } from "react-router-dom";
 import SignupPage from "../pages/signupPage";
-
 //일단 loginPage에서 테스트 하는 기능들
 // import AccessTest from "./accessTokenTest";
 // import RefreshTest from "./refreshTokenTest";
@@ -238,6 +237,8 @@ export default function Login() {
         </Stack>
       </Grid>
       <Routes>
+        <Route exact path="/" Component={""} />
+        <Route exact path="/login" Component={""} />
         <Route exact path="/signup" Component={SignupPage} />
         <Route exact path="/findpassword" Component={FindPasswordPage} />
       </Routes>
