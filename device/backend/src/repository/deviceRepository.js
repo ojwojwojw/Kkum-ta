@@ -1,11 +1,13 @@
 const Repository = require("./repository");
 
+const version = "v2";
+
 class DeviceRepository extends Repository{
     constructor(){
         super();
     }
     async init(){
-        const sql = `CREATE TABLE IF NOT EXISTS device_tbl (
+        const sql = `CREATE TABLE IF NOT EXISTS device_tbl_${version} (
             device_key INT(11) NOT NULL DEFAULT '0',
             device_serial CHAR(8) NULL DEFAULT NULL COLLATE 'utf8mb4_bin',
             PRIMARY KEY (device_key) USING BTREE
@@ -16,7 +18,7 @@ class DeviceRepository extends Repository{
         await this.query(sql, []);
     }
     async getDeviceSerial(){
-        const sql = `SELECT device_serial FROM device_tbl`;
+        const sql = `SELECT device_serial FROM device_tbl_${version}`;
         const [rows] = await this.query(sql, []);
         if(rows.length === 0){
             return null;
@@ -24,7 +26,7 @@ class DeviceRepository extends Repository{
         return rows[0].device_serial;
     }
     async setDeviceSerial(device_key){
-        const sql = `INSERT INTO device_tbl (device_serial) VALUES (?)
+        const sql = `INSERT INTO device_tbl_${version} (device_serial) VALUES (?)
         ON DUPLICATE KEY UPDATE device_serial=?`
         const params = [device_key, device_key];
         await this.query(sql, params);

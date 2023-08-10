@@ -1,12 +1,14 @@
 const Repository = require("./repository");
 
+const version = "v2";
+
 class StopwatchLogRepository extends Repository {
   constructor() {
     super();
   }
   async init() {
     const sql = `
-    CREATE TABLE IF NOT EXISTS stopwatch_log_tbl (
+    CREATE TABLE IF NOT EXISTS stopwatch_log_tbl_${version} (
       log_key INT(11) NOT NULL AUTO_INCREMENT,
       group_key INT(11) NOT NULL,
       operation VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',
@@ -20,13 +22,13 @@ class StopwatchLogRepository extends Repository {
     await this.query(sql, []);
   }
   async insert(group_key, operation) {
-    const sql = `INSERT INTO stopwatch_log_tbl(group_key, operation) VALUES(?, ?)`;
+    const sql = `INSERT INTO stopwatch_log_tbl_${version}(group_key, operation) VALUES(?, ?)`;
     const params = [group_key, operation];
     const [row] = await this.query(sql, params);
     return row.insertId;
   }
   async getById(group_key) {
-    const sql = "SELECT * FROM stopwatch_log_tbl WHERE group_key = ?";
+    const sql = `SELECT * FROM stopwatch_log_tbl_${version} WHERE group_key = ?`;
     const params = [group_key];
     return this.query(sql, params);
   }
@@ -50,10 +52,10 @@ class StopwatchLogRepository extends Repository {
         `begin time is not in a valid format(YYYY-MM-DD hh:mm:ss), ${beginTime}`
       );
     }
-    const sql = `SELECT operation, log_time FROM stopwatch_log_tbl WHERE group_key = ?
+    const sql = `SELECT operation, log_time FROM stopwatch_log_tbl_${version} WHERE group_key = ?
     AND log_time BETWEEN COALESCE(
       (
-        SELECT MAX(log_time) FROM stopwatch_log_tbl
+        SELECT MAX(log_time) FROM stopwatch_log_tbl_${version}
         WHERE group_key = ? AND log_time < ?
       ), ?
     ) AND NOW();
@@ -74,11 +76,11 @@ class StopwatchLogRepository extends Repository {
       );
     }
     const sql = `
-    SELECT operation, log_time FROM stopwatch_log_tbl WHERE group_key = ?
+    SELECT operation, log_time FROM stopwatch_log_tbl_${version} WHERE group_key = ?
     AND log_time BETWEEN COALESCE(
       (
         SELECT MAX(log_time)
-        FROM stopwatch_log_tbl
+        FROM stopwatch_log_tbl_${version}
         WHERE group_key = ?
         AND log_time < ?
       ), ?
