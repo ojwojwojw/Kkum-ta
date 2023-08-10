@@ -9,7 +9,7 @@ const devRouter = express.Router();
 devRouter.get("/", async (req, res)=>{
     const result = await deviceService.getDeviceSerial();
     if(result === null){
-        res.status(500).json({id:null});
+        res.status(503).json({id:null});
         return;
     }
     else {

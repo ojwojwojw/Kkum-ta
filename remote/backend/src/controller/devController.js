@@ -7,6 +7,6 @@ const devRouter = express.Router();
 })();
 
 devRouter.post('/register', async (req, res)=>{
-    return res.json({id: await deviceRepository.getNewDeviceSerial()});
+    return res.status(200).json({id: await deviceRepository.getNewDeviceSerial()});
 });
 module.exports = devRouter;
