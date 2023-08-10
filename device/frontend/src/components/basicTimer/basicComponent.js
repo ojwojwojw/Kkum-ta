@@ -9,7 +9,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import SettingsIcon from "@mui/icons-material/Settings";
 import styled from "@emotion/styled";
 import { Button, IconButton, Stack } from "@mui/material";
 import axios from "axios";
@@ -215,16 +214,12 @@ export default function BasicTimerComponent({
             )}
           </Button>
           <Button
-            className={remainTime === 0 ? "btn set" : "btn reset"}
+            className={"btn reset"}
             color="warning"
             // 최대값이 99:59:59가 되도록 제한
             onClick={() => resetInitTime()}
           >
-            {remainTime === 0 ? (
-              <SettingsIcon sx={{ fontSize: "6.5dvh" }} />
-            ) : (
-              <RestartAltIcon sx={{ fontSize: "6.5dvh" }} />
-            )}
+            <RestartAltIcon sx={{ fontSize: "6.5dvh" }} />
           </Button>
         </Grid>
         <Grid item>

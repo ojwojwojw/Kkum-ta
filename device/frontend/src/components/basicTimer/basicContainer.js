@@ -191,31 +191,33 @@ export default function TimerContainer({ timerList, id }) {
               />
             );
           })}
-          <Grid item className="btn-create-timer">
-            {/* {storeTimerArray.length < 10 && id === 0 && (
+          {storeTimerArray.length < 10 && id === 0 && (
+            <Grid item className="btn-create-timer">
+              {/* {storeTimerArray.length < 10 && id === 0 && (
               <TransitionsModal
                 input={timerInput}
                 setInput={setTimerInput}
                 createTimer={() => createTimer(timerInput, 1)}
               />
             )} */}
-            <Button
-              sx={{
-                width: "68dvw",
-                height: "10dvh",
-                ml: "30px",
-                mb: 2,
-                borderRadius: 4,
-                bgcolor: "#376f94",
-                color: "white",
-                fontSize: "6dvh",
-                pb: 0,
-              }}
-              onClick={createTimer}
-            >
-              createTimer
-            </Button>
-          </Grid>
+              <Button
+                sx={{
+                  width: "68dvw",
+                  height: "10dvh",
+                  ml: "30px",
+                  mb: 2,
+                  borderRadius: 4,
+                  bgcolor: "#376f94",
+                  color: "white",
+                  fontSize: "6dvh",
+                  pb: 0,
+                }}
+                onClick={createTimer}
+              >
+                createTimer
+              </Button>
+            </Grid>
+          )}
         </Grid>
         <Grid item xs={4}>
           <Stack

@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-import { Grid, Box, Modal, Fade, Button, Backdrop } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Modal,
+  Fade,
+  Button,
+  Backdrop,
+  IconButton,
+} from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -39,22 +48,16 @@ export default function UpdateModal({ input, setInput, updateTimer }) {
 
   return (
     <div>
-      <Button
+      <IconButton
         sx={{
-          width: "60px",
-          height: "60px",
-          ml: "30px",
-          mb: 2,
           borderRadius: 4,
-          bgcolor: "#376f94",
-          color: "white",
-          fontSize: "30px",
+          color: "gray",
           pb: 0,
         }}
         onClick={handleOpen}
       >
-        SET
-      </Button>
+        <SettingsIcon fontSize="large" />
+      </IconButton>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
