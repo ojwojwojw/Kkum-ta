@@ -1,3 +1,4 @@
+const { user } = require("../config/connection");
 const Repository = require("./repository");
 
 class componentRepository extends Repository {
@@ -9,17 +10,22 @@ class componentRepository extends Repository {
         const sql = `
             CREATE TABLE 'component_tbl' (
                 'component_key' INT(11) NOT NULL AUTO_INCREMENT,
-                'group_key' INT(11) NOT NULL,
                 'component_type' VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
                 'init_time' INT(11) NULL DEFAULT NULL,
                 'cur_time' INT(11) NULL DEFAULT NULL,
                 'maxIter' INT(11) NULL DEFAULT NULL,
+                'group_key' INT(11) NULL DEFAULT NULL,
+                'user_key' INT(11) NULL DEFAULT NULL,
                 PRIMARY KEY ('component_key') USING BTREE,
-                INDEX 'group_key' ('group_key') USING BTREE,
-                CONSTRAINT 'group_key' FOREIGN KEY ('group_key') REFERENCES 'group_tbl' ('group_key') ON UPDATE NO ACTION ON DELETE NO ACTION
+                INDEX 'FK_component_tbl_group_tbl' ('group_key') USING BTREE,
+                INDEX 'FK_component_tbl_user_tbl' ('user_key') USING BTREE,
+                CONSTRAINT 'FK_component_tbl_group_tbl' FOREIGN KEY ('group_key') REFERENCES 'group_tbl' ('group_key') ON UPDATE NO ACTION ON DELETE NO ACTION,
+                CONSTRAINT 'FK_component_tbl_user_tbl' FOREIGN KEY ('user_key') REFERENCES 'user_tbl' ('user_key') ON UPDATE NO ACTION ON DELETE NO ACTION
             )
             COLLATE='utf8mb4_general_ci'
             ENGINE=InnoDB
+            AUTO_INCREMENT=3
+        ;
             `;
         await this.query(sql, []);
     }
@@ -37,12 +43,9 @@ class componentRepository extends Repository {
     
     async findAllComponentByUserId(user_id) {
         const sql = `
-            SELECT user_tbl.id, component_tbl.component_type, component_tbl.init_time, component_tbl.maxIter
-            FROM user_tbl 
-            JOIN login_tbl ON user_tbl.user_key = login_tbl.user_key 
-            JOIN group_tbl ON login_tbl.login_key = group_tbl.login_key
-            JOIN component_tbl ON group_tbl.group_key = component_tbl.group_key
-            WHERE user_tbl.id = ?
+            SELECT user_tbl.id, component_tbl.component_type, component_tbl.init_time
+            FROM user_tbl JOIN component_tbl ON user_tbl.user_key = component_tbl.user_key
+            WHERE user_tbl.id = ?;
         `;
         const params = [user_id];
         const [rows] = await this.query(sql, params);
@@ -56,17 +59,18 @@ class componentRepository extends Repository {
         return rows[0];
     }
 
-    async insertCompoent(group_key, component_type, init_time, cur_time, maxIter) {
+    async insertCompoent(component_type, init_time, cur_time, maxIter, group_key, user_key) {
         const sql = `
             INSERT INTO component_tbl(
-                group_key, 
                 component_type, 
                 init_time, 
                 cur_time, 
-                maxIter
-            ) VALUES(?, ?, ?, ?, ?)
+                maxIter,
+                group_key,
+                user_key
+            ) VALUES(?, ?, ?, ?, ?, ?)
         `;
-        const params = [group_key, component_type, init_time, cur_time, maxIter];
+        const params = [component_type, init_time, cur_time, maxIter, group_key, user_key];
         await this.query(sql, params);
     }
 

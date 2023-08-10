@@ -7,12 +7,14 @@ import "./basicContainer.css";
 import { useDispatch, useSelector } from "react-redux";
 import { create, fetchData, forceRendering } from "../../redux/timerSlice";
 import { Grid, Box, Stack, Button } from "@mui/material";
+import StopwatchComponent from "./stopwatchComponent";
 
 export default function TimerContainer({ timerList, id }) {
   const dispatch = useDispatch();
   const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
   const [timerInput, setTimerInput] = useState(0);
-  const [click, setClick] = useState(0);
+
+  const [isGroupRunning, setIsGroupRunning] = useState(false);
 
   useEffect(() => {
     console.log("timer container constructor");
@@ -40,48 +42,15 @@ export default function TimerContainer({ timerList, id }) {
     forceAllStart();
   }, [storeTimerArray]); // storeTimerArray가 변경될 때마다 forceAllStart 호출
 
-  // useEffect(()=>{
-  //   const groupRender = setTimeout(()=>{
-  //     forceAllStart();
-  //   },1000)
-
-  //   return () =>{
-  //     clearTimeout(groupRender)
-  //   }
-  // },[])
-
-  // // 타이머 스톱워치 생성 함수 리팩토링(중복 제거 후 타입으로 구분)
-  // function createBasicWatch(type, idx) {
-  //   if (timerList.length >= 10) return;
-
-  //   const newWatch = {
-  //     id: Date.now(),
-  //     type: type,
-  //     timer: type === "timer" ? new BasicTimer() : new BasicStopwatch(),
-  //   };
-  //   // console.log(newWatch);
-  //   setDummy((prev) => {
-  //     timerList.splice(timerList.length, 0, newWatch);
-  //     return prev + 1;
+  // function remove(id) {
+  //   if (timerList.length === 0) return;
+  //   let deleteIdx = 0;
+  //   timerList.forEach((obj, idx) => {
+  //     if (obj.id === id) {
+  //       deleteIdx = idx;
+  //     }
   //   });
-  //   return newWatch.id;
   // }
-
-  function remove(id) {
-    if (timerList.length === 0) return;
-    let deleteIdx = 0;
-    timerList.forEach((obj, idx) => {
-      if (obj.id === id) {
-        deleteIdx = idx;
-      }
-    });
-
-    //   setDummy((prev) => {
-    //     timerList[deleteIdx].timer.pause(); // clearInterval 을 위해 반드시 호출 !!
-    //     timerList.splice(deleteIdx, 1);
-    //     return prev + 1;
-    //   });
-  }
 
   function save() {
     // time, init
@@ -92,22 +61,25 @@ export default function TimerContainer({ timerList, id }) {
       data.type = obj.type;
       arr.push(data);
     });
-    console.log(arr);
+    // console.log(arr);
   }
 
   function allStart() {
     storeTimerArray.forEach(({ timer }) => timer.start());
     storeTimerArray.forEach((timer) => logStart(timer.id));
+    if (isGroupRunning === false) setIsGroupRunning(true);
   }
 
   function allPause() {
     storeTimerArray.forEach(({ timer }) => timer.pause());
     storeTimerArray.forEach((timer) => logPause(timer.id));
+    if (isGroupRunning === true) setIsGroupRunning(false);
   }
 
   function allReset() {
     storeTimerArray.forEach(({ timer }) => timer.reset());
     storeTimerArray.forEach((timer) => logStop(timer.id));
+    if (isGroupRunning === true) setIsGroupRunning(false);
   }
 
   //그룹이동 랜더링 관련
@@ -208,26 +180,11 @@ export default function TimerContainer({ timerList, id }) {
 
   return (
     <Box className="time-container" sx={{ flexGrow: 1 }}>
-      <Grid
-        container
-        className={click % 20 === 0 && click !== 0 ? "img-bomb" : ""}
-        position={"fixed"}
-        top={"100px"}
-        ml={"32px"}
-        width={"68dvw"}
-        height={"13dvh"}
-        bgcolor={"#003366"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        color={"white"}
-        zIndex={4}
-        fontSize={"4.3dvh"}
-        onClick={() => {
-          setClick(click + 1);
-        }}
-      >
-        <p>{`지금까지 공부한 시간 :  00:00:00`}</p>
-      </Grid>
+      <StopwatchComponent
+        isGroupRunning={isGroupRunning}
+        setIsGroupRunning={setIsGroupRunning}
+        storeTimerArray={storeTimerArray}
+      />
       <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
         <Grid item xs={8}>
           {storeTimerArray.map((obj, idx) => {

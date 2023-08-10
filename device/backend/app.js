@@ -23,4 +23,7 @@ app.use(debug);
 const timerController = require("./src/controller/timerController");
 app.use('/timer', timerController);
 
+const devController = require('./src/controller/devController');
+app.use('/dev', devController);
+
 module.exports = app;
