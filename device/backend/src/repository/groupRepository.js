@@ -22,7 +22,7 @@ class GroupRepository extends Repository{
         await this.query(`INSERT IGNORE INTO group_tbl_${version}(group_key) VALUES(0), (1), (2), (3), (4)`, []);
     }
     getAll(){
-        const sql = "SELECT * FROM group_tbl";
+        const sql = `SELECT * FROM group_tbl_${version}`;
         const params = [];
         return this.query(sql, params);
     }
