@@ -45,27 +45,17 @@ export default function TimerContainer({ timerList, id }) {
   //   forceAllStart();
   // }, [storeTimerArray]); // storeTimerArray가 변경될 때마다 forceAllStart 호출
 
-  // function remove(id) {
-  //   if (timerList.length === 0) return;
-  //   let deleteIdx = 0;
-  //   timerList.forEach((obj, idx) => {
-  //     if (obj.id === id) {
-  //       deleteIdx = idx;
-  //     }
+  // function save() {
+  //   // time, init
+  //   const arr = [];
+  //   timerList.forEach((obj) => {
+  //     const timer = obj.timer;
+  //     const data = timer.save();
+  //     data.type = obj.type;
+  //     arr.push(data);
   //   });
+  //   // console.log(arr);
   // }
-
-  function save() {
-    // time, init
-    const arr = [];
-    timerList.forEach((obj) => {
-      const timer = obj.timer;
-      const data = timer.save();
-      data.type = obj.type;
-      arr.push(data);
-    });
-    // console.log(arr);
-  }
 
   function allStart() {
     storeTimerArray.forEach(({ timer }) => timer.start());
@@ -127,9 +117,9 @@ export default function TimerContainer({ timerList, id }) {
   };
 
   //타이머 Create
-  const createTimer = async (initTime, maxIter) => {
+  const createTimer = async () => {
     try {
-      const data = { type: "timer", initTime: [initTime, 0], maxIter: maxIter };
+      const data = { type: "timer", initTime: [0, 0], maxIter: 1 };
       const res = await axios.post(`timer/?group_id=${id}`, data);
       console.log(res.data);
       const timer = new BasicTimer();
@@ -137,7 +127,7 @@ export default function TimerContainer({ timerList, id }) {
         create({
           id: res.data.id,
           type: "timer",
-          initTime: initTime,
+          initTime: 0,
           isRunning: false,
           timer: timer,
         })
@@ -206,13 +196,29 @@ export default function TimerContainer({ timerList, id }) {
             );
           })}
           <Grid item className="btn-create-timer">
-            {storeTimerArray.length < 10 && id === 0 && (
+            {/* {storeTimerArray.length < 10 && id === 0 && (
               <TransitionsModal
                 input={timerInput}
                 setInput={setTimerInput}
                 createTimer={() => createTimer(timerInput, 1)}
               />
-            )}
+            )} */}
+            <Button
+              sx={{
+                width: "68dvw",
+                height: "10dvh",
+                ml: "30px",
+                mb: 2,
+                borderRadius: 4,
+                bgcolor: "#376f94",
+                color: "white",
+                fontSize: "6dvh",
+                pb: 0,
+              }}
+              onClick={createTimer}
+            >
+              createTimer
+            </Button>
           </Grid>
         </Grid>
         <Grid item xs={4}>

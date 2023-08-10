@@ -11,8 +11,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import styled from "@emotion/styled";
-import { Button, IconButton } from "@mui/material";
-import Numpad from "./numpad";
+import { Button, IconButton, Stack } from "@mui/material";
 import axios from "axios";
 import { deleteTimer } from "../../redux/timerSlice";
 import { useDispatch } from "react-redux";
@@ -21,6 +20,8 @@ import {
   isRunningTrue,
   isRunningFalse,
 } from "../../redux/timerSlice";
+
+import UpdateModal from "./UpdateModal";
 
 // function useConstructor(callBack = () => {}) {
 //   const flag = useRef(false);
@@ -57,11 +58,11 @@ export default function BasicTimerComponent({
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
   const [progress, setProgress] = useState(timer.getProgress());
-  const [input, setInput] = useState(0);
+  // const [input, setInput] = useState(0);
   const dispatch = useDispatch();
 
   // 현재 공부중인지를 검사하는 변수
-  const [isStudy, setIsStudy] = useState(0);
+  // const [isStudy, setIsStudy] = useState(0);
 
 
   useEffect(() => {
@@ -80,7 +81,7 @@ export default function BasicTimerComponent({
   // });
 
   useEffect(() => {
-    // console.log(remainTime)
+    console.log(remainTime);
     timer.setRemainTime = setRemainTime;
     timer.setIsRunning = setIsRunning;
     timer.setProgress = setProgress;
@@ -229,14 +230,21 @@ export default function BasicTimerComponent({
           </Button>
         </Grid>
         <Grid item>
-          <IconButton
-            aria-label="delete"
-            variant="text"
-            color="error"
-            onClick={deleteWatch} //remove는 프런트단에서만 삭제됨
-          >
-            <CloseIcon sx={{ fontSize: "5dvh" }} />
-          </IconButton>
+          <Stack>
+            <IconButton
+              aria-label="delete"
+              variant="text"
+              color="error"
+              onClick={deleteWatch} //remove는 프런트단에서만 삭제됨
+            >
+              <CloseIcon sx={{ fontSize: "5dvh" }} />
+            </IconButton>
+            <UpdateModal
+              input={remainTime}
+              setInput={setRemainTime}
+              updateTimer={updateTimer}
+            />
+          </Stack>
         </Grid>
       </Grid>
     </StyledTimerContainer>
