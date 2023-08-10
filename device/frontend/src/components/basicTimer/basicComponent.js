@@ -63,14 +63,15 @@ export default function BasicTimerComponent({
   // 현재 공부중인지를 검사하는 변수
   const [isStudy, setIsStudy] = useState(0);
 
-  // console.log("init:", initTime);
+
   useEffect(() => {
-    if (timer) {
-      setRemainTime(initTime)
-    }
-  }, [timer]);
+      console.log(initTime)
+      setRemainTime(initTime);
+  
+  }, [initTime]);
 
 
+  // 추가하는 순간 기존에 생성되어있던 타이머의 랜더링이 이상해짐
   // useConstructor(() => {
   //   timer.setRemainTime = setRemainTime;
   //   timer.setIsRunning = setIsRunning;
@@ -79,7 +80,7 @@ export default function BasicTimerComponent({
   // });
 
   useEffect(() => {
-    console.log(remainTime)
+    // console.log(remainTime)
     timer.setRemainTime = setRemainTime;
     timer.setIsRunning = setIsRunning;
     timer.setProgress = setProgress;

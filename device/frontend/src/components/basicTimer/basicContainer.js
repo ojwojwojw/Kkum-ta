@@ -17,30 +17,33 @@ export default function TimerContainer({ timerList, id }) {
   const [isGroupRunning, setIsGroupRunning] = useState(false);
 
   useEffect(() => {
-    console.log("timer container constructor");
+    // console.log("timer container constructor");
     return () => {
-      console.log("timer container destructor");
+      // console.log("timer container destructor");
     };
   }, []);
 
+
   useEffect(() => {
-    console.log("timer container constructor");
+    // console.log("timer container constructor");
     // 0.1초 뒤에 load 함수 호출을 지연시킵니다.
     const timerId = setTimeout(() => {
       load();
     }, 100);
 
     return () => {
-      console.log("timer container destructor");
+      // console.log("timer container destructor");
       // 컴포넌트가 0.1초 전에 언마운트되었다면 타이머를 클리어합니다.
       clearTimeout(timerId);
     };
   }, []);
 
-  useEffect(() => {
-    console.log("timer container useEffect storeTimerArray");
-    forceAllStart();
-  }, [storeTimerArray]); // storeTimerArray가 변경될 때마다 forceAllStart 호출
+
+  // 그룹이동시 백그라운드에 타이머가 도는 것에 맞춰서 타이머 랜더링
+  // useEffect(() => {
+  //   // console.log("timer container useEffect storeTimerArray");
+  //   forceAllStart();
+  // }, [storeTimerArray]); // storeTimerArray가 변경될 때마다 forceAllStart 호출
 
   // function remove(id) {
   //   if (timerList.length === 0) return;
@@ -83,17 +86,17 @@ export default function TimerContainer({ timerList, id }) {
   }
 
   //그룹이동 랜더링 관련
-  function forceAllStart() {
-    storeTimerArray.forEach((item) => {
-      if (item.isRunning === true) {
-        console.log("조건문 안에 들어오나?");
-        item.timer.pause();
-        item.timer.start();
-      }
-    });
+  // function forceAllStart() {
+  //   storeTimerArray.forEach((item) => {
+  //     if (item.isRunning === true) {
+  //       // console.log("조건문 안에 들어오나?");
+  //       item.timer.pause();
+  //       item.timer.start();
+  //     }
+  //   });
 
-    dispatch(forceRendering());
-  }
+  //   dispatch(forceRendering());
+  // }
 
   //API 요청관련
 
@@ -111,6 +114,7 @@ export default function TimerContainer({ timerList, id }) {
           type: item.type,
           isRunning: item.isRunning,
           timer: timer,
+          initTime: item.remainTime
         });
         return null;
       });
