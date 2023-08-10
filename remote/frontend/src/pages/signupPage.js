@@ -36,7 +36,7 @@ const SignupPage = () => {
   return (
     <div className="signup-container">
       <div className="signup-form">
-        <h1>This is signup Page.</h1>
+        <h1>회원가입</h1>
         <form>
           <input
             className="signup-input"
