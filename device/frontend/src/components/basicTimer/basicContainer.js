@@ -39,6 +39,7 @@ export default function TimerContainer({ timerList, id }) {
   }, []);
 
 
+
   // 그룹이동시 백그라운드에 타이머가 도는 것에 맞춰서 타이머 랜더링
   // useEffect(() => {
   //   // console.log("timer container useEffect storeTimerArray");
