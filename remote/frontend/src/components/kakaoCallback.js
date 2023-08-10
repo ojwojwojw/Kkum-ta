@@ -26,6 +26,7 @@ function KakaoCallback() {
 
         navigate("/"); // API 호출 성공 시 메인 페이지로 이동
         console.log(response.data);
+        localStorage.setItem("accessToken", response.data.accessToken); //로컬스토리지에 토큰 저장
       } catch (error) {
         alert("Function fetchLogin error!");
         console.error(error);
