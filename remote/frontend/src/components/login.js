@@ -54,7 +54,7 @@ export default function Login() {
   //sns 로그인 요청
   const googleSignIn = async () => {
     try {
-      const res = await axios.get('https://i9c101.p.ssafy.io:443/auth/google' , {
+      const res = await axios.get('https://localhost/auth/google' , {
         hearder : { 
           
         }
