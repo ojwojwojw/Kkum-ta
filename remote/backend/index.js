@@ -14,7 +14,7 @@ const logController = require("./src/controller/logController");
 
 passportConfig(passport);
 
-const whitelist = ["http://localhost:3000"];
+const whitelist = ["https://i9c101.p.ssafy.io:443"];
 const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {
