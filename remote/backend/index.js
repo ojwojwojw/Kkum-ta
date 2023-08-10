@@ -14,7 +14,7 @@ const logController = require("./src/controller/logController");
 
 passportConfig(passport);
 
-const whitelist = ["https://172.18.0.3:443"];
+const whitelist = ["http://localhost:3000", "http://localhost:8090"];
 const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {

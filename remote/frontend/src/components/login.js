@@ -64,7 +64,7 @@ export default function Login() {
   const googleURL = async () => {
     try {
       const { url } = await (
-        await fetch("http://172.18.0.4:8090/auth/google/url")
+        await fetch("https://localhost:3000/auth/google/url")
       ).json();
 
       console.log(url); // 응답으로 온 url
