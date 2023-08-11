@@ -12,62 +12,24 @@ import StopwatchComponent from "./stopwatchComponent";
 export default function TimerContainer({ timerList, id }) {
   const dispatch = useDispatch();
   const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
-  const [timerInput, setTimerInput] = useState(0);
 
   const [isGroupRunning, setIsGroupRunning] = useState(false);
 
   useEffect(() => {
-    console.log("timer container constructor");
-    return () => {
-      console.log("timer container destructor");
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log("timer container constructor");
-    // 0.1초 뒤에 load 함수 호출을 지연시킵니다.
     const timerId = setTimeout(() => {
       load();
-    }, 100);
+    }, 1);
 
     return () => {
-      console.log("timer container destructor");
-      // 컴포넌트가 0.1초 전에 언마운트되었다면 타이머를 클리어합니다.
       clearTimeout(timerId);
     };
   }, []);
 
-  useEffect(() => {
-    console.log("timer container useEffect storeTimerArray");
-    forceAllStart();
-  }, [storeTimerArray]); // storeTimerArray가 변경될 때마다 forceAllStart 호출
-
-  // function remove(id) {
-  //   if (timerList.length === 0) return;
-  //   let deleteIdx = 0;
-  //   timerList.forEach((obj, idx) => {
-  //     if (obj.id === id) {
-  //       deleteIdx = idx;
-  //     }
-  //   });
-  // }
-
-  function save() {
-    // time, init
-    const arr = [];
-    timerList.forEach((obj) => {
-      const timer = obj.timer;
-      const data = timer.save();
-      data.type = obj.type;
-      arr.push(data);
-    });
-    // console.log(arr);
-  }
-
   function allStart() {
     storeTimerArray.forEach(({ timer }) => timer.start());
     storeTimerArray.forEach((timer) => logStart(timer.id));
-    if (isGroupRunning === false) setIsGroupRunning(true);
+    if (isGroupRunning === false && storeTimerArray.length !== 0)
+      setIsGroupRunning(true);
   }
 
   function allPause() {
@@ -82,19 +44,6 @@ export default function TimerContainer({ timerList, id }) {
     if (isGroupRunning === true) setIsGroupRunning(false);
   }
 
-  //그룹이동 랜더링 관련
-  function forceAllStart() {
-    storeTimerArray.forEach((item) => {
-      if (item.isRunning === true) {
-        console.log("조건문 안에 들어오나?");
-        item.timer.pause();
-        item.timer.start();
-      }
-    });
-
-    dispatch(forceRendering());
-  }
-
   //API 요청관련
 
   //타이머 전체 read
@@ -102,7 +51,7 @@ export default function TimerContainer({ timerList, id }) {
     try {
       const tempTimerList = [];
       const res = await axios.get(`timer/?group_id=${id}`);
-      console.log("load");
+      // console.log("load");
       res.data.map((item, idx) => {
         const timer = new BasicTimer();
         timer.load(item);
@@ -111,34 +60,35 @@ export default function TimerContainer({ timerList, id }) {
           type: item.type,
           isRunning: item.isRunning,
           timer: timer,
+          initTime: item.remainTime,
         });
         return null;
       });
-      console.log(tempTimerList);
+      // console.log(tempTimerList);
       dispatch(fetchData(tempTimerList));
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (error) {
       console.log("Error Occured During Fetch: ", error);
     }
   };
 
   //타이머 Create
-  const createTimer = async (initTime, maxIter) => {
+  const createTimer = async () => {
     try {
-      const data = { type: "timer", initTime: [initTime, 0], maxIter: maxIter };
+      const data = { type: "timer", initTime: [0, 0], maxIter: 1 };
       const res = await axios.post(`timer/?group_id=${id}`, data);
-      console.log(res.data);
+      // console.log(res.data);
       const timer = new BasicTimer();
       dispatch(
         create({
           id: res.data.id,
           type: "timer",
-          initTime: initTime,
+          initTime: res.data.initTime,
           isRunning: false,
           timer: timer,
         })
       );
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (error) {
       console.log(error);
     }
@@ -150,7 +100,7 @@ export default function TimerContainer({ timerList, id }) {
       const data = { operation: "start" };
       const res = await axios.post(`timer/operation/${timerId}`, data);
       console.log("log start data on backend.", res.data);
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (err) {
       console.log(err);
     }
@@ -161,7 +111,7 @@ export default function TimerContainer({ timerList, id }) {
       const data = { operation: "pause" };
       const res = await axios.post(`timer/operation/${timerId}`, data);
       console.log("log pause data on backend.", res.data);
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (err) {
       console.log(err);
     }
@@ -172,7 +122,7 @@ export default function TimerContainer({ timerList, id }) {
       const data = { operation: "stop" };
       const res = await axios.post(`timer/operation/${timerId}`, data);
       console.log("log stop(reset) data on backend.", res.data);
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (err) {
       console.log(err);
     }
@@ -201,15 +151,33 @@ export default function TimerContainer({ timerList, id }) {
               />
             );
           })}
-          <Grid item className="btn-create-timer">
-            {storeTimerArray.length < 10 && id === 0 && (
+          {storeTimerArray.length < 10 && id === 0 && (
+            <Grid item className="btn-create-timer">
+              {/* {storeTimerArray.length < 10 && id === 0 && (
               <TransitionsModal
                 input={timerInput}
                 setInput={setTimerInput}
                 createTimer={() => createTimer(timerInput, 1)}
               />
-            )}
-          </Grid>
+            )} */}
+              <Button
+                sx={{
+                  width: "68dvw",
+                  height: "10dvh",
+                  ml: "30px",
+                  mb: 2,
+                  borderRadius: 4,
+                  bgcolor: "#376f94",
+                  color: "white",
+                  fontSize: "6dvh",
+                  pb: 0,
+                }}
+                onClick={createTimer}
+              >
+                createTimer
+              </Button>
+            </Grid>
+          )}
         </Grid>
         <Grid item xs={4}>
           <Stack
