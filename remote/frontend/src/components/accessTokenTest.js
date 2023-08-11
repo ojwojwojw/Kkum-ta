@@ -9,7 +9,7 @@ const AccessTest = () => {
 
     const accessTokenTest = async () => {
         try{
-            const res = await axios.get('https://i9c101.p.ssafy.io:443/auth/check',{
+            const res = await axios.get('https://i9c101.p.ssafy.io:8090/auth/check',{
                 headers: {
                     Authorization: `Bearer ${data}` // 액세스 토큰을 Authorization 헤더에 설정하는 방법
                 }
