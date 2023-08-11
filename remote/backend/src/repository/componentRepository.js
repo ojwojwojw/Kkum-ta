@@ -10,9 +10,7 @@ class componentRepository extends Repository {
         const sql = `
             CREATE TABLE 'component_tbl' (
                 'component_key' INT(11) NOT NULL AUTO_INCREMENT,
-                'component_type' VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
                 'init_time' INT(11) NULL DEFAULT NULL,
-                'cur_time' INT(11) NULL DEFAULT NULL,
                 'maxIter' INT(11) NULL DEFAULT NULL,
                 'group_key' INT(11) NULL DEFAULT NULL,
                 'user_key' INT(11) NULL DEFAULT NULL,
@@ -24,9 +22,9 @@ class componentRepository extends Repository {
             )
             COLLATE='utf8mb4_general_ci'
             ENGINE=InnoDB
-            AUTO_INCREMENT=3
-        ;
-            `;
+            AUTO_INCREMENT=4
+            ;
+        `;
         await this.query(sql, []);
     }
 
