@@ -6,27 +6,28 @@ const logRouter = express.Router();
     logService = await Global.getLogService();
 })();
 
-logRouter.get('/:timer_id', async (req, res)=>{
-    const timer_id = req.params.timer_id;
+logRouter.get('/:user_id/:group_id', async (req, res)=>{
+    const user_id = req.params.user_id;
+    const group_id = req.params.group_id;
     const hour = req.query.hour;
     const date = req.query.date;
     const month = req.query.month;
     const year = req.query.year;
     console.log({hour, date, month, year});
     if(!!hour && !!date && !month && !year){
-        res.json(await logService.hour(timer_id, date, hour));
+        res.json(await logService.hour(user_id, group_id, date, hour));
         return;
     }
     if(!hour && !!date && !month && !year){
-        res.json(await logService.date(timer_id, date));
+        res.json(await logService.date(user_id, group_id, date));
         return;
     }
     if(!hour && !date && !!month && !year){
-        res.json(await logService.month(timer_id, month));
+        res.json(await logService.month(user_id, group_id, month));
         return;
     }
     if(!hour && !date && !month && !!year){
-        res.json(await logService.year(timer_id, year));
+        res.json(await logService.year(user_id, group_id, year));
         return;
     }
     res.status(400).json([]);

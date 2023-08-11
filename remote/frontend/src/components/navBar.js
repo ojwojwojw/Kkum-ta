@@ -1,15 +1,24 @@
 import React, { useState } from "react";
 import MenuListBar from "./MenuListBar";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useActionData } from "react-router-dom";
 import { Box, Grid, Button, Menu, MenuItem } from "@mui/material";
 import ReportPage from "../pages/reportsPage";
 import GroupPage from "../pages/groupPage";
 import SignupPage from "../pages/signupPage";
+import FindPasswordPage from "../pages/findPasswordPage";
 import Login from "./login";
+import axios from 'axios'
+import { useDispatch , useSelector} from "react-redux";
+import { logoutState } from "../redux/authSlice";
 
 export default function NavBar() {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const newAccessToken = localStorage.getItem("accessToken") 
+  const [accessToken, setAccessToken] = useState(newAccessToken)
+  const dispatch = useDispatch()
+  const username = useSelector(state => state.auth.userName)
+  const password = useSelector(state => state.auth.password)
 
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -18,6 +27,29 @@ export default function NavBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  //로그아웃 요청
+  const submitSignout = async () => {
+
+    const userData = {
+      "id": username,
+      "password": password,
+    };
+    try {
+      const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/signout', userData, {  //배포를 위해서라도 프록시 설정 해야함.
+        headers: {
+          Authorization: `Bearer ${accessToken}` // 액세스 토큰을 Authorization 헤더에 설정하는 방법
+        },
+        withCredentials: true
+      })
+      localStorage.removeItem("accessToken");  //로컬 스토리지 비우기
+      console.log(res.data)
+      dispatch(logoutState())  //redux state 반영하기
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <Box>
@@ -35,9 +67,10 @@ export default function NavBar() {
         </Grid>
         <Grid item xs={10}></Grid>
         <Grid item xs={1}>
-          <Link to="/login" Component={Login}>
+          {/* 개발의 편의성을 위해 놓아뒀던 login 버튼 */}
+          {/* <Link to="/login" Component={Login}>
             Login
-          </Link>
+          </Link> */}
           <Button
             id="user-button"
             aria-controls={open ? "user-menu" : undefined}
@@ -57,7 +90,7 @@ export default function NavBar() {
             }}
           >
             <MenuItem onClick={handleClose}>MyPage</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={submitSignout}>Logout</MenuItem>
           </Menu>
         </Grid>
       </Grid>
@@ -79,8 +112,6 @@ export default function NavBar() {
             <Route exact path="/group3" Component={GroupPage} />
             <Route exact path="/group4" Component={GroupPage} />
             <Route exact path="/group5" Component={GroupPage} />
-            <Route exact path="report" Component={ReportPage} />
-            <Route exact path="signup" Component={SignupPage} />
           </Routes>
         </Grid>
       </Grid>

@@ -87,7 +87,7 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
                   }}
                 >
                   {arr100.map((hour, idx) => (
-                    <SwiperSlide key={"hour"}>{hour}</SwiperSlide>
+                    <SwiperSlide key={idx}>{hour}</SwiperSlide>
                   ))}
                 </Swiper>
               </Grid>
@@ -105,7 +105,7 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
                   }}
                 >
                   {arr60.map((min, idx) => (
-                    <SwiperSlide key={"min"}>{min}</SwiperSlide>
+                    <SwiperSlide key={idx}>{min}</SwiperSlide>
                   ))}
                 </Swiper>
               </Grid>
@@ -123,7 +123,7 @@ export default function TransitionsModal({ input, setInput, createTimer }) {
                   }}
                 >
                   {arr60.map((sec, idx) => (
-                    <SwiperSlide key={"sec"}>{sec}</SwiperSlide>
+                    <SwiperSlide key={idx}>{sec}</SwiperSlide>
                   ))}
                 </Swiper>
               </Grid>

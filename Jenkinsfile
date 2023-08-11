@@ -103,7 +103,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop front-web-app
-                    docker run -d --name front-web-app1 -p 80:80 -p 443:443 --network=web-network --volume /etc/letsencrypt:/etc/letsencrypt --volume /var/www/letsencrypt:/var/www/letsencrypt --volumes-from front-web-app gugaro/kkumta:front-server-0.1
+                    docker run -d --name front-web-app1 --network=host --volume /etc/letsencrypt:/etc/letsencrypt --volume /var/www/letsencrypt:/var/www/letsencrypt --volumes-from front-web-app gugaro/kkumta:front-server-0.1
                     docker rm front-web-app
                     docker stop front-web-app1
                     docker rename front-web-app1 front-web-app
@@ -115,7 +115,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop back-web-server
-                    docker run -d --name back-web-server1 --network=web-network --volumes-from back-web-server gugaro/kkumta:back-server-0.1
+                    docker run -d --name back-web-server1 --network=host --volume /etc/letsencrypt:/etc/letsencrypt --volume /var/www/letsencrypt:/var/www/letsencrypt --volumes-from back-web-server gugaro/kkumta:back-server-0.1
                     docker rm back-web-server
                     docker stop back-web-server1
                     docker rename back-web-server1 back-web-server

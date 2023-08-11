@@ -1,6 +1,11 @@
 * {
   font-family: "Nanum Gothic";
   font-weight: 500;
+  cursor: auto;
+}
+
+button:hover {
+  cursor: none;
 }
 
 body {
