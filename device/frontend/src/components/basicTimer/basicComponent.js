@@ -55,11 +55,11 @@ export default function BasicTimerComponent({
   initTime,
   load,
 }) {
-  const timeToInsert = useSelector((state) => state.timer.timeToInsert);
+  // const timeToInsert = useSelector((state) => state.timer.timeToInsert);
 
-  useEffect(() => {
-    setRemainTime(timeToInsert);
-  }, [timeToInsert]);
+  // useEffect(() => {
+  //   setRemainTime(timeToInsert);
+  // }, [timeToInsert]);
 
   const [input, setInput] = useState(0);
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
@@ -68,20 +68,20 @@ export default function BasicTimerComponent({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setRemainTime(input);
-  }, [input]);
+    setRemainTime(timer.getRemainTime());
+  }, [timer]);
 
   useEffect(() => {
-    console.log(remainTime);
+    // console.log(remainTime);
     timer.setRemainTime = setRemainTime;
     timer.setIsRunning = setIsRunning;
     timer.setProgress = setProgress;
-    console.log("basic timer componenet constructor");
+    // console.log("basic timer componenet constructor");
     return () => {
       timer.setRemainTime = null;
       timer.setIsRunning = null;
       timer.setProgress = null;
-      console.log("basic timer componenet destructor");
+      // console.log("basic timer componenet destructor");
     };
   }, [timer]);
 
@@ -91,14 +91,19 @@ export default function BasicTimerComponent({
     isRunning
       ? dispatch(isRunningFalse(WatchId))
       : dispatch(isRunningTrue(WatchId));
-    dispatch(forceRendering());
+    // dispatch(forceRendering());
+  }
+
+  function reload() {
+    setTimeout(() => load(), 1);
   }
 
   function resetInitTime() {
     timer.reset();
+    dispatch(isRunningFalse(WatchId));
     // updateTimer(initTime * 1000); //최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop(); //api 요청으로 백엔드에 리셋 기록 남기기
-    dispatch(forceRendering());
+    // dispatch(forceRendering());
   }
 
   //api 요청 관련
@@ -109,7 +114,7 @@ export default function BasicTimerComponent({
       const res = await axios.delete(`timer/${timerId}`);
       console.log("res", res.data);
       dispatch(deleteTimer(timerId));
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (error) {
       console.log("occured error during delete request.", error);
     }
@@ -139,9 +144,6 @@ export default function BasicTimerComponent({
       const data = { operation: "pause" };
       const res = await axios.post(`timer/operation/${timerId}`, data);
       console.log("log pause data on backend.", res.data);
-      // const endTime = Date.now();
-      // const requestDuration = endTime - startTime;
-      // console.log("요청-응답 시간:", requestDuration, "밀리초");
     } catch (err) {
       console.log(err);
     }
@@ -219,6 +221,8 @@ export default function BasicTimerComponent({
               updateTimer={updateTimer}
               input={input}
               setInput={setInput}
+              reload={reload}
+              // timer = {timer}
             />
           </Stack>
         </Grid>

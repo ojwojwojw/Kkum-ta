@@ -20,7 +20,7 @@ export default class BasicTimer {
     this.setRemainTime = null; // 남은 시간 state setter
     this.setIsRunning = null; // 동작 여부 state setter
     this.setProgress = null; // progress state setter
-    console.log("basic timer constructor");
+    // console.log("basic timer constructor");
   }
 
   // 현재 타이머 시간이 0 이 되었을 때, 다음 동작을 결정하는 함수 (내부적으로만 사용, 외부에서 사용할 일 없음)
