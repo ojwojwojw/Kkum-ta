@@ -61,22 +61,15 @@ export default function BasicTimerComponent({
     setRemainTime(timeToInsert);
   }, [timeToInsert]);
 
+  const [input, setInput] = useState(0);
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
   const [progress, setProgress] = useState(timer.getProgress());
-  // const [input, setInput] = useState(0);
   const dispatch = useDispatch();
 
-  // 현재 공부중인지를 검사하는 변수
-  // const [isStudy, setIsStudy] = useState(0);
-
-  // 추가하는 순간 기존에 생성되어있던 타이머의 랜더링이 이상해짐
-  // useConstructor(() => {
-  //   timer.setRemainTime = setRemainTime;
-  //   timer.setIsRunning = setIsRunning;
-  //   timer.setProgress = setProgress;
-  //   console.log("basic timer componenet constructor");
-  // });
+  useEffect(() => {
+    setRemainTime(input);
+  }, [input]);
 
   useEffect(() => {
     console.log(remainTime);
@@ -101,10 +94,6 @@ export default function BasicTimerComponent({
     dispatch(forceRendering());
   }
 
-  // function remove() {
-  //   removeTimer(WatchId);
-  // }
-
   function resetInitTime() {
     timer.reset();
     // updateTimer(initTime * 1000); //최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
@@ -116,7 +105,6 @@ export default function BasicTimerComponent({
   const deleteWatch = async () => {
     try {
       const timerId = WatchId;
-      // console.log(timerId)
       timer.pause();
       const res = await axios.delete(`timer/${timerId}`);
       console.log("res", res.data);
@@ -124,8 +112,6 @@ export default function BasicTimerComponent({
       dispatch(forceRendering());
     } catch (error) {
       console.log("occured error during delete request.", error);
-      // const timerId = WatchId;
-      //  console.log(timerId)
     }
   };
 
@@ -197,11 +183,6 @@ export default function BasicTimerComponent({
           {("00" + Math.floor(remainTime / 1000 / 3600)).slice(-2)}:
           {("00" + Math.floor(((remainTime / 1000) % 3600) / 60)).slice(-2)}:
           {("00" + Math.floor((remainTime / 1000) % 60)).slice(-2)}
-          {type === "stopWatch" && (
-            <span className="micro">
-              {("00" + Math.floor(((remainTime / 1000) % 1) * 100)).slice(-2)}
-            </span>
-          )}
         </Grid>
         <Grid item xs={4} className="timerButton">
           <Button
@@ -236,7 +217,8 @@ export default function BasicTimerComponent({
             <UpdateModal
               WatchId={WatchId}
               updateTimer={updateTimer}
-              // timer = {timer}
+              input={input}
+              setInput={setInput}
             />
           </Stack>
         </Grid>

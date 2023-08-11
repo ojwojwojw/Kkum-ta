@@ -34,12 +34,11 @@ const style = {
   p: "5dvh",
 };
 
-export default function UpdateModal({ WatchId, updateTimer }) {
+export default function UpdateModal({ WatchId, updateTimer, input, setInput }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const dispatch = useDispatch();
-  const [input, setInput] = useState(0);
 
   const [hour, setHour] = useState(0);
   const [min, setMin] = useState(0);
@@ -59,12 +58,14 @@ export default function UpdateModal({ WatchId, updateTimer }) {
   //   timer.reset();
   // }
 
-  function insertTime(int) {
-    console.log("시발 왜 안찍혀", int);
+  function insertTime(newInput) {
     console.log(WatchId);
-    dispatch(setTimeToInsert(int));
-    dispatch(changeInitTimeForInsert({ id: WatchId, value: int }));
-    updateTimer(int);
+    dispatch(setTimeToInsert(newInput));
+    dispatch(changeInitTimeForInsert({ id: WatchId, value: newInput }));
+    updateTimer(newInput);
+  }
+  function update(newInput) {
+    updateTimer(newInput);
   }
 
   return (
@@ -169,12 +170,12 @@ export default function UpdateModal({ WatchId, updateTimer }) {
                 variant="contained"
                 color="success"
                 onClick={() => {
-                  // setInput((hour * 3600 + min * 60 + sec) * 1000);
+                  setInput((hour * 3600 + min * 60 + sec) * 1000);
                   insertTime(input);
-                  // updateTimer(input);
-                  // setHour(0);
-                  // setMin(0);
-                  // setSec(0);
+                  update(input);
+                  setHour(0);
+                  setMin(0);
+                  setSec(0);
                   // resetInitTime();
                   handleClose();
                 }}
