@@ -16,7 +16,7 @@ function GoogleCallback() {
     async (code) => {
       try {
         const response = await axios.post(
-          "https://i9c101.p.ssafy.io:8090/auth/google/login",
+          "http://localhost:8090/auth/google/login",
           { code: code },
           {
             //배포를 위해서라도 프록시 설정 해야함.

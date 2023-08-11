@@ -6,7 +6,7 @@ class GoogleService {
     this.userRepository = new UserRepository();
     this.ID = process.env.GOOGLE_ID;
     this.SECRETE = process.env.GOOGLE_CLIENT_SECRETE;
-    this.redirect_URI = "https://i9c101.p.ssafy.io/callback/google";
+    this.redirect_URI = "http://localhost:3000/callback/google";
     this.SCOPE = "https://www.googleapis.com/auth/userinfo.email";
     this.prompt = "select_account";
   }

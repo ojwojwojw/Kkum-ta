@@ -6,7 +6,7 @@ class KakaoService {
     this.userRepository = new UserRepository();
     this.ID = process.env.KAKAO_ID;
     this.SECRETE = process.env.KAKAO_CLIENT_SECRETE;
-    this.redirect_URI = "https://i9c101.p.ssafy.io/callback/kakao";
+    this.redirect_URI = "http://localhost:3000/callback/kakao";
   }
 
   getAuthCodeURL() {
