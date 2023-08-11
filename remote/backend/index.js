@@ -8,7 +8,7 @@ const passport = require("passport");
 const session = require("express-session");
 const passportConfig = require("./src/passport");
 const cookieParser = require("cookie-parser");
-const PORT = 8090;
+const PORT = 443;
 
 const authController = require("./src/controller/authController");
 const devController = require("./src/controller/devController");
