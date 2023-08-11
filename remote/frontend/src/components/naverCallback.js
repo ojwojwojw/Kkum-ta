@@ -16,7 +16,8 @@ function NaverCallback() {
     async (code) => {
       try {
         const response = await axios.post(
-          "http://localhost:8090/auth/naver/login",
+          // "https://i9c101.p.ssafy.io/auth/naver/login", // 배포용
+          "http://localhost:8090/auth/naver/login", // 개발용
           { code: code },
           {
             //배포를 위해서라도 프록시 설정 해야함.
