@@ -76,7 +76,7 @@ function StopwatchComponent({
         }}
       >
         <p>{`지금까지 공부한 시간   ${String(
-          Math.floor(curTime / 1000 / 3600)
+          Math.floor((curTime / 1000 / 3600) % 100)
         ).padStart(2, "0")} :
           ${String(Math.floor(((curTime / 1000) % 3600) / 60)).padStart(
             2,
