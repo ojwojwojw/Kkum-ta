@@ -14,10 +14,11 @@ const logController = require("./src/controller/logController");
 
 passportConfig(passport);
 
-const whitelist = ["http://localhost:3000", "http://localhost:8090"];
+const whitelist = ["http://localhost:3000", "http://localhost:8090", undefined];
 const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {
+    console.log(origin);
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
