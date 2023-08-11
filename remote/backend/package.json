@@ -26,6 +26,8 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "randexp": "^0.5.3",
-    "redis": "^4.6.7"
+    "redis": "^4.6.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   }
 }
