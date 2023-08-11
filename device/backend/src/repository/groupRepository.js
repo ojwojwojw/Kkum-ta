@@ -21,24 +21,34 @@ class GroupRepository extends Repository{
         await this.query(sql, params);
         await this.query(`INSERT IGNORE INTO group_tbl_${version}(group_key) VALUES(0), (1), (2), (3), (4)`, []);
     }
-    getAll(){
+    async getAll(){
         const sql = `SELECT * FROM group_tbl_${version}`;
         const params = [];
         return this.query(sql, params);
     }
-    getById(id){
+    async getById(id){
         const sql = `SELECT * FROM group_tbl_${version} WHERE group_key=?`;
         const params = [id];
         return this.query(sql, params);
     }
-    rename(id, name){
+    async rename(id, name){
         const sql = `UPDATE group_tbl_${version} SET name=? WHERE group_key=?`;
         const params=[name, id];
         return this.query(sql, params);
     }
-    setStopwatchTime(id, miliseconds){
+    async setStopwatchTime(id, miliseconds){
         const sql = `UPDATE group_tbl_${version} SET stopwatch_time=? WHERE group_key=?`;
         const params = [miliseconds, id];
+        return this.query(sql, params);
+    }
+    async getLastUpdateAll(){
+        const sql = `SELECT id, last_update FROM group_tbl_${version}`;
+        const params = [];
+        return this.query(sql, params);
+    }
+    async setLastUpdate(id, last_update){
+        const sql = `UPDATE group_tbl_${version} SET last_update=? WHERE group_key=?`;
+        const params = [last_update, id];
         return this.query(sql, params);
     }
 }

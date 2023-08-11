@@ -21,6 +21,15 @@ class StudyHourlyRepository extends Repository{
         ;`;
         await this.query(sql, []);
     }
+    async getStudyTimes(group_key){
+        const sql = `SELECT group_key, date, hour, portion
+        FROM study_hourly_tbl_${version}
+        WHERE group_key=?
+        ORDER BY date ASC, hour ASC
+        LIMIT 1000;`;
+        const params = [group_key];
+        return this.query(sql, params);
+    }
     async setHourlyStudytime(group_key, date, hour, portion){
         if(typeof(date) !== "string" || date.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) === null){
             throw new Error(`date is not valid (date=${date})`);

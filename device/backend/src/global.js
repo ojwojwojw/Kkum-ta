@@ -96,7 +96,10 @@ class Global {
   static async getStopwatchLogService() {
     if (!Global.#stopwatchLogService) {
       Global.#stopwatchLogService = new StopwatchLogService(
-        await Global.getStopwatchLogRepository()
+        await Global.getStopwatchLogRepository(),
+        await Global.getGroupRepository(),
+        await Global.getStudyHourlyRepository(),
+        await Global.getDeviceRepository()
       );
     }
     return Global.#stopwatchLogService;
