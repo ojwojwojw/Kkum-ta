@@ -68,7 +68,7 @@ app.use("/auth", authController);
 app.use("/dev", devController);
 app.use("/log", logController);
 
-const privateKey = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/privateKey.pem", "utf8");
+const privateKey = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/privkey.pem", "utf8");
 const certificate = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/cert.pem", "utf8");
 const ca = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/chain.pem", "utf8");
 const credentials = {
