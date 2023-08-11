@@ -78,4 +78,4 @@ const credentials = {
 }
 const httpsServer = https.createServer(credentials, app);
 
-app.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
+httpsServer.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
