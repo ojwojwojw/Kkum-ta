@@ -76,7 +76,7 @@ class Global {
     if (!Global.#groupService) {
       Global.#groupService = new GroupService(
         await Global.getGroupRepository(),
-        await Global.getStopwatchLogRepository()
+        await Global.getStopwatchLogService()
       );
       await Global.#groupService.init();
     }

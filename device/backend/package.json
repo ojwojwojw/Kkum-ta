@@ -18,6 +18,8 @@
     "mysql2": "^3.5.2"
   },
   "devDependencies": {
-    "jest": "^29.6.1"
+    "jest": "^29.6.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   }
 }
