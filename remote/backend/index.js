@@ -19,11 +19,10 @@ const logController = require("./src/controller/logController");
 passportConfig(passport);
 app.disable("x-powered-by");
 
-const whitelist = ["http://localhost:3000", "http://localhost:443"];
+const whitelist = ["http://localhost:3000", "http://localhost:443", "http://localhost:8090"];
 const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {
-    console.log(origin);
     if (whitelist.indexOf(origin) !== -1 || origin === undefined) {
       callback(null, true);
     } else {
