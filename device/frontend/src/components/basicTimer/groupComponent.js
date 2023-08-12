@@ -46,13 +46,13 @@ export default function GroupComponent() {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    console.log("group constructor");
+  // useEffect(() => {
+  //   console.log("group constructor");
 
-    return () => {
-      console.log("group destructor");
-    };
-  }, []);
+  //   return () => {
+  //     console.log("group destructor");
+  //   };
+  // }, []);
 
   function add(idx) {
     if (timerArrayList.length > 4) return;
@@ -74,8 +74,6 @@ export default function GroupComponent() {
   for (let i = 0; i < 5; i++) {
     add(i);
   }
-
-  console.log(timerArrayList);
 
   return (
     <Box>
