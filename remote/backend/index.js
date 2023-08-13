@@ -21,20 +21,12 @@ const logController = require("./src/controller/logController");
 passportConfig(passport);
 app.disable("x-powered-by");
 
-<<<<<<< HEAD
 const whitelist = ["http://localhost:3000", "http://localhost:8090", "https://i9c101.p.ssafy.io"];
 const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {
     console.log(origin);
     if (whitelist.indexOf(origin) !== -1) {
-=======
-const whitelist = ["http://localhost:3000", "http://localhost:443", "http://localhost:8090"];
-const corsOptions = {
-  credentials: true,
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || origin === undefined) {
->>>>>>> feat/frontend/web_report
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
