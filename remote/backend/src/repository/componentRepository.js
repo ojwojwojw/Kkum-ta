@@ -57,31 +57,22 @@ class componentRepository extends Repository {
         return rows[0];
     }
 
-    async insertCompoent(component_type, init_time, cur_time, maxIter, group_key, user_key) {
+    async insertCompoent(init_time, maxIter, group_key, user_key) {
         const sql = `
             INSERT INTO component_tbl(
-                component_type, 
                 init_time, 
-                cur_time, 
                 maxIter,
                 group_key,
                 user_key
-            ) VALUES(?, ?, ?, ?, ?, ?)
+            ) VALUES(?, ?, ?, ?)
         `;
-        const params = [component_type, init_time, cur_time, maxIter, group_key, user_key];
+        const params = [init_time, maxIter, group_key, user_key];
         await this.query(sql, params);
     }
 
     async updateInitTime(ckey, init_time) {
         const sql = `UPDATE component_tbl SET init_time = ? WHERE component_key = ?`;
         const params = [ckey, init_time];
-        await this.query(sql, params);
-        return true;
-    }
-
-    async updateCurTime(ckey, cur_time) {
-        const sql = `UPDATE component_tbl SET cur_time = ? WHERE component_key = ?`;
-        const params = [ckey, cur_time];
         await this.query(sql, params);
         return true;
     }
