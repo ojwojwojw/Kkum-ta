@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
-import {FormControl , InputLabel , Select , MenuItem} from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import './reportPage.css'
 
 import {
@@ -39,7 +39,9 @@ export default function ReportPage() {
   //api 요청시 필요한 데이터 
   const user_id = useSelector(state => state.auth.userName);
   const [groupID, setGroupID] = useState("");
-  const [hour , setHour] = useState("");
+  const [hour, setHour] = useState("");
+  const [startYear, setStartYear] = useState(23);
+  const [yearGroupID , setYearGroupID] = useState(0)
 
   //데이트 피커 전용 변수
   const [startDateForHour, setStartDateForHour] = useState(new Date());
@@ -54,13 +56,13 @@ export default function ReportPage() {
 
   //요청 받아서 랜더링을 위해 갈아 끼울 리스트들 // 관련 state 변수들
   //시간단위 조회
-  const Series1=[
+  const Series1 = [
     {
       data: new Array(1).fill(0),
       stack: "A",
       label: "공부",
       color: "#003366",
-      
+
     },
     {
       data: new Array(1).fill(0),
@@ -68,10 +70,10 @@ export default function ReportPage() {
       label: "휴식",
       color: "#eaea66",
     },
-    
+
   ]
 
-  const Circle1=[
+  const Circle1 = [
     {
       data: [
         {
@@ -90,12 +92,12 @@ export default function ReportPage() {
     },
   ]
   const [hourSeries, setHourSeries] = useState(Series1)
-  const [hourCircle,setHourCircle] = useState(Circle1)
+  const [hourCircle, setHourCircle] = useState(Circle1)
 
 
   //일간 조회
 
-  const Series24=[
+  const Series24 = [
     {
       data: new Array(24).fill(0),
       stack: "A",
@@ -110,7 +112,7 @@ export default function ReportPage() {
     },
   ]
 
-  const Circle24=[
+  const Circle24 = [
     {
       data: [
         {
@@ -130,10 +132,10 @@ export default function ReportPage() {
   ]
   const [dailySeries, setDailySeries] = useState(Series24)
   const [dailyCircle, setDailyCircle] = useState(Circle24)
-  
+
 
   //월간 조회
-  const Series31=[
+  const Series31 = [
     {
       data: new Array(32).fill(0),
       stack: "A",
@@ -148,7 +150,7 @@ export default function ReportPage() {
     },
   ]
 
-  const Circle31=[
+  const Circle31 = [
     {
       data: [
         {
@@ -168,7 +170,7 @@ export default function ReportPage() {
   ]
   const [monthlySeries, setMonthlySeries] = useState(Series31)
   const [monthlyCircle, setMonthlyCircle] = useState(Circle31)
-  
+
 
 
   ////api 요청 관련
@@ -210,13 +212,13 @@ export default function ReportPage() {
       Series24[1].data = modifiedData;
       Circle24[0].data = [{
         id: 0,
-        value: res.data.reduce((acc,cur)=>{return acc + cur},0),
+        value: res.data.reduce((acc, cur) => { return acc + cur }, 0),
         label: "공부 시간",
         color: "#003366",
       },
       {
         id: 1,
-        value: modifiedData.reduce((acc,cur)=>{return acc + cur},0),
+        value: modifiedData.reduce((acc, cur) => { return acc + cur }, 0),
         label: "휴식 시간",
         color: "#eaea66",
       }]
@@ -234,20 +236,20 @@ export default function ReportPage() {
     try {
       const temp = startMonth.getFullYear() + '-' + (startMonth.getMonth() + 1);
       const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${temp}`)
-      
+
       console.log(res.data)
       const modifiedData = res.data.map(value => 1 - value)
       Series31[0].data = res.data;
       Series31[1].data = modifiedData;
       Circle31[0].data = [{
         id: 0,
-        value: res.data.reduce((acc,cur)=>{return acc + cur},0),
+        value: res.data.reduce((acc, cur) => { return acc + cur }, 0),
         label: "공부 시간",
         color: "#003366",
       },
       {
         id: 1,
-        value: modifiedData.reduce((acc,cur)=>{return acc + cur},0),
+        value: modifiedData.reduce((acc, cur) => { return acc + cur }, 0),
         label: "휴식 시간",
         color: "#eaea66",
       }]
@@ -257,12 +259,25 @@ export default function ReportPage() {
     }
     catch (err) {
       console.log(err)
-      
+
     }
   }
-  
 
-//return (랜더링)
+  //연관 조회 요청 api (잔디밭)
+  const yearCheck = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8090/log/${user_id}/${yearGroupID}/?month=${startYear}`)
+      console.log(res.data)
+    }
+    catch (err) {
+      console.log(err)
+      console.log(user_id,yearGroupID,startYear)
+    }
+  }
+
+
+
+  //return (랜더링)
 
   return (
     <Box m={"20px"}>
@@ -276,7 +291,7 @@ export default function ReportPage() {
           justifyContent={"center"}
           alignItems={"center"}
           bgcolor={"white"}
-          
+
         >
 
           <Grid item xs={2} >
@@ -292,7 +307,7 @@ export default function ReportPage() {
                 aria-label="day"
                 onClick={() => setHandle("day")}
               >
-                시간단위 : {Math.round(hourCircle[0].data[0].value*60)}분 / 60분
+                시간단위 : {Math.round(hourCircle[0].data[0].value * 60)}분 / 60분
               </ToggleButton>
               <ToggleButton
                 value="week"
@@ -306,7 +321,7 @@ export default function ReportPage() {
                 aria-label="month"
                 onClick={() => setHandle("month")}
               >
-                월간 : {Math.round(monthlyCircle[0].data[0].value*24)}시간
+                월간 : {Math.round(monthlyCircle[0].data[0].value * 24)}시간
               </ToggleButton>
             </ToggleButtonGroup>
           </Grid>
@@ -315,7 +330,7 @@ export default function ReportPage() {
 
           <Grid item xs={7}>
             {/* 버튼에 따른 그래프(barChart) */}
-            
+
             {handle === "day" && (
               <Grid>
                 {/* 그룹 번호 입력 */}
@@ -326,7 +341,7 @@ export default function ReportPage() {
                     id="demo-simple-select"
                     value={groupID}
                     label="Age"
-                    onChange={(e)=> setGroupID(e.target.value)}
+                    onChange={(e) => setGroupID(e.target.value)}
                   >
                     <MenuItem value={0}>그룹1</MenuItem>
                     <MenuItem value={1}>그룹2</MenuItem>
@@ -349,7 +364,7 @@ export default function ReportPage() {
                     id="demo-simple-select"
                     value={hour}
                     label="Age"
-                    onChange={(e)=> setHour(e.target.value)}
+                    onChange={(e) => setHour(e.target.value)}
                   >
                     <MenuItem value={0}>0시</MenuItem>
                     <MenuItem value={1}>1시</MenuItem>
@@ -391,7 +406,7 @@ export default function ReportPage() {
               </Grid>
             )}
 
-            
+
             {handle === "week" && (
               <Grid>
                 {/* 그룹 번호 입력 */}
@@ -402,7 +417,7 @@ export default function ReportPage() {
                     id="demo-simple-select"
                     value={groupID}
                     label="Age"
-                    onChange={(e)=> setGroupID(e.target.value)}
+                    onChange={(e) => setGroupID(e.target.value)}
                   >
                     <MenuItem value={0}>그룹1</MenuItem>
                     <MenuItem value={1}>그룹2</MenuItem>
@@ -430,15 +445,15 @@ export default function ReportPage() {
 
             {handle === "month" && (
               <Grid>
-                 {/* 그룹 번호 입력 */}
-                 <FormControl>
+                {/* 그룹 번호 입력 */}
+                <FormControl>
                   <InputLabel id="demo-simple-select-label"></InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={groupID}
                     label="Age"
-                    onChange={(e)=> setGroupID(e.target.value)}
+                    onChange={(e) => setGroupID(e.target.value)}
                   >
                     <MenuItem value={0}>그룹1</MenuItem>
                     <MenuItem value={1}>그룹2</MenuItem>
@@ -502,7 +517,9 @@ export default function ReportPage() {
         </Grid>
       </Grid>
 
-      
+            
+      {/* 잔디밭 관련 */}
+
       <Grid container>
         <Grid
           container
@@ -515,9 +532,25 @@ export default function ReportPage() {
           justifyContent={"center"}
           alignItems={"center"}
         >
+          <FormControl>
+            <InputLabel id="demo-simple-select-label"></InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={startYear}
+              label="Age"
+              onChange={(e) => setStartYear(e.target.value)}
+            >
+              <MenuItem value={23} onClick={yearCheck}>2023</MenuItem>
+              <MenuItem value={22} onClick={yearCheck}>2022</MenuItem>
+              <MenuItem value={21} onClick={yearCheck}>2021</MenuItem>
+              <MenuItem value={20} onClick={yearCheck}>2020</MenuItem>
+              <MenuItem value={19} onClick={yearCheck}>2019</MenuItem>
+              <MenuItem value={18} onClick={yearCheck}>2018</MenuItem>
+         
+            </Select>
+          </FormControl>
           
-          {/* 잔디밭 관련 */}
-
           <Grid item mt="20px">
             <Stack direction={"row"}>
               {groundY.map((row, yIndex) => (
@@ -543,7 +576,7 @@ export default function ReportPage() {
               ))}
             </Stack>
           </Grid>
-          
+
         </Grid>
       </Grid>
     </Box>
