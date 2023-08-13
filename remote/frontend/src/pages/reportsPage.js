@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
-import { FormControl, InputLabel, Select, MenuItem ,Tooltip} from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem, Tooltip } from "@mui/material";
 import './reportPage.css'
 
 
@@ -331,6 +331,7 @@ export default function ReportPage() {
 
             {handle === "day" && (
               <Grid>
+              <div className="inputContainer">
                 {/* 그룹 번호 입력 */}
                 <FormControl className="custom-form-control">
                   <InputLabel id="demo-simple-select-label"></InputLabel>
@@ -340,7 +341,12 @@ export default function ReportPage() {
                     value={groupID}
                     label="Age"
                     onChange={(e) => setGroupID(e.target.value)}
+                    displayEmpty
+
                   >
+                    <MenuItem value="">
+                      <em>그룹을 선택해주세요.</em>
+                    </MenuItem>
                     <MenuItem value={0}>그룹1</MenuItem>
                     <MenuItem value={1}>그룹2</MenuItem>
                     <MenuItem value={2}>그룹3</MenuItem>
@@ -363,7 +369,11 @@ export default function ReportPage() {
                     value={hour}
                     label="Age"
                     onChange={(e) => setHour(e.target.value)}
+                    displayEmpty
                   >
+                    <MenuItem value="">
+                      <em>시간대를 선택해주세요.</em>
+                    </MenuItem>
                     <MenuItem value={0}>0시</MenuItem>
                     <MenuItem value={1}>1시</MenuItem>
                     <MenuItem value={2}>2시</MenuItem>
@@ -392,8 +402,8 @@ export default function ReportPage() {
                 </FormControl>
 
                 {/* api요청보내는버튼 */}
-                <button onClick={hourCheck}>데이터 불러오기</button>
-
+                <button onClick={hourCheck} className="apiReqBtn">데이터 불러오기</button>
+              </div>
 
                 <BarChart
                   series={hourSeries}
@@ -406,33 +416,39 @@ export default function ReportPage() {
 
 
             {handle === "week" && (
-              <Grid>
-                {/* 그룹 번호 입력 */}
-                <FormControl>
-                  <InputLabel id="demo-simple-select-label"></InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={groupID}
-                    label="Age"
-                    onChange={(e) => setGroupID(e.target.value)}
-                  >
-                    <MenuItem value={0}>그룹1</MenuItem>
-                    <MenuItem value={1}>그룹2</MenuItem>
-                    <MenuItem value={2}>그룹3</MenuItem>
-                    <MenuItem value={3}>그룹4</MenuItem>
-                    <MenuItem value={4}>그룹5</MenuItem>
-                  </Select>
-                </FormControl>
-                {/* 날짜 선택하는 데이트 피커 */}
-                <DatePicker
-                  selected={startDate}
-                  onChange={date => setStartDate(date)}
-                  customInput={<ExampleCustomInput />}
-                />
-                {/* api요청보내는버튼 */}
-                <button onClick={dailyCheck}>데이터 불러오기</button>
+              <Grid >
+                <div className="inputContainer">
 
+                  {/* 그룹 번호 입력 */}
+                  <FormControl>
+                    <InputLabel id="demo-simple-select-label"></InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={groupID}
+                      label="Age"
+                      onChange={(e) => setGroupID(e.target.value)}
+                      displayEmpty
+                    >
+                      <MenuItem value="">
+                        <em>그룹을 선택해주세요.</em>
+                      </MenuItem>
+                      <MenuItem value={0}>그룹1</MenuItem>
+                      <MenuItem value={1}>그룹2</MenuItem>
+                      <MenuItem value={2}>그룹3</MenuItem>
+                      <MenuItem value={3}>그룹4</MenuItem>
+                      <MenuItem value={4}>그룹5</MenuItem>
+                    </Select>
+                  </FormControl>
+                  {/* 날짜 선택하는 데이트 피커 */}
+                  <DatePicker
+                    selected={startDate}
+                    onChange={date => setStartDate(date)}
+                    customInput={<ExampleCustomInput />}
+                  />
+                  {/* api요청보내는버튼 */}
+                  <button onClick={dailyCheck} className="apiReqBtn">데이터 불러오기</button>
+                </div>
                 <BarChart
                   series={dailySeries}
                   width={700}
@@ -443,32 +459,38 @@ export default function ReportPage() {
 
             {handle === "month" && (
               <Grid>
+                <div className="inputContainer">
                 {/* 그룹 번호 입력 */}
-                <FormControl>
-                  <InputLabel id="demo-simple-select-label"></InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={groupID}
-                    label="Age"
-                    onChange={(e) => setGroupID(e.target.value)}
-                  >
-                    <MenuItem value={0}>그룹1</MenuItem>
-                    <MenuItem value={1}>그룹2</MenuItem>
-                    <MenuItem value={2}>그룹3</MenuItem>
-                    <MenuItem value={3}>그룹4</MenuItem>
-                    <MenuItem value={4}>그룹5</MenuItem>
-                  </Select>
+                  <FormControl>
+                    <InputLabel id="demo-simple-select-label"></InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={groupID}
+                      label="Age"
+                      onChange={(e) => setGroupID(e.target.value)}
+                      displayEmpty
+                    >
+                      <MenuItem value="">
+                        <em>그룹을 선택해주세요.</em>
+                      </MenuItem>
+                      <MenuItem value={0}>그룹1</MenuItem>
+                      <MenuItem value={1}>그룹2</MenuItem>
+                      <MenuItem value={2}>그룹3</MenuItem>
+                      <MenuItem value={3}>그룹4</MenuItem>
+                      <MenuItem value={4}>그룹5</MenuItem>
+                    </Select>
 
-                </FormControl>
-                {/* 월 선택하는 데이트 피커 */}
-                <DatePicker
-                  selected={startMonth}
-                  onChange={date => setStartMonth(date)}
-                  customInput={<ExampleCustomInput />}
-                />
-                {/* api요청보내는버튼 */}
-                <button onClick={monthCheck}>데이터 불러오기</button>
+                  </FormControl>
+                  {/* 월 선택하는 데이트 피커 */}
+                  <DatePicker
+                    selected={startMonth}
+                    onChange={date => setStartMonth(date)}
+                    customInput={<ExampleCustomInput />}
+                  />
+                  {/* api요청보내는버튼 */}
+                  <button onClick={monthCheck} className="apiReqBtn">데이터 불러오기</button>
+                </div>
 
 
                 <BarChart
@@ -578,8 +600,8 @@ export default function ReportPage() {
                         if (day <= daysInMonth) {
                           const color = colorGradient(grassArray[day - 1]);
                           const grassData = grassArray[day - 1];
-                          const hour = Math.floor(grassData * 24 )
-                          const minute = Math.round(grassData * 24 * 60) % 60 
+                          const hour = Math.floor(grassData * 24)
+                          const minute = Math.round(grassData * 24 * 60) % 60
                           // 날짜별 그리드 생성
                           return (
                             <Tooltip title={`${currentMonth}월 ${day}일 , 공부시간: ${hour}시간 ${minute}분`}>
