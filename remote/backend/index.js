@@ -8,6 +8,10 @@ const passport = require("passport");
 const session = require("express-session");
 const passportConfig = require("./src/passport");
 const cookieParser = require("cookie-parser");
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+
 const PORT = 8090;
 
 const authController = require("./src/controller/authController");
@@ -15,13 +19,22 @@ const devController = require("./src/controller/devController");
 const logController = require("./src/controller/logController");
 
 passportConfig(passport);
+app.disable("x-powered-by");
 
+<<<<<<< HEAD
 const whitelist = ["http://localhost:3000", "http://localhost:8090", "https://i9c101.p.ssafy.io"];
 const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {
     console.log(origin);
     if (whitelist.indexOf(origin) !== -1) {
+=======
+const whitelist = ["http://localhost:3000", "http://localhost:443", "http://localhost:8090"];
+const corsOptions = {
+  credentials: true,
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || origin === undefined) {
+>>>>>>> feat/frontend/web_report
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
@@ -64,6 +77,32 @@ app.use(debug);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+const options = {
+  swaggerDefinition: {
+      openapi: "3.0.0",
+      info: {
+          version: "0.1.0",
+          title: "KKumta",
+          description: "꿈을 이뤄주는 타이머, 꿈타"
+      },
+      servers: [
+          {
+              url: "http://localhost:8090",
+              description: "로컬호스트 테스트 서버"
+          },
+          {
+              url: "http://i9c101.p.ssafy.io:8090",
+              description: "배포 서버"
+          }
+      ],
+  },
+  apis: ["./src/controller/*.js"]
+}
+
+const specs = swaggerJsdoc(options);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+
 app.use("/auth", authController);
 app.use("/dev", devController);
 app.use("/log", logController);

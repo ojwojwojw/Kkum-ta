@@ -33,7 +33,12 @@ export default function Login() {
     };
     try {
       const res = await axios.post(
+<<<<<<< HEAD
         "https://i9c101.p.ssafy.io:8090/auth/signin",
+=======
+        "https://i9c101.p.ssafy.io/auth/signin", // 배포용
+        // "http://localhost:8090/auth/signin", // 개발용
+>>>>>>> feat/frontend/web_report
         userData,
         {
           //배포를 위해서라도 프록시 설정 해야함.
@@ -62,9 +67,13 @@ export default function Login() {
 
   const googleURL = async () => {
     try {
+      // const { url } = await (
+      //   await fetch("https://i9c101.p.ssafy.io/auth/google/url")
+      // ) // 배포용
       const { url } = await (
-        await fetch("https://i9c101.p.ssafy.io:8090/auth/google/url")
-      ).json();
+        await fetch("http://localhost:8090/auth/google/url")
+      ) // 개발용
+        .json();
 
       console.log(url); // 응답으로 온 url
       document.location.href = url;
@@ -76,9 +85,13 @@ export default function Login() {
 
   const kakaoURL = async () => {
     try {
+      // const { url } = await (
+      //   await fetch("https://i9c101.p.ssafy.io/auth/kakao/url")
+      // ) // 배포용
       const { url } = await (
-        await fetch("https://i9c101.p.ssafy.io:8090/auth/kakao/url")
-      ).json();
+        await fetch("http://localhost:8090/auth/kakao/url")
+      ) // 개발용
+        .json();
 
       console.log(url); // 응답으로 온 url
       document.location.href = url;
@@ -90,9 +103,13 @@ export default function Login() {
 
   const naverURL = async () => {
     try {
+      // const { url } = await (
+      //   await fetch("https://i9c101.p.ssafy.io/auth/naver/url")
+      // ) // 배포용
       const { url } = await (
-        await fetch("https://i9c101.p.ssafy.io:8090/auth/naver/url")
-      ).json();
+        await fetch("http://localhost:8090/auth/naver/url")
+      ) // 개발용
+        .json();
 
       console.log(url); // 응답으로 온 url
       document.location.href = url;

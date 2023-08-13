@@ -16,7 +16,7 @@ export default function NavBar() {
   const [accessToken, setAccessToken] = useState(newAccessToken)
   const dispatch = useDispatch()
   const username = useSelector(state => state.auth.userName)
-  const password = useSelector(state => state.auth.password)
+  const provider = useSelector(state => state.auth.provider)
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -33,11 +33,12 @@ export default function NavBar() {
 
     const userData = {
       "id": username,
-      "password": password,
+      "provider": provider,
     };
     try {
       const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/signout', userData, {  //배포를 위해서라도 프록시 설정 해야함.
         headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
           Authorization: `Bearer ${accessToken}` // 액세스 토큰을 Authorization 헤더에 설정하는 방법
         },
         withCredentials: true
@@ -48,6 +49,7 @@ export default function NavBar() {
     }
     catch (err) {
       console.log(err)
+      console.log(username,provider,accessToken)
     }
   }
 
