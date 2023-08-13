@@ -56,10 +56,10 @@
   color: gray;
 }
 
-.timerButton Button:active {
+.timerButton .MuiButtonBase-root:active {
   background-color: rgb(212, 212, 212);
 }
 
-.timerButton .MuiButtonBase-root:hover {
+.timerButton + .MuiButtonBase-root:hover {
   background-color: rgb(212, 212, 212);
 }
