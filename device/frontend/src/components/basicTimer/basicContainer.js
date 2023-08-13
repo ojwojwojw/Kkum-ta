@@ -24,6 +24,15 @@ export default function TimerContainer({ timerList, id }) {
     };
   }, []);
 
+  useEffect(()=> {
+    const groupRunning = storeTimerArray.some((timer)=>timer.isRunning===true);
+    setIsGroupRunning(groupRunning);
+
+    if (!groupRunning && isGroupRunning) {
+      setIsGroupRunning(false);
+    }
+  }, [storeTimerArray, isGroupRunning, setIsGroupRunning])
+
   function allStart() {
     storeTimerArray.forEach(({ timer }) => timer.start());
     storeTimerArray.forEach((timer) => logStart(timer.id));
