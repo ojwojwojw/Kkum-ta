@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem ,Tooltip} from "@mui/material";
 import './reportPage.css'
+
 
 import {
   Box,
@@ -24,24 +25,12 @@ export default function ReportPage() {
     setView(nextView);
   };
 
-  const groundY = new Array(53).fill(0);
-  const groundX = new Array(7).fill(0);
-
-  // 날짜 구하기
-  var date = new Date();
-  var year = date.getFullYear();
-
-  // 올해 1월1일을 가져오기
-  var newYear = new Date(`${year}-01-01`);
-  var newNextYear = new Date(`${year + 1}-01-01`);
-  var dateOfYear = (newNextYear - newYear) / 1000 / 3600 / 24;
-
   //api 요청시 필요한 데이터 
   const user_id = useSelector(state => state.auth.userName);
   const [groupID, setGroupID] = useState("");
   const [hour, setHour] = useState("");
   const [startYear, setStartYear] = useState(23);
-  const [yearGroupID , setYearGroupID] = useState(0)
+  const [yearGroupID, setYearGroupID] = useState(0)
 
   //데이트 피커 전용 변수
   const [startDateForHour, setStartDateForHour] = useState(new Date());
@@ -53,6 +42,14 @@ export default function ReportPage() {
     </button>
   );
 
+  //잔디를 그리기 위해 필요한 변수들
+  const [grassArray, setGrassArray] = useState([]) //데이터 배열
+  const months = Array.from({ length: 12 }, (_, i) => i + 1); // 1부터 12까지의 배열 생성
+  const maxValue = Math.max(...grassArray);
+  const colorGradient = (value) => {
+    const opacity = (value / maxValue) * 0.9 + 0.1;
+    return `rgba(0, 120, 50, ${opacity})`;
+  };
 
   //요청 받아서 랜더링을 위해 갈아 끼울 리스트들 // 관련 state 변수들
   //시간단위 조회
@@ -266,12 +263,13 @@ export default function ReportPage() {
   //연관 조회 요청 api (잔디밭)
   const yearCheck = async () => {
     try {
-      const res = await axios.get(`http://localhost:8090/log/${user_id}/${yearGroupID}/?month=${startYear}`)
+      const res = await axios.get(`http://localhost:8090/log/${user_id}/${yearGroupID}/?year=${startYear}`)
       console.log(res.data)
+      setGrassArray(res.data)
     }
     catch (err) {
       console.log(err)
-      console.log(user_id,yearGroupID,startYear)
+      console.log(user_id, yearGroupID, startYear)
     }
   }
 
@@ -517,7 +515,7 @@ export default function ReportPage() {
         </Grid>
       </Grid>
 
-            
+
       {/* 잔디밭 관련 */}
 
       <Grid container>
@@ -539,43 +537,89 @@ export default function ReportPage() {
               id="demo-simple-select"
               value={startYear}
               label="Age"
-              onChange={(e) => setStartYear(e.target.value)}
+              onChange={(e) => {
+                setStartYear(e.target.value);
+                yearCheck(e.target.value); // 선택한 연도에 대한 yearCheck 함수 호출
+              }}
             >
-              <MenuItem value={23} onClick={yearCheck}>2023</MenuItem>
-              <MenuItem value={22} onClick={yearCheck}>2022</MenuItem>
-              <MenuItem value={21} onClick={yearCheck}>2021</MenuItem>
-              <MenuItem value={20} onClick={yearCheck}>2020</MenuItem>
-              <MenuItem value={19} onClick={yearCheck}>2019</MenuItem>
-              <MenuItem value={18} onClick={yearCheck}>2018</MenuItem>
-         
+              <MenuItem value={23} >2023</MenuItem>
+              <MenuItem value={22} >2022</MenuItem>
+              <MenuItem value={21} >2021</MenuItem>
+              <MenuItem value={20} >2020</MenuItem>
+              <MenuItem value={19} >2019</MenuItem>
+              <MenuItem value={18} >2018</MenuItem>
+
             </Select>
           </FormControl>
-          
+
+          {/* grass 격자 그래프  */}
           <Grid item mt="20px">
-            <Stack direction={"row"}>
-              {groundY.map((row, yIndex) => (
-                <Stack key={yIndex}>
-                  {groundX.map((col, xIndex) => {
-                    const day = yIndex * 7 + xIndex + 1;
-                    return day <= dateOfYear ? (
-                      <Grid
-                        key={xIndex + yIndex * 7 + 1}
-                        sx={{
-                          width: "13px",
-                          height: "13px",
-                          m: "2px",
-                          opacity: `10%`,
-                          border: "1px solid #0a0",
-                          borderRadius: "2px",
-                        }}
-                        bgcolor={"#003366"}
-                      ></Grid>
-                    ) : null;
-                  })}
-                </Stack>
-              ))}
+            <Stack direction={"row"} sx={{ gap: "4px" }}>
+              {months.map((month) => {
+                const isLeapYear = (year) => (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+                const daysInMonth = [0, 31, isLeapYear(new Date().getFullYear()) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+                const startDay = new Date(new Date().getFullYear(), month - 1, 1).getDay();
+
+                const dayGrids = [];
+                let currentMonth = month;
+                let currentDay = 1; // 월의 첫째 날로 시작
+
+                // 월별 날짜 그리드 생성 루프
+                while (currentDay <= daysInMonth) {
+                  // 주마다 7일씩 배치하도록 요일 배열 생성
+                  const weekDays = Array.from({ length: 7 }, (_, dayIndex) => currentDay + dayIndex);
+
+                  const isMonthChanged = currentMonth !== month;
+
+                  dayGrids.push(
+                    // 주별 그리드 생성
+                    <Stack key={`${currentMonth}-${currentDay}`} direction={"column"} sx={{ alignItems: "center" }}>
+                      {weekDays.map((day) => {
+                        if (day <= daysInMonth) {
+                          const color = colorGradient(grassArray[day - 1]);
+                          const grassData = grassArray[day - 1];
+                          const hour = Math.floor(grassData * 24 )
+                          const minute = Math.round(grassData * 24 * 60) % 60 
+                          // 날짜별 그리드 생성
+                          return (
+                            <Tooltip title={`${currentMonth}월 ${day}일 , 공부시간: ${hour}시간 ${minute}분`}>
+                              <Grid
+                                key={`${currentMonth}-${day}`}
+                                sx={{
+                                  width: "13px",
+                                  height: "13px",
+                                  marginBottom: "1px",
+                                  border: "1px solid #1a1b1c",
+                                  borderRadius: "1px",
+                                  backgroundColor: color,
+                                  cursor: "pointer",
+                                  position: "relative", // 상대 위치 설정
+                                }}
+                              >
+                              </Grid>
+                            </Tooltip>
+                          );
+                        } else {
+                          return null; // 해당 월의 일수를 넘어가면 아무것도 그리지 않음
+                        }
+                      })}
+                      {isMonthChanged && <Grid sx={{ width: "13px", height: "13px", m: "0.3px" }}></Grid>}
+                    </Stack>
+                  );
+
+                  if (isMonthChanged) {
+                    currentMonth = month; // 월 변경되었을 때 월 업데이트
+                  }
+                  currentDay += 7; // 다음 주의 시작일로 이동
+                }
+
+                return dayGrids; // 해당 월의 그리드 배열 반환
+              })}
             </Stack>
           </Grid>
+
+
+
 
         </Grid>
       </Grid>
