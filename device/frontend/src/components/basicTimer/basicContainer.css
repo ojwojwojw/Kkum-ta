@@ -15,3 +15,7 @@
 .img-bomb {
   background-image: url("/public/nyan-cat.gif");
 }
+
+.btn-create-timer > .MuiButtonBase-root.MuiButton-root:hover {
+  background-color: #376f94ea;
+}

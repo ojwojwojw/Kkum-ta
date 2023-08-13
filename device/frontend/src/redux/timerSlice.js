@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   timerArray: [],
   Rendering: false,
+  timeToInsert: 0,
 };
 
 export const timerSlice = createSlice({
@@ -13,7 +14,7 @@ export const timerSlice = createSlice({
       state.timerArray = action.payload;
     },
     create: (state, action) => {
-      console.log("payload:", action.payload);
+      // console.log("payload:", action.payload);
       state.timerArray = [...state.timerArray, action.payload];
     },
     deleteTimer: (state, action) => {
@@ -47,6 +48,20 @@ export const timerSlice = createSlice({
     forceRendering: (state) => {
       state.Rendering = !state.Rendering;
     },
+    setTimeToInsert: (state, action) => {
+      state.timeToInsert = action.payload;
+    },
+    changeInitTimeForInsert: (state, action) => {
+      state.timerArray = state.timerArray.map((item) => {
+        if (item.id === action.payload.id) {
+          return {
+            ...item,
+            initTime: action.payload.value,
+          };
+        }
+        return item; // 반드시 값을 반환해야 합니다.
+      });
+    },
   },
 });
 
@@ -58,6 +73,8 @@ export const {
   forceRendering,
   isRunningTrue,
   isRunningFalse,
+  setTimeToInsert,
+  changeInitTimeForInsert,
 } = timerSlice.actions;
 
 export const selectArray = (state) => state.timer.timerArray;
