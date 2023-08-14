@@ -28,8 +28,7 @@ const whitelist = ["http://localhost:3000", "http://localhost:8090", "https://i9
 const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {
-    console.log(origin);
-    if (whitelist.indexOf(origin) !== -1) {
+    if (whitelist.indexOf(origin) !== -1 || origin === undefined) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
