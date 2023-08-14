@@ -1,11 +1,9 @@
-const UserRepository = require("../repository/userRepository");
-const EncryptService = require("./encryptService");
 const LoginDto = require("../dto/authDto");
 
 class signupService {
-  constructor() {
-    this.userRepository = new UserRepository();
-    this.encryptService = new EncryptService();
+  constructor(userRepository, encryptService) {
+    this.userRepository = userRepository;
+    this.encryptService = encryptService;
   }
   async signup_local(id, password, email) {
     const userIdInfo = await this.userRepository.getUserById(id);

@@ -29,6 +29,15 @@ class DeviceRepository extends Repository{
             }
         }
     }
+    async getDeviceSerialById(device_key){
+        const sql = `SELECT device_serial FROM device_tbl WHERE device_key = ?`;
+        const params = [device_key];
+        const [rows] = await this.query(sql, params);
+        if(rows.length === 0){
+            return null;
+        }
+        return rows[0].device_serial;
+    }
 }
 
 module.exports = DeviceRepository;

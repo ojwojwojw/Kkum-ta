@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const https = require("https");
+const fs = require("fs");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const session = require("express-session");
@@ -15,11 +17,14 @@ const PORT = 8090;
 const authController = require("./src/controller/authController");
 const devController = require("./src/controller/devController");
 const logController = require("./src/controller/logController");
+const componenetController = require("./src/controller/componentController");
+const groupController = require("./src/controller/groupController");
+
 
 passportConfig(passport);
 app.disable("x-powered-by");
 
-const whitelist = ["http://localhost:3000", "http://localhost:443", "http://localhost:8090"];
+const whitelist = ["http://localhost:3000", "http://localhost:8090", "https://i9c101.p.ssafy.io"];
 const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {
@@ -64,6 +69,7 @@ const debug = (req, res, next) => {
 
 app.use(debug);
 
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
@@ -95,5 +101,19 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/auth", authController);
 app.use("/dev", devController);
 app.use("/log", logController);
+app.use("/timer", componenetController);
+app.use("/group", groupController);
 
-app.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
+const privateKey = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/privkey.pem", "utf8");
+const certificate = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/cert.pem", "utf8");
+const ca = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/chain.pem", "utf8");
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: ca
+}
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
+
+//app.listen(PORT, ()=> console.log(`Server listens on port ${PORT}`))
