@@ -20,6 +20,15 @@ export default function TimerContainer({ id }) {
   const [isGroupRunning, setIsGroupRunning] = useState(false);
 
   useEffect(() => {
+    // console.log("timer container constructor");
+    return () => {
+      // console.log("timer container destructor");
+    };
+  }, []);
+
+  useEffect(() => {
+    // console.log("timer container constructor");
+    // 0.1초 뒤에 load 함수 호출을 지연시킵니다.
     const timerId = setTimeout(() => {
       load();
     }, 1);
