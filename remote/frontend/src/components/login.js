@@ -63,12 +63,12 @@ export default function Login() {
 
     const googleURL = async () => {
         try {
-            // const { url } = await (
-            //   await fetch("https://i9c101.p.ssafy.io/auth/google/url")
-            // ) // 배포용
             const { url } = await (
-                await fetch("http://localhost:8090/auth/google/url")
-            ) // 개발용
+              await fetch("https://i9c101.p.ssafy.io/auth/google/url")
+            ) // 배포용
+            // const { url } = await (
+            //     await fetch("http://localhost:8090/auth/google/url")
+            // ) // 개발용
                 .json();
 
             console.log(url); // 응답으로 온 url
