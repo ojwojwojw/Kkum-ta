@@ -1,24 +1,19 @@
 const express = require("express");
 const passport = require("passport");
-const jwtService = require("../service/jwtService");
-const jwt = new jwtService();
-const loginService = require("../service/signupService");
-const loginApp = new loginService();
-const SearchService = require("../service/searchService");
-const searchService = new SearchService();
-const MailverifyService = require("../service/mailverifyService");
-const mailApp = new MailverifyService();
-const KakaoService = require("../service/kakaoService");
-const kakaoClient = new KakaoService();
-const GoogleService = require("../service/googleService");
-const googleClient = new GoogleService();
-const NaverService = require("../service/naverService");
-const naverClient = new NaverService();
-const UpdateService = require("../service/updateService");
-const updateService = new UpdateService();
-const UserRepository = require("../repository/userRepository");
-const { isLoggedIn, isNotLoggedIn } = require("../service/authService");
+const Global = require("../global");
 
+(async () => {
+  jwt = await Global.getJwtService();
+  loginApp = await Global.getSignupService();
+  searchService = await Global.getSearchService();
+  mailApp = await Global.getMailVerifyService();
+  kakaoClient = await Global.getKakaoService();
+  googleClient = await Global.getGoogleService();
+  naverClient = await Global.getNaverService();
+  updateService = await Global.getUpdateService();
+  userRepository = await Global.getUserRepository();
+})();
+const { isLoggedIn, isNotLoggedIn } = require("../service/authService");
 const authRouter = express.Router();
 
 authRouter.get("/", (req, res) => {
@@ -43,7 +38,6 @@ authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
       return res.status(400).json({ status: "bad request" });
     }
     const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
-    const userRepository = new UserRepository();
     await userRepository.updateRefreshToken(
       user.id,
       user.provider,
@@ -102,7 +96,7 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
 //         user.id,
 //         user.provider
 //       );
-//       const userRepository = new UserRepository();
+//       const userRepository = await Global.getUserRepository();
 //       await userRepository.updateRefreshToken(
 //         user.id,
 //         user.provider,
@@ -135,7 +129,6 @@ authRouter.post("/google/login", async (req, res, next) => {
   console.log("/login start");
   try {
     const code = req.body.code;
-    const userRepository = new UserRepository();
 
     const google_access_token = await googleClient.getToken(code); // 토큰 받아오기
     const google_user = await googleClient.getUserData(
@@ -216,7 +209,6 @@ authRouter.post("/kakao/login", async (req, res, next) => {
       kakao_user.id,
       kakao_user.provider
     );
-    const userRepository = new UserRepository();
     await userRepository.updateRefreshToken(
       kakao_user.id,
       kakao_user.provider,
@@ -277,7 +269,6 @@ authRouter.post("/naver/login", async (req, res, next) => {
       naver_user.id,
       naver_user.provider
     );
-    const userRepository = new UserRepository();
     await userRepository.updateRefreshToken(
       naver_user.id,
       naver_user.provider,
@@ -402,7 +393,6 @@ authRouter.put("/changePW", async (req, res) => {
 });
 
 authRouter.post("/signout", isLoggedIn, async (req, res) => {
-  const userRepository = new UserRepository();
   if (!req.cookies.refreshToken) {
     return res.status(401).json({ status: "unauthorized" });
   }

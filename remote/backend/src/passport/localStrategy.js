@@ -1,6 +1,6 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const UserRepository = require("../repository/userRepository");
+const Global = require("../global");
 const EncryptService = require("../service/encryptService");
 
 module.exports = () => {
@@ -14,7 +14,7 @@ module.exports = () => {
       },
       async (id, password, done) => {
         try {
-          const userRepository = new UserRepository();
+          const userRepository = await Global.getUserRepository();
           const encryptService = new EncryptService();
           const userInfo = await userRepository.getUserByIdAndProvider(
             id,
