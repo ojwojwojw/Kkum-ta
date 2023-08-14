@@ -3,6 +3,7 @@ const UserRepository = require("./repository/userRepository");
 const LogRepository = require("./repository/logRepository");
 const GroupRepository = require('./repository/groupRepository');
 const LogService = require('./service/logService');
+const ComponentRepository = require('./repository/componentRepository')
 const GoogleService = require('./service/googleService');
 const JWTService = require('./service/jwtService');
 const NaverService = require('./service/naverService');
@@ -19,6 +20,7 @@ class Global {
     static #logRepository = null;
     static #groupRepository = null;
     static #logService = null;
+    static #componentRepository = null;
     static #googleService = null;
     static #jwtService = null;
     static #naverService = null;
@@ -61,6 +63,22 @@ class Global {
             Global.#logService = new LogService(await Global.getLogRepository());
         }
         return Global.#logService;
+    }
+
+    static async getComponentRepository() {
+        if(!Global.#componentRepository) {
+            Global.#componentRepository = new ComponentRepository();
+            Global.#componentRepository.init();
+        }
+        return Global.#componentRepository;
+    }
+
+    static async getGroupRepository() {
+        if(!Global.#groupRepository) {
+            Global.#groupRepository = new GroupRepository();
+            Global.#groupRepository.init();
+        }
+        return Global.#groupRepository;
     }
     static async getGoogleService(){
         if(!Global.#googleService){

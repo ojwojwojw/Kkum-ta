@@ -262,6 +262,7 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
 // });
 
 authRouter.get("/google/url", (req, res, next) => {
+  console.log(req.headers.origin);
   const url = googleClient.getAuthCodeURL();
 
   res.status(200).json({
