@@ -1,6 +1,6 @@
 const Repository = require("./repository");
 
-class GroupRepository extends Repository {
+class GruopRepository extends Repository {
     constructor() {
         super();
     }
@@ -41,6 +41,30 @@ class GroupRepository extends Repository {
         await this.query(sql, params);
     }
 
+    async insertGroupByUserId(group_key, uid, name) {
+        const sql = `
+            INSERT INTO group_tbl(group_key, user_key, name)
+            VALUES(
+                ?,
+                (SELECT user_key FROM user_tbl WHERE id = ?),
+                ?
+            )
+        `;
+        const params = [group_key, uid, name];
+        await this.query(sql, params);
+    }
+
+    async updateNameByUserIdAndGroupKey(uid, gkey, name) {
+        const sql = `
+            UPDATE group_tbl SET name = ?
+            WHERE user_key = (
+                SELECT user_key FROM user_tbl WHERE id = ?
+            ) AND group_key = ?
+        `;
+        const params = [name, uid, gkey];
+        await this.query(sql, params);
+    }
+
     async deleteGroup(group_id) {
         const sql = `DELETE FROM group_tbl WHERE gruop_key = ?`;
         const params = [group_id];
@@ -53,6 +77,31 @@ class GroupRepository extends Repository {
         const [rows] = await this.query(sql, params);
         return rows[0];
     }
+
+    async findAllByUserId(uid) {
+        const sql = `
+            SELECT group_key, name, last_update
+            FROM group_tbl JOIN user_tbl
+            ON group_tbl.user_key = user_tbl.user_key
+            WHERE user_tbl.id = ?
+        `;
+        const params = [uid];
+        const [rows] = await this.query(sql, params);
+        return rows;
+    }
+
+    async findByUserIdAndGroupId(uid, gid) {
+        const sql = `
+            SELECT name, last_update FROM group_tbl
+            JOIN user_tbl ON group_tbl.user_key = user_tbl.user_key
+            WHERE user_tbl.id = ? AND group_tbl.group_key = ?
+        `;
+        const params = [uid, gid];
+        const [rows] = await this.query(sql, params);
+        return rows;
+    }
+
+    async getLoginKey() {}
 }
 
-module.exports = GroupRepository;
+module.exports = GruopRepository;
