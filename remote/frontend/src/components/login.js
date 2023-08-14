@@ -33,7 +33,7 @@ export default function Login() {
         };
         try {
             const res = await axios.post(
-                "https://i9c101.p.ssafy.io/auth/signin", // 배포용
+                "https://i9c101.p.ssafy.io:8090/auth/signin", // 배포용
                 // "http://localhost:8090/auth/signin",     개발용
                 userData,
                 {
