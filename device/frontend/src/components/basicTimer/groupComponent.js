@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import TimerContainer from "./basicContainer";
 
 // mui
-import { Box, Grid, Tabs, Tab } from "@mui/material";
+import { Box, Grid, Tabs, Tab, Button } from "@mui/material";
 import PropTypes from "prop-types";
 
 function CustomTabPanel(props) {
@@ -93,11 +93,7 @@ export default function GroupComponent() {
         <Grid item xs={12}>
           {timerArrayList.map((obj, idx) => (
             <CustomTabPanel key={obj.id} value={value} index={idx}>
-              <TimerContainer
-                key={obj.id}
-                id={obj.id}
-                timerList={obj.timerList}
-              ></TimerContainer>
+              <TimerContainer key={obj.id} id={obj.id}></TimerContainer>
             </CustomTabPanel>
           ))}
         </Grid>
