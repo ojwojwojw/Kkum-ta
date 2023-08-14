@@ -64,7 +64,7 @@ export default function Login() {
     const googleURL = async () => {
         try {
             const { url } = await (
-              await fetch("https://i9c101.p.ssafy.io/auth/google/url")
+              await fetch("https://i9c101.p.ssafy.io:8090/auth/google/url")
             ) // 배포용
             // const { url } = await (
             //     await fetch("http://localhost:8090/auth/google/url")
@@ -82,7 +82,7 @@ export default function Login() {
     const kakaoURL = async () => {
         try {
             const { url } = await (
-              await fetch("https://i9c101.p.ssafy.io/auth/kakao/url")
+              await fetch("https://i9c101.p.ssafy.io:8090/auth/kakao/url")
             ) // 배포용
             // const { url } = await (
             //     await fetch("http://localhost:8090/auth/kakao/url")
@@ -100,7 +100,7 @@ export default function Login() {
     const naverURL = async () => {
         try {
             const { url } = await (
-              await fetch("https://i9c101.p.ssafy.io/auth/naver/url")
+              await fetch("https://i9c101.p.ssafy.io:8090/auth/naver/url")
             ) // 배포용
             // const { url } = await (
             //     await fetch("http://localhost:8090/auth/naver/url")
