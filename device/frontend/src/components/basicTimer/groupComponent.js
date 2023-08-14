@@ -42,6 +42,8 @@ export default function GroupComponent() {
   const mqttNode = useRef(null);
   const dispatch = useDispatch();
 
+  const [text, setText] = useState("");
+
   const [value, setValue] = useState(0);
 
   const handelChange = (e, newValue) => {
@@ -51,17 +53,14 @@ export default function GroupComponent() {
   useEffect(() => {
     let client = mqttNode.current;
     if(client == null) {
+      // client = mqtt.connect('ws://192.168.100.245:1884');
       client = mqtt.connect('ws://localhost:1884');
       client.on("connect", () => {
         console.log("connected");
-        client.subscribe("test")
-        setInterval(() => {
-          console.log("pub");
-          client.publish("kmg", "zzzzzzzz")
-        }, 1000)
+        client.subscribe("face_recognition")
       });
       client.on("message", (topic, message) => {
-        console.log(message.toString());
+        setText(message.toString());
       });
     }
 
@@ -94,7 +93,7 @@ export default function GroupComponent() {
 
   return (
     <Box>
-
+      {text}
       <Grid container>
         <Grid item xs={12}>
           <Tabs
