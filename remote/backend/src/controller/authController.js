@@ -135,22 +135,30 @@ authRouter.post("/google/login", async (req, res, next) => {
   console.log("/login start");
   try {
     const code = req.body.code;
+    const userRepository = new UserRepository();
 
     const google_access_token = await googleClient.getToken(code); // 토큰 받아오기
-    const user = await googleClient.getUserData(
+    const google_user = await googleClient.getUserData(
       google_access_token.access_token
     ); // 유저 정보 받아오기
-    console.log(user);
+    console.log(google_user);
+
+    const user = await userRepository.getUserByIdAndProvider(
+      google_user.id,
+      google_user.provider
+    );
 
     if (!user) {
-      await loginApp.signup_sns(user.id, user.provider);
+      await loginApp.signup_sns(google_user.id, google_user.provider);
     }
 
-    const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
-    const userRepository = new UserRepository();
+    const { accessToken, refreshToken } = jwt.getTokens(
+      google_user.id,
+      google_user.provider
+    );
     await userRepository.updateRefreshToken(
-      user.id,
-      user.provider,
+      google_user.id,
+      google_user.provider,
       refreshToken
     );
     res.cookie("refreshToken", refreshToken, {
@@ -158,8 +166,8 @@ authRouter.post("/google/login", async (req, res, next) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
     const res_user = {
-      id: user.id,
-      provider: user.provider,
+      id: google_user.id,
+      provider: google_user.provider,
     };
     return res
       .status(200)
@@ -190,18 +198,28 @@ authRouter.post("/kakao/login", async (req, res, next) => {
     const code = req.body.code;
 
     const kakao_access_token = await kakaoClient.getToken(code); // 토큰 받아오기
-    const user = await kakaoClient.getUserData(kakao_access_token.access_token); // 유저 정보 받아오기
-    console.log(user);
+    const kakao_user = await kakaoClient.getUserData(
+      kakao_access_token.access_token
+    ); // 유저 정보 받아오기
+    console.log(kakao_user);
+
+    const user = await userRepository.getUserByIdAndProvider(
+      kakao_user.id,
+      kakao_user.provider
+    );
 
     if (!user) {
-      await loginApp.signup_sns(user.id, user.provider);
+      await loginApp.signup_sns(kakao_user.id, kakao_user.provider);
     }
 
-    const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
+    const { accessToken, refreshToken } = jwt.getTokens(
+      kakao_user.id,
+      kakao_user.provider
+    );
     const userRepository = new UserRepository();
     await userRepository.updateRefreshToken(
-      user.id,
-      user.provider,
+      kakao_user.id,
+      kakao_user.provider,
       refreshToken
     );
     res.cookie("refreshToken", refreshToken, {
@@ -209,8 +227,8 @@ authRouter.post("/kakao/login", async (req, res, next) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
     const res_user = {
-      id: user.id,
-      provider: user.provider,
+      id: kakao_user.id,
+      provider: kakao_user.provider,
     };
     return res
       .status(200)
@@ -241,18 +259,28 @@ authRouter.post("/naver/login", async (req, res, next) => {
     const code = req.body.code;
 
     const naver_access_token = await naverClient.getToken(code); // 토큰 받아오기
-    const user = await naverClient.getUserData(naver_access_token.access_token); // 유저 정보 받아오기
-    console.log(user);
+    const naver_user = await naverClient.getUserData(
+      naver_access_token.access_token
+    ); // 유저 정보 받아오기
+    console.log(naver_user);
+
+    const user = await userRepository.getUserByIdAndProvider(
+      naver_user.id,
+      naver_user.provider
+    );
 
     if (!user) {
-      await loginApp.signup_sns(user.id, user.provider);
+      await loginApp.signup_sns(naver_user.id, naver_user.provider);
     }
 
-    const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
+    const { accessToken, refreshToken } = jwt.getTokens(
+      naver_user.id,
+      naver_user.provider
+    );
     const userRepository = new UserRepository();
     await userRepository.updateRefreshToken(
-      user.id,
-      user.provider,
+      naver_user.id,
+      naver_user.provider,
       refreshToken
     );
     res.cookie("refreshToken", refreshToken, {
@@ -260,8 +288,8 @@ authRouter.post("/naver/login", async (req, res, next) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
     const res_user = {
-      id: user.id,
-      provider: user.provider,
+      id: naver_user.id,
+      provider: naver_user.provider,
     };
     return res
       .status(200)
