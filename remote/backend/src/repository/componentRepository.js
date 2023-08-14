@@ -1,14 +1,14 @@
 const { user } = require("../config/connection");
 const Repository = require("./repository");
 
-class componentRepository extends Repository {
+class ComponentRepository extends Repository {
     constructor() {
         super();
     }
 
     async init() {
         const sql = `
-            CREATE TABLE 'component_tbl' (
+            CREATE TABLE IF NOT EXISTS 'component_tbl' (
                 'component_key' INT(11) NOT NULL AUTO_INCREMENT,
                 'component_type' VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
                 'init_time' INT(11) NULL DEFAULT NULL,
@@ -24,7 +24,6 @@ class componentRepository extends Repository {
             )
             COLLATE='utf8mb4_general_ci'
             ENGINE=InnoDB
-            AUTO_INCREMENT=3
         ;
             `;
         await this.query(sql, []);
@@ -101,3 +100,5 @@ class componentRepository extends Repository {
         return this.query(sql, params);
     }
 }
+
+module.exports = ComponentRepository;
