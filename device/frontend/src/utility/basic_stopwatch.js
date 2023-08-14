@@ -63,4 +63,8 @@ export default class BasicStopwatch {
       isRunning: this.#isRunning,
     };
   }
+
+  getCurTime() {
+    return this.#curTime;
+  }
 }

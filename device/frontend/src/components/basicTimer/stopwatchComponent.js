@@ -3,6 +3,7 @@ import BasicStopwatch from "../../utility/basic_stopwatch";
 import { Button, Grid } from "@mui/material";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import axios from "axios";
 
 function StopwatchComponent({
   groupId,
@@ -19,13 +20,26 @@ function StopwatchComponent({
   const stopwatch = useMemo(() => new BasicStopwatch(), []);
 
   useEffect(() => {
-    stopwatch.setCurTime = setCurTime;
+    stopwatch.setCutTime = setCurTime;
     stopwatch.setIsRunning = setIsRunning;
     return () => {
       stopwatch.setCurTime = null;
       stopwatch.setIsRunning = null;
     };
   }, [stopwatch]);
+
+  useEffect(() => {
+    const fetchCurTime = async () => {
+      try {
+        const res = await axios.get(`stopwatch/${groupId}`);
+        const timeData = res.data.time;
+        setCurTime(timeData);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    return fetchCurTime;
+  }, [groupId]);
 
   useEffect(() => {
     const groupRunning = storeTimerArray.some((timer) => timer.isRunning);
