@@ -154,17 +154,20 @@ class UserRepository extends Repository {
     return this.query(sql, params);
   }
 
-  async updateDeviceKey(id, provider, device_serial){
+  async updateDeviceKey(user_key, device_serial){
+    console.log("#1", user_key, device_serial);
     const getDevicekeySQL = "SELECT device_key FROM device_tbl WHERE device_serial=?";
     const [device_key_row] = await this.query(getDevicekeySQL, [device_serial]);
     if(device_key_row.length === 0){
       return null;
     }
+    console.log("#2", device_key_row);
     const device_key = device_key_row[0].device_key;
     const dropSQL = "UPDATE user_tbl SET device_key=NULL WHERE device_key=?";
-    const updateSQL = "UPDATE user_tbl SET device_key=? WHERE id=? AND provider=?";
+    const updateSQL = "UPDATE user_tbl SET device_key=? WHERE user_key=?";
     await this.query(dropSQL, [device_key]);
-    await this.query(updateSQL, [device_key, id, provider]);
+    await this.query(updateSQL, [device_key, user_key]);
+    return true;
   }
 }
 
