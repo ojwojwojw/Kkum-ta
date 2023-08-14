@@ -230,7 +230,7 @@ logRouter.get("/:user_id/:group_id", async (req, res) => {
  *      post:
  *          summary: "사용자 ID를 기반으로 새로운 로그를 등록한다"
  *          description: "새로운 로그를 등록한다"
- *          tags: [Logging]
+ *          tags: [Backend/Logging]
  *          parameters:
  *            - in: path
  *              name: user_id
@@ -311,7 +311,7 @@ logRouter.post("/:user_id/:group_id", async (req, res) => {
  *      post:
  *          summary: "디바이스 키를 기반으로 새로운 로그를 등록한다"
  *          description: "새로운 로그를 등록한다"
- *          tags: [Logging]
+ *          tags: [Backend/Logging]
  *          parameters:
  *            - in: path
  *              name: device_serial
