@@ -1,7 +1,8 @@
 const { user } = require("../config/connection");
+const { param } = require("../controller/devController");
 const Repository = require("./repository");
 
-class componentRepository extends Repository {
+class ComponentRepository extends Repository {
     constructor() {
         super();
     }
@@ -32,18 +33,39 @@ class componentRepository extends Repository {
         return this.query(`SELECT * FROM component_tbl`, []);
     }
 
+    async findAllByComponentKey(component_key) {
+        const sql = `SELECT * FROM component_tbl WHERE component_key = ?`;
+        const params = [component_key];
+        const [rows] = await this.query(sql, params);
+        return rows[0];
+    }
+
     async findAllComponentByGroupKey(group_key) {
         const sql = `SELECT * FROM component_tbl WHERE group_key = ?`;
         const params = [group_key];
         const [rows] = await this.query(sql, params);
         return rows[0];
     }
+
+    async findAllComponentByGroupKeyOfUser(group_key, user_id) {
+        const sql = `
+            SELECT component_key, init_time, maxIter, group_key, id FROM component_tbl
+            JOIN user_tbl
+            ON component_tbl.user_key = user_tbl.user_key
+            WHERE group_key = ? AND id = ?;
+        `
+        const params = [group_key, user_id];
+        const [rows] = await this.query(sql, params);
+        return rows[0];
+    }
     
     async findAllComponentByUserId(user_id) {
         const sql = `
-            SELECT user_tbl.id, component_tbl.component_type, component_tbl.init_time
-            FROM user_tbl JOIN component_tbl ON user_tbl.user_key = component_tbl.user_key
-            WHERE user_tbl.id = ?;
+            SELECT component_key, init_time, maxIter, group_key
+            FROM component_tbl 
+            JOIN user_tbl
+            ON user_tbl.user_key = component_tbl.user_key
+            WHERE id = ?;
         `;
         const params = [user_id];
         const [rows] = await this.query(sql, params);
@@ -53,6 +75,13 @@ class componentRepository extends Repository {
     async findByComponentKey(ckey) {
         const sql = `SELECT * FROM component_tbl WHERE component_key = ?`;
         const params = [ckey];
+        const rows = await this.query(sql, params);
+        return rows[0];
+    }
+
+    async findByUserAndGroupAndComponent(ukey, gkey, ckey) {
+        const sql = `SELECT * FROM component_tbl WHERE user_key = ? AND group_key = ? AND component_key = ?`;
+        const params = [ukey, gkey, ckey];
         const rows = await this.query(sql, params);
         return rows[0];
     }
@@ -90,3 +119,5 @@ class componentRepository extends Repository {
         return this.query(sql, params);
     }
 }
+
+module.exports = ComponentRepository;
