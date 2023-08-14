@@ -1,16 +1,15 @@
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const UserRepository = require("../repository/userRepository");
 
 class MailverifyService {
-  constructor() {
+  constructor(userRepository) {
     this.transporter = nodemailer.createTransport({
       service: "gmail",
       port: 456,
       secure: true,
       auth: { user: process.env.GMAIL_ID, pass: process.env.GMAIL_PW },
     });
-    this.userRepository = new UserRepository();
+    this.userRepository = userRepository;
   }
 
   async sendMail(id, email) {

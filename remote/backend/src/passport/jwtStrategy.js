@@ -2,7 +2,7 @@ const passport = require("passport");
 const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
-const UserRepository = require("../repository/userRepository");
+const Global = require("../global");
 
 module.exports = () => {
   passport.use(
@@ -13,7 +13,7 @@ module.exports = () => {
       },
       async (jwtPayload, done) => {
         try {
-          const userRepository = new UserRepository();
+          const userRepository = await Global.getUserRepository();
           const user = await userRepository.getUserByIdAndProvider(jwtPayload.user_id, jwtPayload.provider);
           if (user) {
             done(null, user); // 로그인 인증 완료

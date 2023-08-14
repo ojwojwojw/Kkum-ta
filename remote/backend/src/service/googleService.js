@@ -1,9 +1,8 @@
-const UserRepository = require("../repository/userRepository");
 const axios = require("axios");
 
 class GoogleService {
-  constructor() {
-    this.userRepository = new UserRepository();
+  constructor(userRepository) {
+    this.userRepository = userRepository;
     this.ID = process.env.GOOGLE_ID;
     this.SECRETE = process.env.GOOGLE_CLIENT_SECRETE;
     // this.redirect_URI = "https://i9c101.p.ssafy.io/callback/google"; // 배포용
