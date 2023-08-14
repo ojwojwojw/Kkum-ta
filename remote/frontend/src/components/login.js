@@ -4,7 +4,7 @@ import "./login.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { loginState, logoutState } from "../redux/authSlice";
+import { loginState } from "../redux/authSlice";
 import FindPasswordPage from "../pages/findPasswordPage";
 import { Route, Routes } from "react-router-dom";
 import SignupPage from "../pages/signupPage";
@@ -24,6 +24,10 @@ export default function Login() {
   const dispatch = useDispatch();
   // const newAccessToken = localStorage.getItem("accessToken")   //로컬스토리지에서 액세스 토큰 가져오기
   // const [accessToken, setAccessToken] = useState(newAccessToken)
+  
+  //오류 메시지 관련
+  const [loginError, setLoginError] = useState(null)
+
 
   //로그인 요청
   const submitSignIn = async () => {
@@ -54,9 +58,10 @@ export default function Login() {
         })
       ); //redux에 유저데이터 저장
 
-      navigate("/");
+      navigate("/reports");
     } catch (err) {
       console.log("occur error while login.", err);
+      setLoginError("로그인에 실패하였습니다.")
       // console.log(userData)
     }
   };
@@ -115,6 +120,13 @@ export default function Login() {
     }
   };
 
+  //엔터 입력관련
+  const activeEnter = (e) => {
+    if(e.key === "Enter") {
+      submitSignIn();
+    }
+  }
+
   // //로그아웃 요청 (nav바로 이동)
   // const submitSignout = async () => {
 
@@ -169,7 +181,11 @@ export default function Login() {
                 placeholder="PASSWORD"
                 value={password}
                 onChange={(e) => setUserPassword(e.target.value)}
+                onKeyDown={(e) => activeEnter(e)}
               ></Input>
+              <Grid>
+                {loginError? <label style={{ color: 'red' }}>{loginError}</label> : null}
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} className="btn-form">

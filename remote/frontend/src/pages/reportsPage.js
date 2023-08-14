@@ -604,7 +604,7 @@ export default function ReportPage() {
                           const minute = Math.round(grassData * 24 * 60) % 60
                           // 날짜별 그리드 생성
                           return (
-                            <Tooltip title={`${currentMonth}월 ${day}일 , 공부시간: ${hour}시간 ${minute}분`}>
+                            <Tooltip title={`${currentMonth}월 ${day?day:0}일 , 공부시간: ${hour?hour:0}시간 ${minute?minute:0}분`}>
                               <Grid
                                 key={`${currentMonth}-${day}`}
                                 sx={{
