@@ -306,7 +306,7 @@ authRouter.post("/naver/login", async (req, res, next) => {
   console.log("/login finish");
 });
 
-authRouter.post("/refresh", (req, res) => {
+authRouter.post("/refresh", async (req, res) => {
   const id = req.body.id;
   const provider = req.body.provider;
   if (!id || !provider) {
@@ -317,11 +317,12 @@ authRouter.post("/refresh", (req, res) => {
     console.log(req.cookies);
     return res.status(401).json({ status: "unauthorized" });
   }
-  const refresh = jwt.refresh(
+  const refresh = await jwt.refresh(
     req.cookies.refreshToken,
     req.body.id,
     req.body.provider
   );
+  console.log({err: refresh.err})
   if (!refresh.result) {
     if (refresh.err == "jwt expired") {
       return res.status(401).json({ status: "unauthorized" });

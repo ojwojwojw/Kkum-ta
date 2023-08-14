@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import MenuListBar from "./MenuListBar";
-import { Routes, Route, Link, useActionData } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import { Box, Grid, Button, Menu, MenuItem } from "@mui/material";
 import ReportPage from "../pages/reportsPage";
 import GroupPage from "../pages/groupPage";
-import SignupPage from "../pages/signupPage";
-import FindPasswordPage from "../pages/findPasswordPage";
 import Login from "./login";
 import axios from 'axios'
 import { useDispatch , useSelector} from "react-redux";
 import { logoutState } from "../redux/authSlice";
+import RefreshTest from "./refreshTokenTest";
 
 export default function NavBar() {
   const newAccessToken = localStorage.getItem("accessToken") 
@@ -67,7 +66,10 @@ export default function NavBar() {
         <Grid item xs={1}>
           <Link to="/">LOGO</Link>
         </Grid>
-        <Grid item xs={10}></Grid>
+        <Grid item xs={10}>
+          <RefreshTest/>
+          반갑습니다 {username}님.
+        </Grid>
         <Grid item xs={1}>
           {/* 개발의 편의성을 위해 놓아뒀던 login 버튼 */}
           {/* <Link to="/login" Component={Login}>
@@ -80,7 +82,7 @@ export default function NavBar() {
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
           >
-            UserName
+          <Grid> {username} </Grid>
           </Button>
           <Menu
             id="user-menu"

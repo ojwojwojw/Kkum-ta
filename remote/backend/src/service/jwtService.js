@@ -10,7 +10,7 @@ class jwtService {
       { user_id: id, provider: provider },
       process.env.JWT_SECRET,
       {
-        expiresIn: "30m",
+        expiresIn: "10s",
       }
     );
     return accesstoken;
@@ -42,14 +42,14 @@ class jwtService {
     return accessToken;
   }
 
-  refresh(token, id, provider) {
+  async refresh(token, id, provider) {
     try {
       const myToken = jwt.verify(token, process.env.JWT_SECRET);
       if (myToken == "jwt expired") {
-        return { result: false, err: myToken };
+        return { result: false, err: "jwt expired" };
       }
 
-      const user = this.userRepository.getUserByRefreshToken(token);
+      const user = await this.userRepository.getUserByRefreshToken(token);
       if (user.id !== id || user.provider !== provider) {
         return { result: false, err: myToken };
       }

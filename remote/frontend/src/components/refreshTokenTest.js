@@ -17,15 +17,19 @@ const RefreshTest = () => {
                 withCredentials: true
             })
             console.log(res.data)
+            localStorage.removeItem("accessToken");  //로컬 스토리지 비우기
+            localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
         }
         catch (err) {
             console.log(err)
+            console.log(data)
         }
     }
 
     return (
         <div>
-            <button onClick={refreshTokenTest}>리프래쉬 토큰 테스트</button>
+            자동 로그아웃 시간 
+            <button onClick={refreshTokenTest}>연장하기</button>
         </div>
     )
 }
