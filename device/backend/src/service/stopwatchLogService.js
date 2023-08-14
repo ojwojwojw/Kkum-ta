@@ -67,7 +67,8 @@ class StopwatchLogService{
                 });
             });
             const data = Object.values(groupedData);
-            console.log("+Update hourly log: data", data, "+");
+            if(data.length !== 0)
+                console.log("+Update hourly log: data", data, "+");
             data.forEach((item)=>{
                 this.studyHourlyRepository.setHourlyStudytime(item.group_key, item.date, item.hour, item.portion);
             })

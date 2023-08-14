@@ -27,7 +27,7 @@ class StopwatchLogSenderService{
                     console.log("+failed to send data: response code=", err.response.status, "+");
                 }
                 else{
-                    console.log("+failed to send data: response=",err, "+");
+                    console.log("+failed to send data: response=",err.code, "+");
                 }
             }); //Don't care about the result
         }
