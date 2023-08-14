@@ -171,7 +171,7 @@ export default function UpdateModal({
                 onClick={() => {
                   insertTime(input);
                   handleClose();
-                  load();
+                  setTimeout(load(), 1000);
                 }}
               >
                 Update
