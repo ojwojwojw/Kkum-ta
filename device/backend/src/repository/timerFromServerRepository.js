@@ -6,7 +6,7 @@ class TimerFromServerRepository extends serverRepo {
         super();
         this.groupRepository = groupRepository;
         this.serial = new deviceRepo().getDeviceSerial().device_serial;
-        this.userKey = this.getUserKeyBySerial();
+        this.userKey = null;
     }
 
     async getUserKeyBySerial() {
@@ -17,6 +17,7 @@ class TimerFromServerRepository extends serverRepo {
         `
         const params = [this.serial];
         const [rows] = await this.query(sql, params);
+        this.userKey = rows[0].user_key;
         return rows[0].user_key;
     }
 
