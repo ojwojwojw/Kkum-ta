@@ -38,6 +38,17 @@ export default function TimerContainer({ id }) {
     };
   }, []);
 
+  useEffect(() => {
+    const groupRunning = storeTimerArray.some(
+      (timer) => timer.isRunning === true
+    );
+    setIsGroupRunning(groupRunning);
+
+    if (!groupRunning && isGroupRunning) {
+      setIsGroupRunning(false);
+    }
+  }, [storeTimerArray, isGroupRunning, setIsGroupRunning]);
+
   function allStart() {
     storeTimerArray.forEach((item) => {
       item.timer.start();
@@ -147,12 +158,36 @@ export default function TimerContainer({ id }) {
     }
   };
 
+  // stopWatch 관련 로그 작성
+  const logStopwatchStart = async (groupId) => {
+    try {
+      const data = { operation: "start" };
+      const res = await axios.post(`stopwatch/operation/${groupId}`, data);
+      console.log("log stopwatch start data on backend", res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const logStopwatchPause = async (groupId) => {
+    try {
+      const data = { operation: "pause" };
+      const res = await axios.post(`stopwatch/operation/${groupId}`, data);
+      console.log("log stopwatch Pause data on backend", res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Box className="time-container" sx={{ flexGrow: 1 }}>
       <StopwatchComponent
+        groupId={id}
         isGroupRunning={isGroupRunning}
         setIsGroupRunning={setIsGroupRunning}
         storeTimerArray={storeTimerArray}
+        logStopwatchStart={logStopwatchStart}
+        logStopwatchPause={logStopwatchPause}
       />
       <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
         <Grid item xs={8}>

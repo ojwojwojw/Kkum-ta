@@ -30,7 +30,7 @@ const StyledTimerContainer = styled(Box)`
 `;
 
 // Styled 컴포넌트를 생성하여 배경색과 너비를 동적으로 변경
-const StyledTimerBackground = styled(Box)`
+const StyledTimerBackground = styled(Grid)`
   background-color: ${(props) =>
     `rgba(253, 92, 92, ${props.progress * props.progress * 0.6 + 0.1})`};
   width: ${(props) => `${props.progress * 100}%`};

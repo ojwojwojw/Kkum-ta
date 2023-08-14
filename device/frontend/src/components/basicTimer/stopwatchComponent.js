@@ -5,9 +5,12 @@ import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 function StopwatchComponent({
+  groupId,
   isGroupRunning,
   setIsGroupRunning,
   storeTimerArray,
+  logStopwatchStart,
+  logStopwatchPause,
 }) {
   const [curTime, setCurTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -37,18 +40,28 @@ function StopwatchComponent({
     stopwatch.pause();
   }, [stopwatch]);
 
-  const handleReset = () => {
-    stopwatch.reset();
-  };
+  // const handleReset = () => {
+  //   stopwatch.reset();
+  //   setIsRunning(false);
+  // };
 
   useEffect(() => {
     setIsRunning(isGroupRunning);
     if (isGroupRunning) {
       handleStart();
+      logStopwatchStart(groupId);
     } else {
       handlePause();
+      logStopwatchPause(groupId);
     }
-  }, [isGroupRunning, handlePause, handleStart]);
+  }, [
+    isGroupRunning,
+    handlePause,
+    handleStart,
+    logStopwatchStart,
+    logStopwatchPause,
+    groupId,
+  ]);
 
   return (
     <div>
