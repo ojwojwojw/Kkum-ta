@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
-const UserRepository = require("../repository/userRepository");
+const Global = require("../global");
 
 class jwtService {
-  constructor() {
-    this.userRepository = new UserRepository();
+  constructor(userRepository) {
+    this.userRepository = userRepository;
   }
   #getAccessTokenByIdAndProvider(id, provider) {
     const accesstoken = jwt.sign(

@@ -10,7 +10,7 @@ const RefreshTest = ({setAccessToken}) => {
         const data = { "id": userId, "provider": provider }
 
         try {
-            const res = await axios.post('http://localhost:8090/auth/refresh', data, {
+            const res = await axios.post('https://i9c101.p.ssafy.io:443/auth/refresh', data, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },

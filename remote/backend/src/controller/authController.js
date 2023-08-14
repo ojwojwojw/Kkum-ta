@@ -1,24 +1,19 @@
 const express = require("express");
 const passport = require("passport");
-const jwtService = require("../service/jwtService");
-const jwt = new jwtService();
-const loginService = require("../service/signupService");
-const loginApp = new loginService();
-const SearchService = require("../service/searchService");
-const searchService = new SearchService();
-const MailverifyService = require("../service/mailverifyService");
-const mailApp = new MailverifyService();
-const KakaoService = require("../service/kakaoService");
-const kakaoClient = new KakaoService();
-const GoogleService = require("../service/googleService");
-const googleClient = new GoogleService();
-const NaverService = require("../service/naverService");
-const naverClient = new NaverService();
-const UpdateService = require("../service/updateService");
-const updateService = new UpdateService();
-const UserRepository = require("../repository/userRepository");
-const { isLoggedIn, isNotLoggedIn } = require("../service/authService");
+const Global = require("../global");
 
+(async () => {
+  jwt = await Global.getJwtService();
+  loginApp = await Global.getSignupService();
+  searchService = await Global.getSearchService();
+  mailApp = await Global.getMailVerifyService();
+  kakaoClient = await Global.getKakaoService();
+  googleClient = await Global.getGoogleService();
+  naverClient = await Global.getNaverService();
+  updateService = await Global.getUpdateService();
+  userRepository = await Global.getUserRepository();
+})();
+const { isLoggedIn, isNotLoggedIn } = require("../service/authService");
 const authRouter = express.Router();
 
 authRouter.get("/", (req, res) => {
@@ -28,12 +23,89 @@ authRouter.get("/", (req, res) => {
 authRouter.post("/", (req, res) => {
   res.status(200).send("POST userRouter /");
 });
-
 authRouter.get("/check", isLoggedIn, (req, res) => {
   console.log(req.headers.authorization.split("Bearer ")[1]);
   return res.status(200).json("check");
 });
-
+/**
+ * @swagger
+ * /auth/signin:
+ *      post:
+ *          summary: 로그인 한다.
+ *          description: "id, 비밀번호를 받고 로그인 한다."
+ *          tags: [Auth]
+ *          requestBody:
+ *            required: true
+ *            content:
+ *              application/x-www-form-urlencoded:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: string
+ *                      example: ""
+ *                    password:
+ *                      type: string
+ *                      format: password
+ *                      example: ""
+ *          responses:
+ *              200:
+ *                  description: "인증 성공"
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                status:
+ *                                  type: string
+ *                                  example: "ok"
+ *                                user:
+ *                                  type: object
+ *                                  properties:
+ *                                    id:
+ *                                      type: string
+ *                                      example: "id"
+ *                                    email:
+ *                                      type: string
+ *                                      example: "email@somewhere.com"
+ *                                    provider:
+ *                                      type: string
+ *                                      example: "local"
+ *                                accessToken:
+ *                                  type: string
+ *                                  example: "JWT 액세스 토큰(Authorize 칸에서 사용 가능)"
+ *              400:
+ *                description: "회원 정보를 찾지 못함"
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        status:
+ *                          type: string
+ *                          example: "bad request"
+ *              401:
+ *                description: "요청 에러"
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        status:
+ *                          type: string
+ *                          example: "unauthorized"
+ *
+ *              500:
+ *                description: "인증 실패"
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        status:
+ *                          type: string
+ *                          example: internal server error
+ */
 authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", async (authError, user, info) => {
     if (authError) {
@@ -43,7 +115,6 @@ authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
       return res.status(400).json({ status: "bad request" });
     }
     const { accessToken, refreshToken } = jwt.getTokens(user.id, user.provider);
-    const userRepository = new UserRepository();
     await userRepository.updateRefreshToken(
       user.id,
       user.provider,
@@ -63,7 +134,74 @@ authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
       .json({ status: "ok", user: res_user, accessToken: accessToken });
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
-
+/**
+ * @swagger
+ * /auth/signup:
+ *      post:
+ *          summary: 회원가입한다.
+ *          description: "id, 비밀번호, 이메일을 입력받고 회원 가입 한다."
+ *          tags: [Auth]
+ *          requestBody:
+ *            required: true
+ *            content:
+ *              application/x-www-form-urlencoded:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: string
+ *                      example: ""
+ *                    password:
+ *                      type: string
+ *                      format: password
+ *                      example: ""
+ *                    email:
+ *                      type: string
+ *                      example: ""
+ *          responses:
+ *              200:
+ *                  description: "성공"
+ *                  content:
+ *                      application/x-www-form-urlencoded:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                status:
+ *                                  type: string
+ *                                  example: "ok"
+ *                                user:
+ *                                  type: object
+ *                                  properties:
+ *                                    id:
+ *                                      type: string
+ *                                    email:
+ *                                      type: string
+ *                                    provider:
+ *                                      type: string
+ *                                accessToken:
+ *                                  type: string
+ *                                  example: "accesstoken"
+ *              400:
+ *                description: "회원 정보를 찾지 못함"
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        status:
+ *                          type: string
+ *                          example: "bad request"
+ *              500:
+ *                description: "인증 실패"
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        status:
+ *                          type: string
+ *                          example: internal server error
+ */
 authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
   const id = req.body.id;
   const pw = req.body.password;
@@ -102,7 +240,7 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
 //         user.id,
 //         user.provider
 //       );
-//       const userRepository = new UserRepository();
+//       const userRepository = await Global.getUserRepository();
 //       await userRepository.updateRefreshToken(
 //         user.id,
 //         user.provider,
@@ -124,6 +262,7 @@ authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
 // });
 
 authRouter.get("/google/url", (req, res, next) => {
+  console.log(req.headers.origin);
   const url = googleClient.getAuthCodeURL();
 
   res.status(200).json({
@@ -135,7 +274,6 @@ authRouter.post("/google/login", async (req, res, next) => {
   console.log("/login start");
   try {
     const code = req.body.code;
-    const userRepository = new UserRepository();
 
     const google_access_token = await googleClient.getToken(code); // 토큰 받아오기
     const google_user = await googleClient.getUserData(
@@ -216,7 +354,6 @@ authRouter.post("/kakao/login", async (req, res, next) => {
       kakao_user.id,
       kakao_user.provider
     );
-    const userRepository = new UserRepository();
     await userRepository.updateRefreshToken(
       kakao_user.id,
       kakao_user.provider,
@@ -277,7 +414,6 @@ authRouter.post("/naver/login", async (req, res, next) => {
       naver_user.id,
       naver_user.provider
     );
-    const userRepository = new UserRepository();
     await userRepository.updateRefreshToken(
       naver_user.id,
       naver_user.provider,
@@ -403,7 +539,6 @@ authRouter.put("/changePW", async (req, res) => {
 });
 
 authRouter.post("/signout", isLoggedIn, async (req, res) => {
-  const userRepository = new UserRepository();
   if (!req.cookies.refreshToken) {
     return res.status(401).json({ status: "unauthorized" });
   }

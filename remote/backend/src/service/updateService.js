@@ -1,10 +1,7 @@
-const UserRepository = require("../repository/userRepository");
-const EncryptService = require("./encryptService");
-
 class UpdateService {
-  constructor() {
-    this.userRepository = new UserRepository();
-    this.encryptService = new EncryptService();
+  constructor(userRepository, encryptService) {
+    this.userRepository = userRepository;
+    this.encryptService = encryptService;
   }
   async updatePw(id, password) {
     const userIdInfo = await this.userRepository.getUserById(id);

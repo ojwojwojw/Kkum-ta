@@ -8,6 +8,7 @@ const DeviceService = require("./service/deviceService");
 const GroupService = require("./service/groupService");
 const TimerService = require("./service/timerService");
 const StopwatchLogService = require("./service/stopwatchLogService");
+const StopwatchLogSenderService = require("./service/stopwatchLogSenderService");
 
 class Global {
   static #deviceRepository = null;
@@ -20,6 +21,7 @@ class Global {
   static #groupService = null;
   static #timerService = null;
   static #stopwatchLogService = null;
+  static #stopwatchLogSenderService = null;
 
   static async getDeviceRepository() {
     if (!Global.#deviceRepository) {
@@ -96,11 +98,22 @@ class Global {
   static async getStopwatchLogService() {
     if (!Global.#stopwatchLogService) {
       Global.#stopwatchLogService = new StopwatchLogService(
-        await Global.getStopwatchLogRepository()
+        await Global.getStopwatchLogRepository(),
+        await Global.getStudyHourlyRepository()
       );
     }
     return Global.#stopwatchLogService;
   }
+
+  static async getStopwatchLogSenderService(){
+    if(!Global.#stopwatchLogSenderService){
+      Global.#stopwatchLogSenderService = new StopwatchLogSenderService(
+        await Global.getStudyHourlyRepository(),
+        await Global.getDeviceService()
+      )
+    }
+  }
+
 }
 
 module.exports = Global;
