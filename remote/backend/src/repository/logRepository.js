@@ -25,16 +25,16 @@ class  LogRepository extends Repository{
         const sql = `
         INSERT INTO log_tbl(group_key, date, hour, user_key, portion)
         VALUES(?, ?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE portion=?`;
+        ON DUPLICATE KEY UPDATE portion=portion+?`;
         const params = [group_key, date, hour, user_key, portion, portion];
-        console.log(sql, params);
-        this.query(sql, params);
+        this.query(sql, params); //no await to increase the speed
         return;
     }
 
     async insertLogs(itemArray){
         itemArray.forEach((item)=>{
             this.insertLog(item.user_key, item.group_key, item.date, item.hour, item.portion);
+            //no await here either
         })
         return;
     }
@@ -46,9 +46,10 @@ class  LogRepository extends Repository{
         if(typeof(hour) !== "number" || hour < 0 || hour > 24){
             throw new Error(`hour is not valid (hour=${hour})`);
         }
-        const sql = `SELECT portion FROM study_hourly_tbl_${version} WHERE group_key=? AND date=? AND hour=? ORDER BY hour ASC;`;
-        const params = [group_key, date, hour];
+        const sql = `SELECT portion FROM log_tbl WHERE user_key=? AND group_key=? AND date=? AND hour=? ORDER BY hour ASC;`;
+        const params = [user_key, group_key, date, hour];
         const [rows] = await this.query(sql, params);
+        console.log("hourly:", rows);
         if(rows.length === 0){
             return 0;
         }
@@ -60,12 +61,13 @@ class  LogRepository extends Repository{
         if(typeof(date) !== "string" || date.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) === null){
             throw new Error(`date is not valid (date=${date})`);
         }
-        const sql = `SELECT hour, portion FROM study_hourly_tbl_${version} WHERE group_key=? AND date=? ORDER BY date ASC;`;
-        const params = [group_key, date];
+        const sql = `SELECT hour, portion FROM log_tbl WHERE user_key=? AND group_key=? AND date=? ORDER BY date ASC;`;
+        const params = [user_key, group_key, date];
         const [rows] = await this.query(sql, params);
+        console.log("daily:", rows);
         const result = new Array(24).fill(0);
         rows.map(item=>{result[item.hour] = item.portion});
-        return rows;
+        return result;
     }
     async getMonthlyStudytime(user_key, group_key, year, month){
         if(!Number.isInteger(year)){
@@ -76,12 +78,14 @@ class  LogRepository extends Repository{
         }
         const sql = `
         SELECT DAY(date) AS day, avg(portion) AS portion
-        FROM study_hourly_tbl_${version}
-        GROUP BY group_key, date
-        HAVING group_key=? AND YEAR(date)=? AND MONTH(date)=?
+        FROM log_tbl
+        GROUP BY user_key, group_key, date
+        HAVING user_key=? AND group_key=? AND YEAR(date)=? AND MONTH(date)=?
         ;`
-        const params = [group_key, year, month];
+        const params = [user_key, group_key, year, month];
+        console.log(sql, params);
         const [rows] = await this.query(sql, params);
+        console.log("monthly:",rows);
         const result = new Array(new Date(year, month, 0).getDate()).fill(0);
         rows.map(item=>{result[item.day - 1] = item.portion;})
         return result;
@@ -95,13 +99,14 @@ class  LogRepository extends Repository{
         }
         const sql = `
         SELECT DATEDIFF(DATE, MAKEDATE(YEAR(DATE), 1)) AS date, avg(portion) AS portion
-        FROM study_hourly_tbl_${version}
-        GROUP BY group_key, date
-        HAVING group_key=? AND YEAR(date)=?
+        FROM log_tbl
+        GROUP BY user_key, group_key, date
+        HAVING user_key=? AND group_key=? AND YEAR(date)=?
         ORDER BY date ASC
         ;`;
-        const params = [group_key, year];
+        const params = [user_key, group_key, year];
         const [rows] = await this.query(sql, params);
+        console.log("yearly:", rows);
         const result = new Array(this.isLeapYear(year)?366:365).fill(0);
         rows.map(item=>{result[item.date]=item.portion;});
         return result;

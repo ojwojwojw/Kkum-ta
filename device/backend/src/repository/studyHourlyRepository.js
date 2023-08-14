@@ -1,6 +1,6 @@
 const Repository = require("./repository");
 
-const version = "v2";
+const version = "v3";
 
 class StudyHourlyRepository extends Repository{
     constructor(){
@@ -37,12 +37,11 @@ class StudyHourlyRepository extends Repository{
         if(typeof(hour) !== "number" || hour < 0 || hour > 24){
             throw new Error(`hour is not valid (hour=${hour})`);
         }
-        if(typeof(portion) !== "number" || portion < 0 || portion > 1){
+        if(typeof(portion) !== "number" || portion < 0 || portion > 1 || Object.is(portion,NaN)){
             throw new Error(`portion is not valid(it should be between 0 and 1) (portion=${portion})`);
         }
-        const sql = `INSERT INTO study_hourly_tbl_${version} (group_key, date, hour, portion) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE portion=?;`;
-        const [rows] = await this.query(sql, [group_key, date, hour, portion, portion]);
-        return rows.insertId;
+        const sql = `INSERT INTO study_hourly_tbl_${version} (group_key, date, hour, portion) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE portion = portion + ?;`;
+        this.query(sql, [group_key, date, hour, portion, portion]);
     }
     async getHourlyStudytime(group_key, date, hour){
         if(typeof(date) !== "string" || date.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) === null){
@@ -110,6 +109,28 @@ class StudyHourlyRepository extends Repository{
         const result = new Array(this.isLeapYear(year)?366:365).fill(0);
         rows.map(item=>{result[item.date]=item.portion;});
         return result;
+    }
+    async getAllRows(group_id){
+        if(!Number.isInteger(group_id) || group_id < 0 || group_id > 4){
+            throw new Error(`group_id is not valid (group_id=${group_id})`);
+        }
+        const sql = `
+        SELECT date, hour, portion FROM study_hourly_tbl_${version}
+        WHERE group_key=?
+        ORDER BY date ASC, hour ASC
+        ;`;
+        const params = [group_id];
+        return this.query(sql, params);
+    }
+    async removeMultiple(data){
+        if(data.length === 0) return;
+        const questionMarkQuery = data.map((item)=>"(?, ?, ?)").join(", ");
+        const sql = `
+        DELETE FROM study_hourly_tbl_${version}
+        WHERE (date, hour, portion) IN (${questionMarkQuery});
+        `
+        const params = data.map((item)=>[item.date, item.hour, item.portion]).flat();
+        await this.query(sql, params);
     }
 }
 

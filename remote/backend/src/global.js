@@ -20,27 +20,27 @@ class Global {
     static async getUserRepository(){
         if(!Global.#userRepository){
             Global.#userRepository = new UserRepository(await Global.getGroupRepository());
-            Global.#userRepository.init();
+            await Global.#userRepository.init();
         }
         return Global.#userRepository;
     }
     static async getLogRepository(){
         if(!Global.#logRepository){
             Global.#logRepository = new LogRepository();
-            Global.#logRepository.init();
+            await Global.#logRepository.init();
         }
         return Global.#logRepository;
     }
     static async getGroupRepository(){
         if(!Global.#groupRepository){
             Global.#groupRepository = new GroupRepository();
-            Global.#groupRepository.init();
+            await Global.#groupRepository.init();
         }
         return Global.#groupRepository;
     }
     static async getLogService(){
         if(!Global.#logService){
-            Global.#logService = new LogService();
+            Global.#logService = new LogService(await Global.getLogRepository());
         }
         return Global.#logService;
     }

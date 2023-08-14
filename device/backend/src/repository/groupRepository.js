@@ -42,7 +42,7 @@ class GroupRepository extends Repository{
         return this.query(sql, params);
     }
     async getLastUpdateAll(){
-        const sql = `SELECT id, last_update FROM group_tbl_${version}`;
+        const sql = `SELECT group_key, last_update FROM group_tbl_${version}`;
         const params = [];
         return this.query(sql, params);
     }

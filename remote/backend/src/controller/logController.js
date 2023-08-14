@@ -182,24 +182,47 @@ logRouter.get("/:user_id/:group_id", async (req, res) => {
   const date = req.query.date;
   const month = req.query.month;
   const year = req.query.year;
-  console.log({ hour, date, month, year });
+  const user_key = (await userRepository.getUserById(user_id))?.user_key;
+  if(!user_key === null){
+    res.status(401).json({status: `Cannot find user(${user_id})`});
+  }
   if (!!hour && !!date && !month && !year) {
-    res.json(await logService.hour(user_id, group_id, date, hour));
+    if(isNaN(parseInt(hour))){
+      res.status(400).json({status:`Invalid hour(${hour})`});
+    }
+    else{
+      res.status(200).json(await logService.hour(user_key, group_id, date, parseInt(hour)));
+    }
     return;
   }
   if (!hour && !!date && !month && !year) {
-    res.json(await logService.date(user_id, group_id, date));
-    return;
+    if(/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      res.status(200).json(await logService.date(user_key, group_id, date));
+      return;
+    }else{
+      res.status(400).json({status: `Invalid date(${date})`});
+      return;
+    }
   }
   if (!hour && !date && !!month && !year) {
-    res.json(await logService.month(user_id, group_id, month));
-    return;
+    if(/^\d{4}-\d{2}$/.test(month)) {
+      res.status(200).json(await logService.month(user_key, group_id, month));
+      return;
+    }else{
+      res.status(400).json({status:`invalid month(${month})`});
+      return;
+    }
   }
   if (!hour && !date && !month && !!year) {
-    res.json(await logService.year(user_id, group_id, year));
+    if(/^\d{4}$/.test(year)){
+      res.status(200).json(await logService.year(user_key, group_id, parseInt(year)));
+    }
+    else{
+      res.status(400).json({status: `invalid year(${year})`});
+    }
     return;
   }
-  res.status(400).json([]);
+  res.status(400).json({status: `invalid operation`});
 });
 /**
  * @swagger
