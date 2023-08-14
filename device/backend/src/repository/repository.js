@@ -19,7 +19,6 @@ class Repository {
             conn = this.conn ? this.conn : await this.pool.getConnection();
             return conn.execute(sql, params);
         } catch (e) {
-            throw e;
             throw new SQLError(
                 "sql:" + sql + ", params: " + params + " : " + e.sqlMessage
             );
