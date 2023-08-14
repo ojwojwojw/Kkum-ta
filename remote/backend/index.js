@@ -64,6 +64,7 @@ const debug = (req, res, next) => {
 
 app.use(debug);
 
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
