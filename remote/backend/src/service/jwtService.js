@@ -10,7 +10,7 @@ class jwtService {
       { user_id: id, provider: provider },
       process.env.JWT_SECRET,
       {
-        expiresIn: "10s",
+        expiresIn: "30m",
       }
     );
     return accesstoken;

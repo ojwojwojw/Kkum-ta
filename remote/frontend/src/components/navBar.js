@@ -67,7 +67,9 @@ export default function NavBar() {
           <Link to="/">LOGO</Link>
         </Grid>
         <Grid item xs={10}>
-          <RefreshTest/>
+          <RefreshTest
+          setAccessToken = {setAccessToken}
+          />
           반갑습니다 {username}님.
         </Grid>
         <Grid item xs={1}>

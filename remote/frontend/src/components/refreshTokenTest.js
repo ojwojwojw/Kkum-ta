@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 
-const RefreshTest = () => {
+const RefreshTest = ({setAccessToken}) => {
     const provider = useSelector(state => state.auth.provider)
     const userId = useSelector(state => state.auth.userName)
 
@@ -19,6 +19,7 @@ const RefreshTest = () => {
             console.log(res.data)
             localStorage.removeItem("accessToken");  //로컬 스토리지 비우기
             localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
+            setAccessToken(res.data.accessToken)
         }
         catch (err) {
             console.log(err)
