@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-// const cors = require("cors");
+const cors = require("cors");
 const https = require("https");
 const fs = require("fs");
 const bodyParser = require("body-parser");
@@ -24,20 +24,20 @@ const groupController = require("./src/controller/groupController");
 passportConfig(passport);
 app.disable("x-powered-by");
 
-// const whitelist = ["http://localhost:3000", "http://localhost:8090", "https://i9c101.p.ssafy.io"];
-// const corsOptions = {
-//   credentials: true,
-//   origin: function (origin, callback) {
-//     console.log(origin);
-//     if (whitelist.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-// };
+const whitelist = ["http://localhost:3000", "http://localhost:8090", "https://i9c101.p.ssafy.io"];
+const corsOptions = {
+  credentials: true,
+  origin: function (origin, callback) {
+    console.log(origin);
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(
   session({
     secret: process.env.SESSION_SECRETE,
@@ -105,16 +105,14 @@ app.use("/log", logController);
 app.use("/timer", componenetController);
 app.use("/group", groupController);
 
-// const privateKey = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/privkey.pem", "utf8");
-// const certificate = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/cert.pem", "utf8");
-// const ca = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/chain.pem", "utf8");
-// const credentials = {
-//   key: privateKey,
-//   cert: certificate,
-//   ca: ca
-// }
-// const httpsServer = https.createServer(credentials, app);
+const privateKey = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/privkey.pem", "utf8");
+const certificate = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/cert.pem", "utf8");
+const ca = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/chain.pem", "utf8");
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: ca
+}
+const httpsServer = https.createServer(credentials, app);
 
-// httpsServer.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
-
-app.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
+httpsServer.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
