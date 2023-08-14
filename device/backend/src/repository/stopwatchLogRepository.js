@@ -1,6 +1,6 @@
 const Repository = require("./repository");
 
-const version = "v2";
+const version = "v3";
 
 class StopwatchLogRepository extends Repository {
   constructor() {
@@ -14,7 +14,9 @@ class StopwatchLogRepository extends Repository {
       operation VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',
       log_time DATETIME(3) NOT NULL DEFAULT current_timestamp(3),
       PRIMARY KEY (log_key) USING BTREE,
-      INDEX log_time(log_time) USING BTREE
+      INDEX log_time(log_time) USING BTREE,
+      INDEX idx_group_key_log_time (group_key, log_time) USING BTREE,
+      INDEX idx_operation_log_time (operation, log_time) USING BTREE
     )
     COLLATE='utf8mb4_general_ci'
     ENGINE=InnoDB
@@ -22,79 +24,61 @@ class StopwatchLogRepository extends Repository {
     await this.query(sql, []);
   }
   async insert(group_key, operation) {
-    const sql = `INSERT INTO stopwatch_log_tbl_${version}(group_key, operation) VALUES(?, ?)`;
-    const params = [group_key, operation];
-    const [row] = await this.query(sql, params);
-    return row.insertId;
-  }
-  async getById(group_key) {
-    const sql = `SELECT * FROM stopwatch_log_tbl_${version} WHERE group_key = ?`;
-    const params = [group_key];
-    return this.query(sql, params);
-  }
-  validateTime(time) {
-    if (!(typeof time === "string")) {
-      return false;
+    const selectSql = `
+      SELECT operation FROM stopwatch_log_tbl_${version} ORDER BY log_time DESC LIMIT 1;
+    `
+    const [selected] = await this.query(selectSql, []);
+    if(selected.operation !== operation){
+      const insertSql = `
+      INSERT INTO stopwatch_log_tbl_${version} (group_key, operation) VALUES(?, ?)`;
+      const params = [group_key, operation];
+      const [rows] = await this.query(insertSql, params);
+      return rows.insertId;
     }
-    if (
-      !time.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/)
-    ) {
-      return false;
-    }
-    if (Date.parse(time) === NaN) {
-      return false;
-    }
-    return true;
+    return null;
   }
-  async getIdAndBeginTime(groupKey, beginTime){
-    if (!this.validateTime(beginTime)) {
-      throw new Error(
-        `begin time is not in a valid format(YYYY-MM-DD hh:mm:ss), ${beginTime}`
-      );
-    }
-    const sql = `SELECT operation, log_time FROM stopwatch_log_tbl_${version} WHERE group_key = ?
-    AND log_time BETWEEN COALESCE(
-      (
-        SELECT MAX(log_time) FROM stopwatch_log_tbl_${version}
-        WHERE group_key = ? AND log_time < ?
-      ), ?
-    ) AND NOW();
-    `;
-    const params = [groupKey, groupKey, beginTime, beginTime];
-    return this.query(sql, params);
-  }
+  async getAllStartStopPair(){
+    /*const sql = `
+    SELECT t1.group_key, t1.log_time AS start_time,
+       (SELECT t2.log_time FROM stopwatch_log_tbl_${version} t2
+        WHERE t2.group_key = t1.group_key
+          AND t2.log_time > t1.log_time
+          AND t2.operation = 'stop'
+        ORDER BY t2.log_time LIMIT 1) AS stop_time
+    FROM stopwatch_log_tbl_${version} t1
+    WHERE t1.operation = 'start'
+    ORDER BY t1.group_key, t1.log_time;
+    ;`;*/
+    const sql = `SELECT group_key, log_time, operation
+    FROM stopwatch_log_tbl_${version}
+    ORDER BY log_time ASC`;
+    const [result] = await this.query(sql, []);
+    const startStopPairs = [];
+    const startTimes = {};
+    let lastUsedLogTime = new Date(0);
 
-  async getIdAndTimes(groupKey, beginTime, endTime){
-    if (!this.validateTime(beginTime)) {
-      throw new Error(
-        `begin time is not in a valid format(YYYY-MM-DD hh:mm:ss), ${beginTime}`
-      );
+    for (const row of result) {
+        if (row.operation === 'start') {
+            if (!startTimes.hasOwnProperty(row.group_key)) {
+                startTimes[row.group_key] = row.log_time;
+            }
+        } else if (row.operation === 'stop' && startTimes.hasOwnProperty(row.group_key)) {
+            const startTime = startTimes[row.group_key];
+            const stopTime = row.log_time;
+            startStopPairs.push({
+                group_key: row.group_key,
+                start_time: startTime,
+                stop_time: stopTime
+            });
+            delete startTimes[row.group_key];
+            if (new Date(stopTime) > lastUsedLogTime) {
+              lastUsedLogTime = new Date(stopTime);
+            }
+        }
     }
-    if (!this.validateTime(endTime)) {
-      throw new Error(
-        `end time is not in a valid format(YYYY-MM-DD hh:mm:ss), ${endTime}`
-      );
-    }
-    const sql = `
-    SELECT operation, log_time FROM stopwatch_log_tbl_${version} WHERE group_key = ?
-    AND log_time BETWEEN COALESCE(
-      (
-        SELECT MAX(log_time)
-        FROM stopwatch_log_tbl_${version}
-        WHERE group_key = ?
-        AND log_time < ?
-      ), ?
-    ) AND ?;
-    `;
-    const params = [groupKey, groupKey, beginTime, beginTime, endTime];
-    return this.query(sql, params);
-  };
-  async getByIdAndTime(groupKey, beginTime, endTime = null) {
-    if (endTime === null) {
-      return this.getIdAndBeginTime(groupKey, beginTime);
-    } else {
-      return this.getIdAndTimes(groupKey, beginTime, endTime);
-    }
+    const deleteSQL = `DELETE FROM stopwatch_log_tbl_${version} WHERE log_time <= ?;`;
+    await this.query(deleteSQL, [lastUsedLogTime]);
+    return [startStopPairs];
   }
 }
 

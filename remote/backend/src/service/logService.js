@@ -1,22 +1,19 @@
 class LogService{
-    constructor(){
-
+    constructor(logRepository){
+        this.logRepository = logRepository;
     }
     async hour(user_id, group_id, date, hour){
-        return Math.random();
+        return this.logRepository.getHourlyStudytime(user_id, group_id, date, hour);
     }
     async date(user_id, group_id, date){
-        return new Array(24).fill().map(()=>Math.random());
+        return this.logRepository.getDailyStudytime(user_id, group_id, date);
     }
     async month(user_id, group_id, monthStr){
         const [year, month] = monthStr.split('-').map(Number);
-        const nDates = new Date(year, month, 0).getDate();
-        return new Array(nDates).fill().map(()=>Math.random());
+        return this.logRepository.getMonthlyStudytime(user_id, group_id, year, month);
     }
     async year(user_id, group_id, year){
-        const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
-        const nDates = isLeapYear ? 366 : 365;
-        return new Array(nDates).fill().map(()=>Math.random());
+        return this.logRepository.getYearlyStudytime(user_id, group_id, year);
     }
 };
 
