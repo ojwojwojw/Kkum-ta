@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import BasicTimer from "../../utility/basic_timer";
 import BasicTimerComponent from "./basicComponent";
-import TransitionsModal from "./CreateModal";
 import axios from "axios";
 import "./basicContainer.css";
 import { useDispatch, useSelector } from "react-redux";
-import { create, fetchData, forceRendering } from "../../redux/timerSlice";
+import {
+  create,
+  fetchData,
+  isRunningFalse,
+  isRunningTrue,
+} from "../../redux/timerSlice";
 import { Grid, Box, Stack, Button } from "@mui/material";
 import StopwatchComponent from "./stopwatchComponent";
 
-export default function TimerContainer({ timerList, id }) {
+export default function TimerContainer({ id }) {
   const dispatch = useDispatch();
   const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
 
@@ -22,72 +26,53 @@ export default function TimerContainer({ timerList, id }) {
     };
   }, []);
 
-
   useEffect(() => {
     // console.log("timer container constructor");
     // 0.1초 뒤에 load 함수 호출을 지연시킵니다.
     const timerId = setTimeout(() => {
       load();
-    }, 100);
+    }, 1);
 
     return () => {
-      // console.log("timer container destructor");
-      // 컴포넌트가 0.1초 전에 언마운트되었다면 타이머를 클리어합니다.
       clearTimeout(timerId);
     };
   }, []);
 
+  useEffect(() => {
+    const groupRunning = storeTimerArray.some(
+      (timer) => timer.isRunning === true
+    );
+    setIsGroupRunning(groupRunning);
 
-
-  // 그룹이동시 백그라운드에 타이머가 도는 것에 맞춰서 타이머 랜더링
-  // useEffect(() => {
-  //   // console.log("timer container useEffect storeTimerArray");
-  //   forceAllStart();
-  // }, [storeTimerArray]); // storeTimerArray가 변경될 때마다 forceAllStart 호출
-
-  // function save() {
-  //   // time, init
-  //   const arr = [];
-  //   timerList.forEach((obj) => {
-  //     const timer = obj.timer;
-  //     const data = timer.save();
-  //     data.type = obj.type;
-  //     arr.push(data);
-  //   });
-  //   // console.log(arr);
-  // }
+    if (!groupRunning && isGroupRunning) {
+      setIsGroupRunning(false);
+    }
+  }, [storeTimerArray, isGroupRunning, setIsGroupRunning]);
 
   function allStart() {
-    storeTimerArray.forEach(({ timer }) => timer.start());
+    storeTimerArray.forEach((item) => {
+      item.timer.start();
+      dispatch(isRunningTrue(item.id));
+    });
     storeTimerArray.forEach((timer) => logStart(timer.id));
-    if (isGroupRunning === false && storeTimerArray.length !== 0)
-      setIsGroupRunning(true);
   }
 
   function allPause() {
-    storeTimerArray.forEach(({ timer }) => timer.pause());
+    storeTimerArray.forEach((item) => {
+      item.timer.pause();
+      dispatch(isRunningFalse(item.id));
+    });
     storeTimerArray.forEach((timer) => logPause(timer.id));
-    if (isGroupRunning === true) setIsGroupRunning(false);
   }
 
   function allReset() {
-    storeTimerArray.forEach(({ timer }) => timer.reset());
+    storeTimerArray.forEach((item) => {
+      item.timer.reset();
+      dispatch(isRunningFalse(item.id));
+    });
     storeTimerArray.forEach((timer) => logStop(timer.id));
-    if (isGroupRunning === true) setIsGroupRunning(false);
+    setTimeout(console.log(storeTimerArray), 100);
   }
-
-  //그룹이동 랜더링 관련
-  // function forceAllStart() {
-  //   storeTimerArray.forEach((item) => {
-  //     if (item.isRunning === true) {
-  //       // console.log("조건문 안에 들어오나?");
-  //       item.timer.pause();
-  //       item.timer.start();
-  //     }
-  //   });
-
-  //   dispatch(forceRendering());
-  // }
 
   //API 요청관련
 
@@ -96,7 +81,7 @@ export default function TimerContainer({ timerList, id }) {
     try {
       const tempTimerList = [];
       const res = await axios.get(`timer/?group_id=${id}`);
-      console.log("load");
+      // console.log("load");
       res.data.map((item, idx) => {
         const timer = new BasicTimer();
         timer.load(item);
@@ -105,13 +90,13 @@ export default function TimerContainer({ timerList, id }) {
           type: item.type,
           isRunning: item.isRunning,
           timer: timer,
-          initTime: item.remainTime
+          initTime: item.remainTime,
         });
         return null;
       });
-      console.log(tempTimerList);
+      // console.log(tempTimerList);
       dispatch(fetchData(tempTimerList));
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (error) {
       console.log("Error Occured During Fetch: ", error);
     }
@@ -122,18 +107,18 @@ export default function TimerContainer({ timerList, id }) {
     try {
       const data = { type: "timer", initTime: [0, 0], maxIter: 1 };
       const res = await axios.post(`timer/?group_id=${id}`, data);
-      console.log(res.data);
+      // console.log(res.data);
       const timer = new BasicTimer();
       dispatch(
         create({
           id: res.data.id,
           type: "timer",
-          initTime: 0,
+          initTime: res.data.initTime,
           isRunning: false,
           timer: timer,
         })
       );
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (error) {
       console.log(error);
     }
@@ -145,7 +130,7 @@ export default function TimerContainer({ timerList, id }) {
       const data = { operation: "start" };
       const res = await axios.post(`timer/operation/${timerId}`, data);
       console.log("log start data on backend.", res.data);
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (err) {
       console.log(err);
     }
@@ -156,7 +141,7 @@ export default function TimerContainer({ timerList, id }) {
       const data = { operation: "pause" };
       const res = await axios.post(`timer/operation/${timerId}`, data);
       console.log("log pause data on backend.", res.data);
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (err) {
       console.log(err);
     }
@@ -167,7 +152,28 @@ export default function TimerContainer({ timerList, id }) {
       const data = { operation: "stop" };
       const res = await axios.post(`timer/operation/${timerId}`, data);
       console.log("log stop(reset) data on backend.", res.data);
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // stopWatch 관련 로그 작성
+  const logStopwatchStart = async (groupId) => {
+    try {
+      const data = { operation: "start" };
+      const res = await axios.post(`stopwatch/operation/${groupId}`, data);
+      console.log("log stopwatch start data on backend", res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const logStopwatchPause = async (groupId) => {
+    try {
+      const data = { operation: "pause" };
+      const res = await axios.post(`stopwatch/operation/${groupId}`, data);
+      console.log("log stopwatch Pause data on backend", res.data);
     } catch (err) {
       console.log(err);
     }
@@ -176,9 +182,12 @@ export default function TimerContainer({ timerList, id }) {
   return (
     <Box className="time-container" sx={{ flexGrow: 1 }}>
       <StopwatchComponent
+        groupId={id}
         isGroupRunning={isGroupRunning}
         setIsGroupRunning={setIsGroupRunning}
         storeTimerArray={storeTimerArray}
+        logStopwatchStart={logStopwatchStart}
+        logStopwatchPause={logStopwatchPause}
       />
       <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
         <Grid item xs={8}>

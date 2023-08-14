@@ -1,8 +1,9 @@
 const Repository = require("./repository");
 
 class UserRepository extends Repository {
-  constructor() {
+  constructor(groupRepository) {
     super();
+    this.groupRepository = groupRepository;
   }
 
   async init() {
@@ -27,7 +28,8 @@ class UserRepository extends Repository {
   }
 
   async findAll() {
-    return this.query(`SELECT * FROM user_tbl`, []);
+    const [rows] = await this.query(`SELECT * FROM user_tbl`, []);
+    return rows;
   }
 
   async getUserById(id) {
@@ -96,11 +98,23 @@ class UserRepository extends Repository {
     return rows[0];
   }
 
+  async getUserByDeviceSerial(deviceSerial){
+    const sql = "SELECT * FROM user_tbl WHERE device_key= (SELECT device_key FROM device_tbl WHERE device_serial = ?);";
+    const params = [deviceSerial];
+    const [rows] = await this.query(sql, params);
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows[0];
+
+  }
+
   async insertUser(id, salt, hashedPw, email) {
     const sql =
       "INSERT INTO user_tbl(id, salt, hashedPw, email, provider) VALUES (?, ?, ?, ?, ?)";
     const params = [id, salt, hashedPw, email, "local"];
     await this.query(sql, params);
+    await this.groupRepository.createDefaultUserGroup(id);
     return true;
   }
 
@@ -108,6 +122,7 @@ class UserRepository extends Repository {
     const sql = "INSERT INTO user_tbl(id, provider) VALUES (?, ?)";
     const params = [id, provider];
     await this.query(sql, params);
+    await this.groupRepository.createDefaultUserGroup(id);
     return true;
   }
 

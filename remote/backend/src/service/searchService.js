@@ -1,8 +1,6 @@
-const UserRepository = require("../repository/userRepository");
-
 class SearchService {
-    constructor () {
-        this.userRepository = new UserRepository();
+    constructor (userRepository) {
+        this.userRepository = userRepository;
     }
     
     async SearchID(email) {

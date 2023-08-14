@@ -1,12 +1,12 @@
-const UserRepository = require("../repository/userRepository");
 const axios = require("axios");
 
 class NaverService {
-  constructor() {
-    this.userRepository = new UserRepository();
+  constructor(userRepository) {
+    this.userRepository = userRepository;
     this.ID = process.env.NAVER_ID;
     this.SECRETE = process.env.NAVER_CLIENT_SECRETE;
-    this.redirect_URI = "https://i9c101.p.ssafy.io/callback/naver";
+    this.redirect_URI = "https://i9c101.p.ssafy.io/callback/naver"; // 배포용
+    // this.redirect_URI = "http://localhost:3000/callback/naver"; // 개발용
   }
 
   getAuthCodeURL() {

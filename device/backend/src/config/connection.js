@@ -12,6 +12,7 @@ const options = {
     password: MYSQL_PW,
     database: MYSQL_DB,
     connectionLimit: 30,
+    dateStrings: true
 };
 
 module.exports = options;

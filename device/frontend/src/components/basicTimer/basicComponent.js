@@ -14,12 +14,7 @@ import { Button, IconButton, Stack } from "@mui/material";
 import axios from "axios";
 import { deleteTimer } from "../../redux/timerSlice";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux/es/hooks/useSelector";
-import {
-  forceRendering,
-  isRunningTrue,
-  isRunningFalse,
-} from "../../redux/timerSlice";
+import { isRunningTrue, isRunningFalse } from "../../redux/timerSlice";
 
 import UpdateModal from "./UpdateModal";
 
@@ -35,7 +30,7 @@ const StyledTimerContainer = styled(Box)`
 `;
 
 // Styled 컴포넌트를 생성하여 배경색과 너비를 동적으로 변경
-const StyledTimerBackground = styled(Box)`
+const StyledTimerBackground = styled(Grid)`
   background-color: ${(props) =>
     `rgba(253, 92, 92, ${props.progress * props.progress * 0.6 + 0.1})`};
   width: ${(props) => `${props.progress * 100}%`};
@@ -55,40 +50,36 @@ export default function BasicTimerComponent({
   initTime,
   load,
 }) {
-  const timeToInsert = useSelector((state) => state.timer.timeToInsert);
-
-  useEffect(() => {
-    setRemainTime(timeToInsert);
-  }, [timeToInsert]);
-
+  const [input, setInput] = useState(0);
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
-  const [progress, setProgress] = useState(timer.getProgress());
-  // const [input, setInput] = useState(0);
+  const [progress, setProgress] = useState(
+    timer.getProgress() ? timer.getProgress() : 0
+  );
   const dispatch = useDispatch();
 
-  // 현재 공부중인지를 검사하는 변수
-  // const [isStudy, setIsStudy] = useState(0);
-
-  // 추가하는 순간 기존에 생성되어있던 타이머의 랜더링이 이상해짐
-  // useConstructor(() => {
-  //   timer.setRemainTime = setRemainTime;
-  //   timer.setIsRunning = setIsRunning;
-  //   timer.setProgress = setProgress;
-  //   console.log("basic timer componenet constructor");
-  // });
+  useEffect(() => {
+    setRemainTime(timer.getRemainTime());
+  }, [timer]);
 
   useEffect(() => {
-    console.log(remainTime);
+    // console.log(timer.getIsRunning());
+    timer.getIsRunning()
+      ? dispatch(isRunningTrue(WatchId))
+      : dispatch(isRunningFalse(WatchId));
+  }, [timer.getIsRunning(), WatchId]);
+
+  useEffect(() => {
+    // console.log(remainTime);
     timer.setRemainTime = setRemainTime;
     timer.setIsRunning = setIsRunning;
     timer.setProgress = setProgress;
-    console.log("basic timer componenet constructor");
+    // console.log("basic timer componenet constructor");
     return () => {
       timer.setRemainTime = null;
       timer.setIsRunning = null;
       timer.setProgress = null;
-      console.log("basic timer componenet destructor");
+      // console.log("basic timer componenet destructor");
     };
   }, [timer]);
 
@@ -98,34 +89,33 @@ export default function BasicTimerComponent({
     isRunning
       ? dispatch(isRunningFalse(WatchId))
       : dispatch(isRunningTrue(WatchId));
-    dispatch(forceRendering());
+    // dispatch(forceRendering());
   }
 
-  // function remove() {
-  //   removeTimer(WatchId);
-  // }
+  function reload() {
+    setTimeout(() => load(), 1);
+  }
 
   function resetInitTime() {
     timer.reset();
+    dispatch(isRunningFalse(WatchId));
     // updateTimer(initTime * 1000); //최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop(); //api 요청으로 백엔드에 리셋 기록 남기기
-    dispatch(forceRendering());
+    // dispatch(forceRendering());
   }
 
   //api 요청 관련
   const deleteWatch = async () => {
     try {
       const timerId = WatchId;
-      // console.log(timerId)
       timer.pause();
+      dispatch(isRunningFalse(timerId));
       const res = await axios.delete(`timer/${timerId}`);
       console.log("res", res.data);
       dispatch(deleteTimer(timerId));
-      dispatch(forceRendering());
+      // dispatch(forceRendering());
     } catch (error) {
       console.log("occured error during delete request.", error);
-      // const timerId = WatchId;
-      //  console.log(timerId)
     }
   };
 
@@ -153,9 +143,6 @@ export default function BasicTimerComponent({
       const data = { operation: "pause" };
       const res = await axios.post(`timer/operation/${timerId}`, data);
       console.log("log pause data on backend.", res.data);
-      // const endTime = Date.now();
-      // const requestDuration = endTime - startTime;
-      // console.log("요청-응답 시간:", requestDuration, "밀리초");
     } catch (err) {
       console.log(err);
     }
@@ -197,11 +184,6 @@ export default function BasicTimerComponent({
           {("00" + Math.floor(remainTime / 1000 / 3600)).slice(-2)}:
           {("00" + Math.floor(((remainTime / 1000) % 3600) / 60)).slice(-2)}:
           {("00" + Math.floor((remainTime / 1000) % 60)).slice(-2)}
-          {type === "stopWatch" && (
-            <span className="micro">
-              {("00" + Math.floor(((remainTime / 1000) % 1) * 100)).slice(-2)}
-            </span>
-          )}
         </Grid>
         <Grid item xs={4} className="timerButton">
           <Button
@@ -236,6 +218,9 @@ export default function BasicTimerComponent({
             <UpdateModal
               WatchId={WatchId}
               updateTimer={updateTimer}
+              input={input}
+              setInput={setInput}
+              reload={reload}
               // timer = {timer}
             />
           </Stack>
