@@ -7,10 +7,10 @@ const compRouter = express.Router();
 })();
 
 compRouter.get("/:component_key", async (req, res) => {
-    const component_key = res.params.component_key;
+    const component_key = req.params.component_key;
 
     res.json(
-        await componentRepository.findAllComponent.findAllByComponentKey(
+        await componentRepository.findAllByComponentKey(
             component_key
         )
     );
@@ -19,13 +19,13 @@ compRouter.get("/:component_key", async (req, res) => {
 
 compRouter.get("/user/:user_id", async (req, res) => {
     const user_id = req.params.user_id;
-
+    
     res.json(await componentRepository.findAllComponentByUserId(user_id));
     return;
 });
 
 compRouter.get("/user/:user_id/:group_id", async (req, res) => {
-    const group_key = req.params.group_key;
+    const group_key = req.params.group_id;
     const user_id = req.params.user_id;
 
     res.json(
@@ -40,9 +40,10 @@ compRouter.get("/user/:user_id/:group_id", async (req, res) => {
 compRouter.post("/", async (req, res) => {
     const uid = req.body.user_id;
     const gkey = req.body.group_id;
-    const initTiime = req.body.initTiime;
+    const initTiime = req.body.initTime;
     const iter = req.body.maxIter;
     if (!uid || !gkey || !initTiime || !iter) {
+        console.log(uid + " " + gkey + " " + initTime + " " + iter);
         return res.status(400).json({ status: "bad request" });
     }
     const register = await componentRepository.insertComponent(
@@ -57,7 +58,7 @@ compRouter.post("/", async (req, res) => {
 
 compRouter.put("/:component_key", async (req, res) => {
     const ckey = req.params.component_key;
-    const initTime = req.body.initTiime;
+    const initTime = req.body.initTime;
 
     if (!ckey || !initTime) {
         return res.status(400).json({ status: "bad request" });

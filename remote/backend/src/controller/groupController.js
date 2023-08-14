@@ -1,10 +1,9 @@
 const express = require("express");
 const Global = require("../global");
-const GruopRepository = require("../repository/groupRepository");
 const groupRouter = express.Router();
 
 (async () => {
-    GruopRepository = await Global.getGroupRepository();
+    gruopRepository = await Global.getGroupRepository();
 })();
 
 groupRouter.post("/", async (req, res) => {
@@ -19,7 +18,7 @@ groupRouter.post("/", async (req, res) => {
         return res.status(400).json({ status: "Not Match for Gruop ID" });
     }
 
-    const register = await GruopRepository.insertGroupByUserId(
+    const register = await gruopRepository.insertGroupByUserId(
         group_id,
         user_id,
         name
@@ -39,9 +38,9 @@ groupRouter.put("/:user_id/:group_id", async (req, res) => {
         return res.status(400).json({ status: "bad request" });
     }
 
-    const update = await GruopRepository.updateNameByUserIdAndGroupKey(
-        group_id,
+    const update = await gruopRepository.updateNameByUserIdAndGroupKey(
         user_id,
+        group_id,
         name
     );
 
@@ -53,6 +52,20 @@ groupRouter.get("/:user_id", async (req, res) => {
 
     if (!user_id) return res.status(400).json({ status: "bad request" });
 
-    res.json(await GruopRepository.findByUserId(user_id));
+    res.json(await gruopRepository.findAllByUserId(user_id));
     return;
 });
+
+groupRouter.get("/:user_id/:group_id", async (req, res) => {
+    const user_id = req.params.user_id;
+    const group_id = req.params.group_id;
+
+    if(!user_id || !group_id) {
+        return res.status(400).json({status: "bad request"});
+    }
+
+    res.json(await gruopRepository.findByUserIdAndGroupId(user_id, group_id));
+    return;
+})
+
+module.exports = groupRouter;

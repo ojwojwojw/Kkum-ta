@@ -4,7 +4,6 @@ const LogRepository = require("./repository/logRepository");
 const GroupRepository = require('./repository/groupRepository');
 const LogService = require('./service/logService');
 const ComponentRepository = require('./repository/componentRepository')
-const GroupRepository = require('./repository/groupRepository')
 
 class Global {
     static #deviceRepository = null;
@@ -13,7 +12,6 @@ class Global {
     static #groupRepository = null;
     static #logService = null;
     static #componentRepository = null;
-    static #groupRepository = null;
 
     static async getDeviceRepository(){
         if(!Global.#deviceRepository){
