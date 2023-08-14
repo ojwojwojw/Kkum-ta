@@ -16,10 +16,7 @@ module.exports = () => {
         try {
           const userRepository = await Global.getUserRepository();
           const encryptService = new EncryptService();
-          const userInfo = await userRepository.getUserByIdAndProvider(
-            id,
-            "local"
-          );
+          const userInfo = await userRepository.getUserById(id);
           if (userInfo === null) {
             done(null, false, { message: "가입되지 않은 회원입니다." });
             return;
