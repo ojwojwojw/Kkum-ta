@@ -14,12 +14,7 @@ import { Button, IconButton, Stack } from "@mui/material";
 import axios from "axios";
 import { deleteTimer } from "../../redux/timerSlice";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux/es/hooks/useSelector";
-import {
-  forceRendering,
-  isRunningTrue,
-  isRunningFalse,
-} from "../../redux/timerSlice";
+import { isRunningTrue, isRunningFalse } from "../../redux/timerSlice";
 
 import UpdateModal from "./UpdateModal";
 
@@ -55,21 +50,24 @@ export default function BasicTimerComponent({
   initTime,
   load,
 }) {
-  // const timeToInsert = useSelector((state) => state.timer.timeToInsert);
-
-  // useEffect(() => {
-  //   setRemainTime(timeToInsert);
-  // }, [timeToInsert]);
-
   const [input, setInput] = useState(0);
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
   const [isRunning, setIsRunning] = useState(timer.getIsRunning());
-  const [progress, setProgress] = useState(timer.getProgress());
+  const [progress, setProgress] = useState(
+    timer.getProgress() ? timer.getProgress() : 0
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
     setRemainTime(timer.getRemainTime());
   }, [timer]);
+
+  useEffect(() => {
+    // console.log(timer.getIsRunning());
+    timer.getIsRunning()
+      ? dispatch(isRunningTrue(WatchId))
+      : dispatch(isRunningFalse(WatchId));
+  }, [timer.getIsRunning(), WatchId]);
 
   useEffect(() => {
     // console.log(remainTime);
@@ -111,6 +109,7 @@ export default function BasicTimerComponent({
     try {
       const timerId = WatchId;
       timer.pause();
+      dispatch(isRunningFalse(timerId));
       const res = await axios.delete(`timer/${timerId}`);
       console.log("res", res.data);
       dispatch(deleteTimer(timerId));

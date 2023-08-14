@@ -25,25 +25,20 @@ function StopwatchComponent({
   }, [stopwatch]);
 
   useEffect(() => {
-    const groupRunning = storeTimerArray.some(
-      (timer) => timer.isRunning === true
-    );
+    const groupRunning = storeTimerArray.some((timer) => timer.isRunning);
     setIsGroupRunning(groupRunning);
   }, [setIsGroupRunning, storeTimerArray]);
 
   const handleStart = useCallback(() => {
     stopwatch.start();
-    setIsRunning(true);
   }, [stopwatch]);
 
   const handlePause = useCallback(() => {
     stopwatch.pause();
-    setIsRunning(false);
   }, [stopwatch]);
 
   const handleReset = () => {
     stopwatch.reset();
-    setIsRunning(false);
   };
 
   useEffect(() => {

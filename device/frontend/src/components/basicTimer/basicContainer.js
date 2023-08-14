@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import BasicTimer from "../../utility/basic_timer";
 import BasicTimerComponent from "./basicComponent";
-import TransitionsModal from "./CreateModal";
 import axios from "axios";
 import "./basicContainer.css";
 import { useDispatch, useSelector } from "react-redux";
-import { create, fetchData, forceRendering } from "../../redux/timerSlice";
+import {
+  create,
+  fetchData,
+  isRunningFalse,
+  isRunningTrue,
+} from "../../redux/timerSlice";
 import { Grid, Box, Stack, Button } from "@mui/material";
 import StopwatchComponent from "./stopwatchComponent";
 
-export default function TimerContainer({ timerList, id }) {
+export default function TimerContainer({ id }) {
   const dispatch = useDispatch();
   const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
 
@@ -26,22 +30,28 @@ export default function TimerContainer({ timerList, id }) {
   }, []);
 
   function allStart() {
-    storeTimerArray.forEach(({ timer }) => timer.start());
+    storeTimerArray.forEach((item) => {
+      item.timer.start();
+      dispatch(isRunningTrue(item.id));
+    });
     storeTimerArray.forEach((timer) => logStart(timer.id));
-    if (isGroupRunning === false && storeTimerArray.length !== 0)
-      setIsGroupRunning(true);
   }
 
   function allPause() {
-    storeTimerArray.forEach(({ timer }) => timer.pause());
+    storeTimerArray.forEach((item) => {
+      item.timer.pause();
+      dispatch(isRunningFalse(item.id));
+    });
     storeTimerArray.forEach((timer) => logPause(timer.id));
-    if (isGroupRunning === true) setIsGroupRunning(false);
   }
 
   function allReset() {
-    storeTimerArray.forEach(({ timer }) => timer.reset());
+    storeTimerArray.forEach((item) => {
+      item.timer.reset();
+      dispatch(isRunningFalse(item.id));
+    });
     storeTimerArray.forEach((timer) => logStop(timer.id));
-    if (isGroupRunning === true) setIsGroupRunning(false);
+    setTimeout(console.log(storeTimerArray), 100);
   }
 
   //API 요청관련
