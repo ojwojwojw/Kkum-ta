@@ -113,16 +113,16 @@ class UserRepository extends Repository {
     const sql =
       "INSERT INTO user_tbl(id, salt, hashedPw, email, provider) VALUES (?, ?, ?, ?, ?)";
     const params = [id, salt, hashedPw, email, "local"];
-    await this.query(sql, params);
-    await this.groupRepository.createDefaultUserGroup(id);
+    const [rows] = await this.query(sql, params);
+    await this.groupRepository.createDefaultUserGroup(rows.insertId);
     return true;
   }
 
   async insertSNSUser(id, provider) {
     const sql = "INSERT INTO user_tbl(id, provider) VALUES (?, ?)";
     const params = [id, provider];
-    await this.query(sql, params);
-    await this.groupRepository.createDefaultUserGroup(id);
+    const [rows] = await this.query(sql, params);
+    await this.groupRepository.createDefaultUserGroup(rows.insertId);
     return true;
   }
 
@@ -155,13 +155,11 @@ class UserRepository extends Repository {
   }
 
   async updateDeviceKey(user_key, device_serial){
-    console.log("#1", user_key, device_serial);
     const getDevicekeySQL = "SELECT device_key FROM device_tbl WHERE device_serial=?";
     const [device_key_row] = await this.query(getDevicekeySQL, [device_serial]);
     if(device_key_row.length === 0){
       return null;
     }
-    console.log("#2", device_key_row);
     const device_key = device_key_row[0].device_key;
     const dropSQL = "UPDATE user_tbl SET device_key=NULL WHERE device_key=?";
     const updateSQL = "UPDATE user_tbl SET device_key=? WHERE user_key=?";

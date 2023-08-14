@@ -17,8 +17,8 @@ class ComponentRepository extends Repository {
                 PRIMARY KEY (component_key) USING BTREE,
                 INDEX FK_component_tbl_group_tbl (group_key) USING BTREE,
                 INDEX FK_component_tbl_user_tbl (user_key) USING BTREE,
-                CONSTRAINT FK_component_tbl_group_tbl FOREIGN KEY (group_key) REFERENCES group_tbl (group_key) ON UPDATE NO ACTION ON DELETE NO ACTION,
-                CONSTRAINT FK_component_tbl_user_tbl FOREIGN KEY (user_key) REFERENCES user_tbl (user_key) ON UPDATE NO ACTION ON DELETE NO ACTION
+                CONSTRAINT FK_component_tbl_group_tbl FOREIGN KEY (group_key) REFERENCES group_tbl (group_key) ON UPDATE NO ACTION ON DELETE CASCADE,
+                CONSTRAINT FK_component_tbl_user_tbl FOREIGN KEY (user_key) REFERENCES user_tbl (user_key) ON UPDATE NO ACTION ON DELETE CASCADE
             )
             COLLATE='utf8mb4_general_ci'
             ENGINE=InnoDB
