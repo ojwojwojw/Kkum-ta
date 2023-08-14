@@ -12,12 +12,16 @@ function StopwatchComponent({
   storeTimerArray,
   logStopwatchStart,
   logStopwatchPause,
+  text,
 }) {
   const [curTime, setCurTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [click, setClick] = useState(0);
 
   const stopwatch = useMemo(() => new BasicStopwatch(), []);
+
+  // console.log("run?: ", isGroupRunning);
+  // console.log(text);
 
   useEffect(() => {
     stopwatch.setCutTime = setCurTime;
@@ -28,7 +32,23 @@ function StopwatchComponent({
     };
   }, [stopwatch]);
 
+  // useEffect(() => {
+  //   const fetchCurTime = async () => {
+  //     try {
+  //       const res = await axios.get(`stopwatch/${groupId}`);
+  //       const timeData = res.data.time;
+  //       setCurTime(timeData);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   return fetchCurTime;
+  // }, [groupId]);
+
+  // 1초마다 스탑워치 시간 갱신
+
   useEffect(() => {
+    if (isGroupRunning === false) return;
     const fetchCurTime = async () => {
       try {
         const res = await axios.get(`stopwatch/${groupId}`);
@@ -38,8 +58,13 @@ function StopwatchComponent({
         console.log(err);
       }
     };
-    return fetchCurTime;
-  }, [groupId]);
+
+    const interval = setInterval(fetchCurTime, 300);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [groupId, isGroupRunning]);
 
   useEffect(() => {
     const groupRunning = storeTimerArray.some((timer) => timer.isRunning);
@@ -75,6 +100,27 @@ function StopwatchComponent({
     logStopwatchStart,
     logStopwatchPause,
     groupId,
+  ]);
+
+  useEffect(() => {
+    if (isGroupRunning === true && text !== null) {
+      if (text !== "detected") {
+        handlePause();
+        logStopwatchPause(groupId);
+      } else {
+        handleStart();
+        logStopwatchStart(groupId);
+      }
+    }
+  }, [
+    groupId,
+    handlePause,
+    handleStart,
+    logStopwatchPause,
+    logStopwatchStart,
+    isGroupRunning,
+    stopwatch,
+    text,
   ]);
 
   return (
