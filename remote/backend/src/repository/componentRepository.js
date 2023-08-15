@@ -104,16 +104,16 @@ class ComponentRepository extends Repository {
         return rows;
     }
 
-    async insertComponent(init_time, maxIter, group_key, user_id) {
+    async insertComponent(init_time, maxIter, group_key, user_key) {
         const sql = `
             INSERT INTO component_tbl(
                 init_time, 
                 maxIter,
                 group_key,
                 user_key
-            ) VALUES(?, ?, ?, (SELECT user_key FROM user_tbl WHERE user_tbl.id = ?))
+            ) VALUES(?, ?, ?, ?)
         `;
-        const params = [init_time, maxIter, group_key, user_id];
+        const params = [init_time, maxIter, group_key, user_key];
         const [rows] = await this.query(sql, params);
         return rows.insertId;
     }
@@ -121,8 +121,8 @@ class ComponentRepository extends Repository {
     async updateInitTime(ckey, init_time) {
         const sql = `UPDATE component_tbl SET init_time = ? WHERE component_key = ?`;
         const params = [init_time, ckey];
-        await this.query(sql, params);
-        return true;
+        const [rows] = await this.query(sql, params);
+        return rows;
     }
 
     async updateMaxIter(ckey, maxIter) {

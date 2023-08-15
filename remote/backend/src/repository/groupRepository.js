@@ -100,8 +100,22 @@ class GruopRepository extends Repository {
         const [rows] = await this.query(sql, params);
         return rows;
     }
-
-    async getLoginKey() {}
+    async getLastModified(ukey, gkey){
+        const sql = `
+            SELECT last_update FROM group_tbl
+            WHERE user_key = ? ADN group_key = ?
+        `
+        const params = [ukey, gkey];
+        await this.query(sql, params);
+    }
+    async updateLastUpdate(ukey, gkey){
+        const sql = `
+            UPDATE group_tbl SET last_update = current_timestamp()
+            WHERE user_key = ? AND group_key = ?
+        `
+        const params = [ukey, gkey];
+        await this.query(sql, params);
+    }
 }
 
 module.exports = GruopRepository;
