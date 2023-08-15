@@ -1,9 +1,9 @@
-const deviceService = require("./deviceService")
-const deviceRepo = require("../repository/deviceRepository")
-const serverRepo = require("../repository/serverRepository")
-const groupRepo = require("../repository/groupRepository")
-const timerRepo = require("../repository/timerRepository")
-const global = require("../global")
+const deviceService = require("./deviceService");
+const deviceRepo = require("../repository/deviceRepository");
+const serverRepo = require("../repository/serverRepository");
+const groupRepo = require("../repository/groupRepository");
+const timerRepo = require("../repository/timerRepository");
+const global = require("../global");
 
 class SynchroService {
     // server와 device의 group 및 component 관리 repo 가져오기
@@ -17,23 +17,35 @@ class SynchroService {
     async synchronizeDeviceAndServer() {
         const serial = await this.deviceRepo.getDeviceSerial();
         const userInfo = await this.serverRepo.getUserId(serial);
-        const id = userInfo.id
+        const id = userInfo.id;
 
         const groupData = await this.serverRepo.getGroup(id);
 
         groupData.map(async (group) => {
-            if(group.group_key !== 0) {
-                await this.groupFromDeviceRepo.rename(group.group_key, group.name);
-                await this.timerFromDeviceRepo.deleteAllByGroupKey(group.group_key);
-    
-                const timerData = await this.serverRepo.getComponent(id, group.group_key);
-                if(timerData.length !== 0) {
+            if (group.group_key !== 0) {
+                await this.groupFromDeviceRepo.rename(
+                    group.group_key,
+                    group.name
+                );
+                await this.timerFromDeviceRepo.deleteAllByGroupKey(
+                    group.group_key
+                );
+
+                const timerData = await this.serverRepo.getComponent(
+                    id,
+                    group.group_key
+                );
+                if (timerData.length !== 0) {
                     timerData.map((timer) => {
-                        this.timerFromDeviceRepo.insert(timer.group_key, timer.init_time, timer.maxIter);
-                    })
+                        this.timerFromDeviceRepo.insert(
+                            timer.group_key,
+                            timer.init_time,
+                            timer.maxIter
+                        );
+                    });
                 }
             }
-        })
+        });
     }
 }
 
