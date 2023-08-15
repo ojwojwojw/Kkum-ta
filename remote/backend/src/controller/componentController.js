@@ -168,7 +168,7 @@ compRouter.get("/user/:user_id/:group_id", async (req, res) => {
         res.status(400).json({status: `invalid group_key(${group_key})`});
         return;
     }
-    res.status(200).json(await componentRepository.findAllComponentByUserKeyAndGroup(user_key, group_key));
+    res.status(200).json(await componentRepository.findAllComponentByGroupKeyOfUser(group_key, user_id));
     return;
 });
 /**
