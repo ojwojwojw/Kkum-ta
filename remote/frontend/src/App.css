@@ -41,3 +41,25 @@ a:-webkit-any-link {
 .App-link {
   color: #61dafb;
 }
+
+
+.swiper {
+  width: 8dvw;
+  text-align: center;
+}
+
+.swiper-wrapper {
+  font-size: 10dvh;
+}
+
+.swiper-initialized {
+  height: 12dvh;
+}
+
+.modal-box {
+  text-align: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
