@@ -57,6 +57,15 @@ class ComponentRepository extends Repository {
         const [rows] = await this.query(sql, params);
         return rows;
     }
+    async findAllComponentByUserKeyAndGroup(user_key, group_key) {
+        const sql = `
+            SELECT component_key, init_time, maxIter, group_key
+            FROM component_tbl WHERE user_key = ? AND group_key = ?
+        `;
+        const params = [user_key, group_key];
+        const [rows] = await this.query(sql, params);
+        return rows;
+    }
     
     async findAllComponentByUserId(user_id) {
         const sql = `
@@ -67,6 +76,16 @@ class ComponentRepository extends Repository {
             WHERE id = ?;
         `;
         const params = [user_id];
+        const [rows] = await this.query(sql, params);
+        return rows;
+    }
+
+    async findAllComponentByUserKey(user_key) {
+        const sql = `
+            SELECT component_key, init_time, maxIter, group_key
+            FROM component_tbl WHERE user_key = ?
+        `;
+        const params = [user_key];
         const [rows] = await this.query(sql, params);
         return rows;
     }

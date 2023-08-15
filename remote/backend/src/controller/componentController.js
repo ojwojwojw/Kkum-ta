@@ -119,8 +119,13 @@ compRouter.get("/:component_key", async (req, res) => {
  */
 compRouter.get("/user/:user_id", async (req, res) => {
     const user_id = req.params.user_id;
-    
-    res.json(await componentRepository.findAllComponentByUserId(user_id));
+    const user = await userRepository.getUserById(user_id);
+    if(user === null){
+        res.status(404).json({status:`cannot find user named ${user_id}`});
+        return;
+    }
+    const user_key = user.user_key;
+    res.status(200).json(await componentRepository.findAllComponentByUserKey(user_key));
     return;
 });
 /**
@@ -156,9 +161,19 @@ compRouter.get("/user/:user_id", async (req, res) => {
  *  
  */
 compRouter.get("/user/:user_id/:group_id", async (req, res) => {
-    const group_key = req.params.group_id;
+    const group_key = parseInt(req.params.group_id);
     const user_id = req.params.user_id;
-
+    const user = await userRepository.getUserById(user_id);
+    if(user === null){
+        res.status(404).json({status:`cannot find user named ${user_id}`});
+        return;
+    }
+    const user_key = user.user_key;
+    if(isNaN(group_key) || group_key < 1 || group_key > 4){
+        res.status(400).json({status: `invalid group_key(${group_key})`});
+    }
+    res.status(200).json(await componentRepository.findAllComponentByUserKeyAndGroup(user_key, group_key));
+    return;
     res.status(200).json(
         await componentRepository.findAllComponentByGroupKeyOfUser(
             group_key,
@@ -359,4 +374,101 @@ compRouter.delete("/:component_key", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /timer/device/{device_serial}:
+ *  get:
+ *      summary: "디바이스에 속한 타이머 리스트를 가져온다."
+ *      description: "디바이스에 속한 모든 타이머 리스트를 가져온다."
+ *      tags: [Backend/Timer]
+ *      parameters:
+ *        - in: path
+ *          name: device_serial
+ *          schema:
+ *              type: string
+ *          required: true
+ *          description: 디바이스 시리얼 키
+ *      responses:
+ *          200:
+ *              description: 타이머 리스트
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/BasicTimerComponent'
+ *          404:
+ *              description: 디바이스 키에 해당하는 유저가 없음
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              status:
+ *                                  type: string
+ *                                  example: "cannot find user that uses the device serial(A3ZtN32h)"
+ *  
+ */
+compRouter.get("/device/:device_serial", async (req, res) => {
+    const device_serial = req.params.device_serial;
+    const user_id = (await userRepository.getUserByDeviceSerial(device_serial)).user_key;
+    if(user_id === null){
+        res.status(404).json({status:`cannot find user that uses the device serial(${device_serial})`});
+    }
+    else{
+        res.status(200).json(await componentRepository.findAllComponentByUserKey(user_id));
+    }
+    return;
+});
+/**
+ * @swagger
+ * /timer/device/{device_serial}/{group_id}:
+ *  get:
+ *      summary: "유저와 그룹 아이디로 타이머 리스트를 조회한다."
+ *      description: "유저와 그룹 아이디로 타이머 리스트를 조회한다."
+ *      tags: [Backend/Timer]
+ *      parameters:
+ *        - in: path
+ *          name: device_serial
+ *          schema:
+ *              type: string
+ *          required: true
+ *          description: 디바이스 시리얼키
+ *        - in: path
+ *          name: group_id
+ *          schema:
+ *              type: integer
+ *              example: 1
+ *          required: true
+ *          description: 그룹 ID(1~4)
+ *      responses:
+ *          200:
+ *              description: 타이머 리스트
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/BasicTimerComponent'
+ *  
+ */
+compRouter.get("/device/:device_serial/:group_id", async (req, res) => {
+    const group_key = parseInt(req.params.group_id);
+    const device_serial = req.params.device_serial;
+    const user_key = (await userRepository.getUserByDeviceSerial(device_serial)).user_key;
+    if(user_key === null){
+        res.status(404).json({status:`cannot find user that uses the device serial(${device_serial})`});
+    }
+    else if(isNaN(group_key) || group_key < 1 || group_key > 4){
+        res.status(400).json({status:`invalid group_key(${req.params.group_id})`});
+    }
+    else{
+        res.status(200).json(
+            await componentRepository.findAllComponentByUserKeyAndGroup(
+                user_key,
+                group_key
+            )
+        );
+    }
+});
 module.exports = compRouter;
