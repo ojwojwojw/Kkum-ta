@@ -73,6 +73,8 @@ class TimerRepository extends Repository{
 
     async deleteAllByGroupKey(gkey) {
         const sql = `DELETE FROM timer_tbl_${version} WHERE group_key = ?`
+        const parmas = [gkey]
+        return this.query(sql, parmas);
     }
 };
 

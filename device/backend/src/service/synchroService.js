@@ -22,13 +22,16 @@ class SynchroService {
         const groupData = await this.serverRepo.getGroup(id);
 
         groupData.map(async (group) => {
-            if(group.group_key !== 1) {
+            if(group.group_key !== 0) {
                 await this.groupFromDeviceRepo.rename(group.group_key, group.name);
-    
                 await this.timerFromDeviceRepo.deleteAllByGroupKey(group.group_key);
     
                 const timerData = await this.serverRepo.getComponent(id, group.group_key);
-                console.log(timerData);
+                if(timerData.length !== 0) {
+                    timerData.map((timer) => {
+                        this.timerFromDeviceRepo.insert(timer.group_key, timer.init_time, timer.maxIter);
+                    })
+                }
             }
         })
     }
