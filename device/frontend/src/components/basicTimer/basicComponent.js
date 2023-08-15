@@ -76,7 +76,7 @@ export default function BasicTimerComponent({
   useEffect(() => {
     setTimeout(() => {
       setAlarm(false);
-  },3000)
+    }, 3000);
   }, [alarm]);
 
   useEffect(() => {
@@ -189,7 +189,7 @@ export default function BasicTimerComponent({
 
   return (
     <StyledTimerContainer
-      className={type === "timer" ? "watch timer" : "watch stopWatch"}
+      className={!alarm?"watch timer":"watch timer alarming"}
     >
       <StyledTimerBackground className="progress-bar" progress={progress} />
       <Grid container justifyContent={"center"} alignContent={"center"}>
