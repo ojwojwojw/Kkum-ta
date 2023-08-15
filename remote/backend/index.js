@@ -88,7 +88,7 @@ const options = {
               description: "로컬호스트 테스트 서버"
           },
           {
-              url: "http://i9c101.p.ssafy.io:8090",
+              url: "https://i9c101.p.ssafy.io:8090",
               description: "배포 서버"
           }
       ],
@@ -118,4 +118,4 @@ const httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
 
-//app.listen(PORT, ()=> console.log(`Server listens on port ${PORT}`))
+// app.listen(PORT, () => console.log(`Server listens on port ${PORT}`));

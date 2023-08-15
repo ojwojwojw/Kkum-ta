@@ -46,7 +46,7 @@ class jwtService {
     try {
       const myToken = jwt.verify(token, process.env.JWT_SECRET);
       if (myToken == "jwt expired") {
-        return { result: false, err: myToken };
+        return { result: false, err: "jwt expired" };
       }
 
       const user = await this.userRepository.getUserByRefreshToken(token);
