@@ -70,6 +70,10 @@ class TimerRepository extends Repository{
         const params = [id];
         return this.query(sql, params);
     }
+
+    async deleteAllByGroupKey(gkey) {
+        const sql = `DELETE FROM timer_tbl_${version} WHERE group_key = ?`
+    }
 };
 
 module.exports = TimerRepository;

@@ -9,6 +9,10 @@ class TimerFromServerRepository extends serverRepo {
         this.userKey = null;
     }
 
+    async init() {
+        await this.getUserKeyBySerial();
+    }
+
     async getUserKeyBySerial() {
         const sql = `
             SELECT user_key FROM user_tbl

@@ -1,12 +1,15 @@
 const serverRepo = require('./serverRepository')
 const deviceRepo = require('./deviceRepository');
-const { param } = require('../../../../remote/backend/src/controller/authController');
 
 class GroupFromServerRepository extends serverRepo {
     constructor() {
         super();
         this.serial = new deviceRepo().getDeviceSerial();
         this.userKey = null;
+    }
+
+    async init() {
+        await this.getUserKeyBySerial();
     }
 
     async getUserKeyBySerial() {
@@ -34,3 +37,5 @@ class GroupFromServerRepository extends serverRepo {
         const [rows] = await this.query(sql. params);
     }
 }
+
+module.exports = GroupFromServerRepository;
