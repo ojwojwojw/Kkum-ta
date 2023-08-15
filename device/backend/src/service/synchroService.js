@@ -1,42 +1,36 @@
-const global = require("../global");
+const deviceService = require("./deviceService")
+const deviceRepo = require("../repository/deviceRepository")
+const serverRepo = require("../repository/serverRepository")
+const groupRepo = require("../repository/groupRepository")
+const timerRepo = require("../repository/timerRepository")
+const global = require("../global")
 
 class SynchroService {
     // server와 device의 group 및 component 관리 repo 가져오기
     constructor() {
-        this.groupFromServerRepo = global.getGroupFromServerRepository();
-        this.groupFromDeviceRepo = global.getGroupRepository();
-        this.timerFromServerRepo = global.getTimerFromServerRepository();
-        this.timerFromDeviceRepo = global.getTimerRepository();
+        this.serverRepo = new serverRepo();
+        this.deviceRepo = new deviceRepo();
+        this.groupFromDeviceRepo = new groupRepo();
+        this.timerFromDeviceRepo = new timerRepo();
     }
 
     async synchronizeDeviceAndServer() {
-        // device 사용자에 대한 모든 group 정보 get
-        const groupData = this.groupFromServerRepo.getAll();
+        const serial = await this.deviceRepo.getDeviceSerial();
+        const userInfo = await this.serverRepo.getUserId(serial);
+        const id = userInfo.id
 
-        // 각각의 group에 대해
-        groupData.map((item) => {
-            // gruop name, last_update 변경
-            this.groupFromDeviceRepo.rename(item.group_key, item.name);
-            this.groupFromDeviceRepo.setLastUpdate(
-                item.group_key,
-                item.last_update
-            );
-            
-            // 현재 group에 대한 모든 component 정보 get
-            const timerData = this.timerFromServerRepo.getByGroupId(
-                item.group_key
-            );
-            // 기존 DB의 component 정보를 모두 삭제
-            this.timerFromDeviceRepo.deleteAllByGroupKey(item.group_key);
-            // 새 component로 이식
-            timerData.map((timer) => {
-                this.timerFromDeviceRepo.insert(
-                    item.group_key,
-                    timer.init_time,
-                    timer.maxIter
-                );
-            });
-        });
+        const groupData = await this.serverRepo.getGroup(id);
+
+        groupData.map(async (group) => {
+            if(group.group_key !== 1) {
+                await this.groupFromDeviceRepo.rename(group.group_key, group.name);
+    
+                await this.timerFromDeviceRepo.deleteAllByGroupKey(group.group_key);
+    
+                const timerData = await this.serverRepo.getComponent(id, group.group_key);
+                console.log(timerData);
+            }
+        })
     }
 }
 

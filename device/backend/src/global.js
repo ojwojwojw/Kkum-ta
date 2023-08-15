@@ -5,6 +5,7 @@ const StudyHourlyRepository = require("./repository/studyHourlyRepository");
 const TimerRepository = require("./repository/timerRepository");
 const GroupFromServerRepository = require("./repository/groupFromServerRepository");
 const TimerFromServerRepository = require("./repository/timerFromServerRepository");
+const ServerRepository = require("./repository/serverRepository")
 
 const DeviceService = require("./service/deviceService");
 const GroupService = require("./service/groupService");
@@ -20,6 +21,7 @@ class Global {
     static #timerRepository = null;
     static #groupFromServerRepository = null;
     static #timerFromServerRepository = null;
+    static #serverRepository = null;
 
     static #deviceService = null;
     static #groupService = null;
@@ -83,6 +85,13 @@ class Global {
             await Global.#timerFromServerRepository.init();
         }
         return Global.#timerFromServerRepository;
+    }
+
+    static async getServerRepository() {
+        if (!Global.#serverRepository) {
+            Global.#serverRepository = new ServerRepository();
+        }
+        return Global.#serverRepository;
     }
 
     static async getDeviceService() {

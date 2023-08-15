@@ -156,15 +156,19 @@ compRouter.get("/user/:user_id", async (req, res) => {
  *  
  */
 compRouter.get("/user/:user_id/:group_id", async (req, res) => {
-    const group_key = req.params.group_id;
+    const group_key = parseInt(req.params.group_id);
     const user_id = req.params.user_id;
-
-    res.status(200).json(
-        await componentRepository.findAllComponentByGroupKeyOfUser(
-            group_key,
-            user_id
-        )
-    );
+    const user = await userRepository.getUserById(user_id);
+    if(user === null){
+        res.status(404).json({status:`cannot find user named ${user_id}`});
+        return;
+    }
+    const user_key = user.user_key;
+    if(isNaN(group_key) || group_key < 1 || group_key > 4){
+        res.status(400).json({status: `invalid group_key(${group_key})`});
+        return;
+    }
+    res.status(200).json(await componentRepository.findAllComponentByUserKeyAndGroup(user_key, group_key));
     return;
 });
 /**
