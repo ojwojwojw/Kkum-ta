@@ -56,11 +56,28 @@ export default function BasicTimerComponent({
   const [progress, setProgress] = useState(
     timer.getProgress() ? timer.getProgress() : 0
   );
+
+  const [alarm, setAlarm] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     setRemainTime(timer.getRemainTime());
   }, [timer]);
+
+  // 타이머 설정이 되어있고, 시간이 다 되었을 때 alarm의 상태를 변화
+  useEffect(() => {
+    if (timer.getInitTime()[0] !== 0 && timer.getRemainTime() <= 0) {
+      setAlarm(true);
+    }
+  }, [timer.getRemainTime()]);
+
+  // 알람이 울리고 3초 뒤 알람 상태 false로 변경
+  useEffect(() => {
+    setTimeout(() => {
+      setAlarm(false);
+  },3000)
+  }, [alarm]);
 
   useEffect(() => {
     // console.log(timer.getIsRunning());

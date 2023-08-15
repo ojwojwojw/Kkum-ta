@@ -156,7 +156,7 @@ export default function TimerContainer({ id, text }) {
     try {
       const data = { operation: "start" };
       const res = await axios.post(`stopwatch/operation/${groupId}`, data);
-      console.log("log stopwatch start data on backend", res.data);
+      // console.log("log stopwatch start data on backend", res.data);
     } catch (err) {
       console.log(err);
     }
@@ -166,7 +166,7 @@ export default function TimerContainer({ id, text }) {
     try {
       const data = { operation: "pause" };
       const res = await axios.post(`stopwatch/operation/${groupId}`, data);
-      console.log("log stopwatch Pause data on backend", res.data);
+      // console.log("log stopwatch Pause data on backend", res.data);
     } catch (err) {
       console.log(err);
     }
