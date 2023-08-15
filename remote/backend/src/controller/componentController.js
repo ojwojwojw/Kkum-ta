@@ -238,7 +238,7 @@ compRouter.post("/", async (req, res) => {
 /**
  * @swagger
  * /timer/{component_key}:
- *  post:
+ *  put:
  *      summary: "타이머의 initTime을 수정한다."
  *      description: "타이머의 initTime을 수정한다"
  *      tags: [Timer]
