@@ -187,11 +187,11 @@ logRouter.get("/:user_id/:group_id", async (req, res) => {
     res.status(401).json({status: `Cannot find user(${user_id})`});
   }
   if (!!hour && !!date && !month && !year) {
-    if(isNaN(parseInt(hour))){
+    if(isNaN(parseInt(hour)) || hour < 0 || hour > 23){
       res.status(400).json({status:`Invalid hour(${hour})`});
     }
-    else if(!(/^\d{4}-\d{2}-\d{2}$/.test(date))){
-      res.status(400).json({status:`invalid date(${date})`});
+    else if(!(/^\d{4}-\d{2}-\d{2}$/.test(date)) || isNaN(new Date(date).getTime())){
+      res.status(400).json({status:`invalid date(${date}), date should be in format of(YYYY-MM-DD)`});
     }
     else{
       res.status(200).json(await logService.hour(user_key, group_id, date, parseInt(hour)));
@@ -199,25 +199,25 @@ logRouter.get("/:user_id/:group_id", async (req, res) => {
     return;
   }
   if (!hour && !!date && !month && !year) {
-    if(/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    if(!(/^\d{4}-\d{2}-\d{2}$/.test(date)) && !isNaN(new Date(date).getTime())) {
       res.status(200).json(await logService.date(user_key, group_id, date));
       return;
     }else{
-      res.status(400).json({status: `Invalid date(${date})`});
+      res.status(400).json({status: `Invalid date(${date}), date should be in format of(YYYY-MM-DD)`});
       return;
     }
   }
   if (!hour && !date && !!month && !year) {
-    if(/^\d{4}-\d{2}$/.test(month)) {
+    if(/^\d{4}-\d{2}$/.test(month) && !isNaN(new Date(month).getTime())) {
       res.status(200).json(await logService.month(user_key, group_id, month));
       return;
     }else{
-      res.status(400).json({status:`invalid month(${month})`});
+      res.status(400).json({status:`invalid month(${month}), month should be in format of(YYYY-MM)`});
       return;
     }
   }
   if (!hour && !date && !month && !!year) {
-    if(/^\d{4}$/.test(year)){
+    if(/^\d{4}$/.test(year) && !isNaN(new Date(year).getTime())){
       res.status(200).json(await logService.year(user_key, group_id, parseInt(year)));
     }
     else{
