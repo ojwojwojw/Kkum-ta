@@ -239,7 +239,11 @@ compRouter.post("/", async (req, res) => {
         res.status(400).json({status: `invalid group_id(${req.body.group_id}), it should be between 1 and 4.`});
         return;
     }
-    const ukey = (await userRepository.getUserById(uid)).user_key;
+    const user = await userRepository.getUserById(uid);
+    if(!user){
+        return res.status(403).json({status: `cannot find user ${uid}`});
+    }
+    const ukey = user.user_key;
     const insertId = await componentRepository.insertComponent(
         initTiime,
         iter,
@@ -250,9 +254,7 @@ compRouter.post("/", async (req, res) => {
         await groupRepository.updateLastUpdate(ukey, gkey);
         return res.status(201).json({status: "created", id: insertId});
     }
-    else{
-        return res.status(403).json({status: `cannot find user ${uid}`});
-    }
+    return res.status(500).json({status: "Failed to insert"});
 });
 /**
  * @swagger
