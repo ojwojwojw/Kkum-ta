@@ -5,7 +5,7 @@ class GroupFromServerRepository extends serverRepo {
     constructor() {
         super();
         this.serial = new deviceRepo().getDeviceSerial();
-        this.userKey = null;
+        this.userId = null;
     }
 
     async init() {
@@ -14,14 +14,14 @@ class GroupFromServerRepository extends serverRepo {
 
     async getUserKeyBySerial() {
         const sql = `
-            SELECT user_key FROM user_tbl
+            SELECT id FROM user_tbl
             JOIN device_tbl ON user_tbl.device_key = device_tbl.device_key
             WHERE device_tbl.device_serial = ?;
         `
         const params = [this.serial];
         const [rows] = await this.query(sql, params);
-        this.userKey = rows[0].user_key;
-        return rows[0].user_key;
+        this.userId = rows[0].id;
+        return rows[0].id;
     }
 
     async getAll() {

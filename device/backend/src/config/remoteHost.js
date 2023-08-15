@@ -9,5 +9,5 @@ const { REMOTE_HOST, REMOTE_PORT } = process.env;
 module.exports = {
     host: REMOTE_HOST,
     port: REMOTE_PORT,
-    endpoint: "http://" + REMOTE_HOST + ":" + REMOTE_PORT,
+    endpoint: "https://" + REMOTE_HOST + ":" + REMOTE_PORT,
 };

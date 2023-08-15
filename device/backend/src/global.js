@@ -70,23 +70,19 @@ class Global {
     }
 
     static async getGroupFromServerRepository() {
-      if(!Global.#groupFromServerRepository) {
-        Global.#groupFromServerRepository = new GroupFromServerRepository(
-          await Global.getGroupFromServerRepository()
-          );
-          await Global.#groupFromServerRepository.init();
-        } 
+        if (!Global.#groupFromServerRepository) {
+            Global.#groupFromServerRepository = new GroupFromServerRepository();
+            await Global.#groupFromServerRepository.init();
+        }
         return Global.#groupFromServerRepository;
     }
 
     static async getTimerFromServerRepository() {
-      if(!Global.#timerFromServerRepository) {
-        Global.#timerFromServerRepository = new TimerFromServerRepository(
-          await Global.getTimerFromServerRepository()
-        );
-        await Global.#timerFromServerRepository.init();
-      }
-      return Global.#timerFromServerRepository;
+        if (!Global.#timerFromServerRepository) {
+            Global.#timerFromServerRepository = new TimerFromServerRepository();
+            await Global.#timerFromServerRepository.init();
+        }
+        return Global.#timerFromServerRepository;
     }
 
     static async getDeviceService() {

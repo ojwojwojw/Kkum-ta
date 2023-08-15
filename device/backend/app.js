@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
+const SynchroGroupService = require("./src/service/synchroService")
+
 const app = express();
 app.disable("x-powered-by");
 app.use(express.json());
@@ -44,6 +46,9 @@ const debug = (req, res, next)=>{
     }
     next();
 };
+
+const sgs = new SynchroGroupService();
+sgs.synchronizeDeviceAndServer();
 
 app.use(debug);
 

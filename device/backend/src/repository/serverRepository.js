@@ -1,55 +1,27 @@
-const mysql = require("mysql2/promise");
 const options = require("../config/remoteHost.js");
-const SQLError = require("../dto/SQLError.js");
+const axios = require("axios")
 
 class Repository {
     constructor() {
-        this.pool = mysql.createPool(options);
-        this.conn = null;
+        this.base = options.endpoint;
     }
-    async closeDB() {
-        await this.pool.end();
-        this.pool = null;
-        this.conn = null;
+    
+    async getGroup(user_id) {
+        const data = await axios.get(base + "/group/" + user_id);
+
+        return data;
     }
 
-    async query(sql, params) {
-        let conn;
-        try {
-            conn = this.conn ? this.conn : await this.pool.getConnection();
-            return conn.execute(sql, params);
-        } catch (e) {
-            throw new SQLError(
-                "sql:" + sql + ", params: " + params + " : " + e.sqlMessage
-            );
-        } finally {
-            if (!this.conn && conn) {
-                conn.release();
-            }
-        }
+    async getAllComponent(user_id) {
+        const data = await axios.get(base + "/timer/user/" + user_id);
+
+        return data;
     }
-    async beginTransaction() {
-        if (this.conn) {
-            throw new Error("Transaction already begun");
-        }
-        this.conn = await this.pool.getConnection();
-        this.conn.beginTransaction();
-    }
-    async rollback() {
-        if (!this.conn) {
-            throw new Error("No transaction were running");
-        }
-        await this.conn.rollback();
-        await this.conn.release();
-        this.conn = null;
-    }
-    async commit() {
-        if (!this.conn) {
-            throw new Error("No transaction were running");
-        }
-        await this.conn.commit();
-        await this.conn.release();
-        this.conn = null;
+
+    async getComponent(user_id, group_key) {
+        const data = await axios.get(base + "/timer/user/" + user_id + "/" + group_key);
+
+        return data;
     }
 }
 
