@@ -24,7 +24,7 @@ class GruopRepository extends Repository {
     }
     async createDefaultUserGroup(ukey){
         const sql = `
-        INSERT IGNORE INTO group_tbl(group_key, user_key, name)
+        INSERT INTO group_tbl(group_key, user_key, name)
         VALUES
         (0, ?, '기본 그룹'),
         (1, ?, '그룹 1'),
@@ -100,8 +100,23 @@ class GruopRepository extends Repository {
         const [rows] = await this.query(sql, params);
         return rows;
     }
-
-    async getLoginKey() {}
+    async getLastModified(ukey, gkey){
+        const sql = `
+            SELECT last_update FROM group_tbl
+            WHERE user_key = ? AND group_key = ?
+        `
+        const params = [ukey, gkey];
+        const [rows] = await this.query(sql, params);
+        return rows[0].last_update;
+    }
+    async updateLastUpdate(ukey, gkey){
+        const sql = `
+            UPDATE group_tbl SET last_update = current_timestamp()
+            WHERE user_key = ? AND group_key = ?
+        `
+        const params = [ukey, gkey];
+        await this.query(sql, params);
+    }
 }
 
 module.exports = GruopRepository;
