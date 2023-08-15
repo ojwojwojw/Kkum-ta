@@ -190,6 +190,9 @@ logRouter.get("/:user_id/:group_id", async (req, res) => {
     if(isNaN(parseInt(hour))){
       res.status(400).json({status:`Invalid hour(${hour})`});
     }
+    else if(!(/^\d{4}-\d{2}-\d{2}$/.test(date))){
+      res.status(400).json({status:`invalid date(${date})`});
+    }
     else{
       res.status(200).json(await logService.hour(user_key, group_id, date, parseInt(hour)));
     }
