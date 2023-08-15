@@ -174,7 +174,8 @@ export default function ReportPage() {
   //시간단위 그래프(한시간동안에 얼마나 공부) api 요청
   const hourCheck = async () => {
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${startDateForHour}&hour=${hour}`)
+      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${startDateForHour}&hour=${hour}`) //배포용
+      const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${startDateForHour}&hour=${hour}`) //개발용
 
       const modifiedData = 1 - res.data
       Series1[0].data = [res.data];
@@ -202,7 +203,8 @@ export default function ReportPage() {
   //일간 그래프 api 요청
   const dailyCheck = async () => {
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${startDate}`)
+      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${startDate}`) //배포용
+      const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${startDate}`)// 개발용
 
       const modifiedData = res.data.map(value => 1 - value)
       Series24[0].data = res.data;
@@ -232,7 +234,8 @@ export default function ReportPage() {
   const monthCheck = async () => {
     try {
       const temp = startMonth.getFullYear() + '-' + (startMonth.getMonth() + 1);
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${temp}`)
+      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${temp}`) //배포용
+      const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${temp}`) //개발용
 
       console.log(res.data)
       const modifiedData = res.data.map(value => 1 - value)
@@ -263,7 +266,8 @@ export default function ReportPage() {
   //연관 조회 요청 api (잔디밭)
   const yearCheck = async () => {
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${yearGroupID}/?year=${startYear}`)
+      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${yearGroupID}/?year=${startYear}`) //배포용
+      const res = await axios.get(`http://localhost:8090/log/${user_id}/${yearGroupID}/?year=${startYear}`) //개발용
       console.log(res.data)
       setGrassArray(res.data)
     }
