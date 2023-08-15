@@ -53,8 +53,8 @@ export default function GroupComponent() {
   useEffect(() => {
     let client = mqttNode.current;
     if (client == null) {
-      // client = mqtt.connect("ws://192.168.100.245:1884");
-      client = mqtt.connect("ws://localhost:1884");
+      client = mqtt.connect("ws://192.168.100.245:1884");
+      // client = mqtt.connect("ws://localhost:1884");
       client.on("connect", () => {
         console.log("connected");
         client.subscribe("face_recognition");
