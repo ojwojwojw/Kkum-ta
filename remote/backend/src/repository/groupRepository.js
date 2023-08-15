@@ -103,10 +103,11 @@ class GruopRepository extends Repository {
     async getLastModified(ukey, gkey){
         const sql = `
             SELECT last_update FROM group_tbl
-            WHERE user_key = ? ADN group_key = ?
+            WHERE user_key = ? AND group_key = ?
         `
         const params = [ukey, gkey];
-        await this.query(sql, params);
+        const [rows] = await this.query(sql, params);
+        return rows[0].last_update;
     }
     async updateLastUpdate(ukey, gkey){
         const sql = `

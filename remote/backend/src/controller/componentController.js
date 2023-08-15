@@ -235,6 +235,10 @@ compRouter.post("/", async (req, res) => {
     if (!uid || !gkey || !initTiime || !iter) {
         return res.status(400).json({ status: "bad request" });
     }
+    if(isNaN(parseInt(gkey)) || parseInt(gkey) < 1 || parseInt(gkey) > 4){
+        res.status(400).json({status: `invalid group_id(${req.body.group_id}), it should be between 1 and 4.`});
+        return;
+    }
     const ukey = (await userRepository.getUserById(uid)).user_key;
     const insertId = await componentRepository.insertComponent(
         initTiime,
@@ -304,11 +308,11 @@ compRouter.put("/:component_key", async (req, res) => {
         return res.status(400).json({ status: "bad request" });
     }
     await componentRepository.updateInitTime(ckey, initTime);
-    const component = await componentRepository.findByCompoentKey(ckey);
+    const component = await componentRepository.findByComponentKey(ckey);
     if(component.length === 0){
         return res.status(404).json({status: "Not found"});
     }
-    await groupRepository.updateLastUpdate(component.user_key, component.group_key);
+    await groupRepository.updateLastUpdate(component[0].user_key, component[0].group_key);
     return res.status(200).json({status:"ok"});
 });
 /**
@@ -362,15 +366,15 @@ compRouter.delete("/:component_key", async (req, res) => {
     const ckey = req.params.component_key;
 
     if (!ckey) return res.status(400).json({ status: "bad request" });
+    const component = await componentRepository.findByComponentKey(ckey);
+    if(component.length === 0){
+        return res.status(404).json({status: "Not found"});
+    }
 
     const [del] = await componentRepository.deleteComponent(ckey);
     const success = (del.affectedRows == 1);
     if(success){
-        const component = await componentRepository.findByCompoentKey(ckey);
-        if(component.length === 0){
-            return res.status(404).json({status: "Not found"});
-        }
-        await groupRepository.updateLastUpdate(component.user_key, component.group_key);
+        await groupRepository.updateLastUpdate(component[0].user_key, component[0].group_key);
         return res.status(200).json({status: "ok"});
     }
     else{
@@ -400,7 +404,20 @@ compRouter.delete("/:component_key", async (req, res) => {
  *                      schema:
  *                          type: array
  *                          items:
- *                              $ref: '#/components/schemas/BasicTimerComponent'
+ *                              type: object
+ *                              properties:
+ *                                  component_key:
+ *                                      type: integer
+ *                                      example: 0
+ *                                  init_time:
+ *                                      type: integer
+ *                                      example: 68000
+ *                                  maxIter:
+ *                                      type: integer
+ *                                      example: 1
+ *                                  group_key:
+ *                                      type: integer
+ *                                      example: 1
  *          404:
  *              description: "디바이스 키에 해당하는 유저가 없음"
  *              content:
@@ -451,7 +468,7 @@ compRouter.get("/device/:device_serial", async (req, res) => {
  *              type: string
  *              example: "2012-03-04 12:34:56"
  *          required: false
- *          description: "디바이스에서 가지고 있는 정보가 서버에서 만들어진 시간(YYYY-MM-DD)"
+ *          description: "디바이스에서 가지고 있는 정보가 서버에서 만들어진 시간(YYYY-MM-DD hh:mm:ss)"
  *      responses:
  *          200:
  *              description: 타이머 리스트
@@ -460,7 +477,21 @@ compRouter.get("/device/:device_serial", async (req, res) => {
  *                      schema:
  *                          type: array
  *                          items:
- *                              $ref: '#/components/schemas/BasicTimerComponent'
+ *                              type: object
+ *                              properties:
+ *                                  component_key:
+ *                                      type: integer
+ *                                      example: 1
+ *                                  init_time:
+ *                                      type: integer
+ *                                      example: 68000
+ *                                  max_iter:
+ *                                      type: integer
+ *                                      example: 1
+ *                                  group_key:
+ *                                      type: integer
+ *                                      example: 1
+ *                              
  *          304:
  *              description: "수정된 정보가 없다, 304가 보고 싶지 않다면 last_modified를 넣지 말것"
  *              content:
@@ -488,9 +519,17 @@ compRouter.get("/device/:device_serial/:group_id", async (req, res) => {
     }
     else if(last_modified){
         if(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(last_modified)){
-            if(last_modified >= await groupRepository.getLastModified(user_key, group_key)){
+            if(new Date(last_modified) >= new Date(await groupRepository.getLastModified(user_key, group_key))){
                 res.status(304).json({status: "Not modified"});
                 return;
+            }
+            else{
+                res.status(200).json(
+                    await componentRepository.findAllComponentByUserKeyAndGroup(
+                        user_key,
+                        group_key
+                    )
+                );
             }
         }
         else{
