@@ -172,8 +172,9 @@ compRouter.get("/user/:user_id/:group_id", async (req, res) => {
     const user_key = user.user_key;
     if(isNaN(group_key) || group_key < 1 || group_key > 4){
         res.status(400).json({status: `invalid group_key(${group_key})`});
+        return;
     }
-    res.status(200).json(await componentRepository.findAllComponentByUserKeyAndGroup(user_key, group_key));
+    res.status(200).json(await componentRepository.findAllComponentByGroupKeyOfUser(group_key, user_id));
     return;
 });
 /**
@@ -317,6 +318,7 @@ compRouter.put("/:component_key", async (req, res) => {
     await groupRepository.updateLastUpdate(component[0].user_key, component[0].group_key);
     return res.status(200).json({status:"ok"});
 });
+
 /**
  * @swagger
  * /timer/{component_key}:
@@ -364,6 +366,19 @@ compRouter.put("/:component_key", async (req, res) => {
  *                                  example: "not found"
  *  
  */
+
+// compRouter.put("/:component_key", async (req, res) => {
+//     const ckey = req.params.component_key;
+//     const maxIter = req.body.maxIter;
+
+//     if (!ckey || !maxIter) {
+//         return res.status(400).json({ status: "bad request" });
+//     }
+//     const update = await componentRepository.updateMaxIter(ckey, maxIter);
+
+//     return res.status(200).json(update);
+// });
+
 compRouter.delete("/:component_key", async (req, res) => {
     const ckey = req.params.component_key;
 
