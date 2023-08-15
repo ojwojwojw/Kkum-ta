@@ -19,6 +19,7 @@ const devController = require("./src/controller/devController");
 const logController = require("./src/controller/logController");
 const componenetController = require("./src/controller/componentController");
 const groupController = require("./src/controller/groupController");
+const userController = require("./src/controller/userController")
 
 
 passportConfig(passport);
@@ -87,7 +88,7 @@ const options = {
               description: "로컬호스트 테스트 서버"
           },
           {
-              url: "http://i9c101.p.ssafy.io:8090",
+              url: "https://i9c101.p.ssafy.io:8090",
               description: "배포 서버"
           }
       ],
@@ -103,6 +104,7 @@ app.use("/dev", devController);
 app.use("/log", logController);
 app.use("/timer", componenetController);
 app.use("/group", groupController);
+app.use("/user", userController)
 
 const privateKey = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/privkey.pem", "utf8");
 const certificate = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/cert.pem", "utf8");
@@ -116,4 +118,4 @@ const httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
 
-//app.listen(PORT, ()=> console.log(`Server listens on port ${PORT}`))
+// app.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
