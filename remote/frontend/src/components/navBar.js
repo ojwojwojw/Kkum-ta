@@ -113,7 +113,7 @@ export default function NavBar() {
           <Routes>
             <Route exact path="/" Component={""} />
             <Route exact path="/login" Component={Login} />
-            <Route exact path="/reports" Component={ReportPage} />
+            <Route exact path="/reports" Component={ReportPage}/>
             <Route exact path="/group1" Component={GroupPage} />
             <Route exact path="/group2" Component={GroupPage} />
             <Route exact path="/group3" Component={GroupPage} />
