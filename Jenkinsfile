@@ -91,7 +91,7 @@ pipeline {
             steps {
                 sh '''
                     docker stop back-server
-                    docker run -d --name back-server1 --network=device-network --volumes-from back-server gugaro/kkumta:back-device-0.1
+                    docker run -d --name back-server1 -p 8085:8085 --network=device-network --volumes-from back-server gugaro/kkumta:back-device-0.1
                     docker rm back-server
                     docker stop back-server1
                     docker rename back-server1 back-server

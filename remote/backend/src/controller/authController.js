@@ -23,12 +23,89 @@ authRouter.get("/", (req, res) => {
 authRouter.post("/", (req, res) => {
   res.status(200).send("POST userRouter /");
 });
-
 authRouter.get("/check", isLoggedIn, (req, res) => {
   console.log(req.headers.authorization.split("Bearer ")[1]);
   return res.status(200).json("check");
 });
-
+/**
+ * @swagger
+ * /auth/signin:
+ *      post:
+ *          summary: 로그인 한다.
+ *          description: "id, 비밀번호를 받고 로그인 한다."
+ *          tags: [Auth]
+ *          requestBody:
+ *            required: true
+ *            content:
+ *              application/x-www-form-urlencoded:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: string
+ *                      example: ""
+ *                    password:
+ *                      type: string
+ *                      format: password
+ *                      example: ""
+ *          responses:
+ *              200:
+ *                  description: "인증 성공"
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                status:
+ *                                  type: string
+ *                                  example: "ok"
+ *                                user:
+ *                                  type: object
+ *                                  properties:
+ *                                    id:
+ *                                      type: string
+ *                                      example: "id"
+ *                                    email:
+ *                                      type: string
+ *                                      example: "email@somewhere.com"
+ *                                    provider:
+ *                                      type: string
+ *                                      example: "local"
+ *                                accessToken:
+ *                                  type: string
+ *                                  example: "JWT 액세스 토큰(Authorize 칸에서 사용 가능)"
+ *              400:
+ *                description: "회원 정보를 찾지 못함"
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        status:
+ *                          type: string
+ *                          example: "bad request"
+ *              401:
+ *                description: "요청 에러"
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        status:
+ *                          type: string
+ *                          example: "unauthorized"
+ *
+ *              500:
+ *                description: "인증 실패"
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        status:
+ *                          type: string
+ *                          example: internal server error
+ */
 authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", async (authError, user, info) => {
     if (authError) {
@@ -57,7 +134,74 @@ authRouter.post("/signin", isNotLoggedIn, (req, res, next) => {
       .json({ status: "ok", user: res_user, accessToken: accessToken });
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 });
-
+/**
+ * @swagger
+ * /auth/signup:
+ *      post:
+ *          summary: 회원가입한다.
+ *          description: "id, 비밀번호, 이메일을 입력받고 회원 가입 한다."
+ *          tags: [Auth]
+ *          requestBody:
+ *            required: true
+ *            content:
+ *              application/x-www-form-urlencoded:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: string
+ *                      example: ""
+ *                    password:
+ *                      type: string
+ *                      format: password
+ *                      example: ""
+ *                    email:
+ *                      type: string
+ *                      example: ""
+ *          responses:
+ *              200:
+ *                  description: "성공"
+ *                  content:
+ *                      application/x-www-form-urlencoded:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                status:
+ *                                  type: string
+ *                                  example: "ok"
+ *                                user:
+ *                                  type: object
+ *                                  properties:
+ *                                    id:
+ *                                      type: string
+ *                                    email:
+ *                                      type: string
+ *                                    provider:
+ *                                      type: string
+ *                                accessToken:
+ *                                  type: string
+ *                                  example: "accesstoken"
+ *              400:
+ *                description: "회원 정보를 찾지 못함"
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        status:
+ *                          type: string
+ *                          example: "bad request"
+ *              500:
+ *                description: "인증 실패"
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        status:
+ *                          type: string
+ *                          example: internal server error
+ */
 authRouter.post("/signup", isNotLoggedIn, async (req, res) => {
   const id = req.body.id;
   const pw = req.body.password;
@@ -298,7 +442,7 @@ authRouter.post("/naver/login", async (req, res, next) => {
   console.log("/login finish");
 });
 
-authRouter.post("/refresh", (req, res) => {
+authRouter.post("/refresh", async (req, res) => {
   const id = req.body.id;
   const provider = req.body.provider;
   if (!id || !provider) {
@@ -309,11 +453,12 @@ authRouter.post("/refresh", (req, res) => {
     console.log(req.cookies);
     return res.status(401).json({ status: "unauthorized" });
   }
-  const refresh = jwt.refresh(
+  const refresh = await jwt.refresh(
     req.cookies.refreshToken,
     req.body.id,
     req.body.provider
   );
+  console.log({err: refresh.err})
   if (!refresh.result) {
     if (refresh.err == "jwt expired") {
       return res.status(401).json({ status: "unauthorized" });

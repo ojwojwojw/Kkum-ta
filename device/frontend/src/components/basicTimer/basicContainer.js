@@ -13,18 +13,11 @@ import {
 import { Grid, Box, Stack, Button } from "@mui/material";
 import StopwatchComponent from "./stopwatchComponent";
 
-export default function TimerContainer({ id }) {
+export default function TimerContainer({ id, text }) {
   const dispatch = useDispatch();
   const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
 
   const [isGroupRunning, setIsGroupRunning] = useState(false);
-
-  useEffect(() => {
-    // console.log("timer container constructor");
-    return () => {
-      // console.log("timer container destructor");
-    };
-  }, []);
 
   useEffect(() => {
     // console.log("timer container constructor");
@@ -163,7 +156,7 @@ export default function TimerContainer({ id }) {
     try {
       const data = { operation: "start" };
       const res = await axios.post(`stopwatch/operation/${groupId}`, data);
-      console.log("log stopwatch start data on backend", res.data);
+      // console.log("log stopwatch start data on backend", res.data);
     } catch (err) {
       console.log(err);
     }
@@ -173,7 +166,7 @@ export default function TimerContainer({ id }) {
     try {
       const data = { operation: "pause" };
       const res = await axios.post(`stopwatch/operation/${groupId}`, data);
-      console.log("log stopwatch Pause data on backend", res.data);
+      // console.log("log stopwatch Pause data on backend", res.data);
     } catch (err) {
       console.log(err);
     }
@@ -188,6 +181,7 @@ export default function TimerContainer({ id }) {
         storeTimerArray={storeTimerArray}
         logStopwatchStart={logStopwatchStart}
         logStopwatchPause={logStopwatchPause}
+        text={text}
       />
       <Grid container justifyContent={"space-between"} sx={{ flexGrow: 1 }}>
         <Grid item xs={8}>

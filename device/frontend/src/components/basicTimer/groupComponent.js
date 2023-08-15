@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { forceRendering } from "../../redux/timerSlice";
 import { useDispatch } from "react-redux";
 import TimerContainer from "./basicContainer";
+import * as mqtt from "mqtt";
 
 // mui
-import { Box, Grid, Tabs, Tab, Button } from "@mui/material";
+import { Box, Grid, Tabs, Tab } from "@mui/material";
 import PropTypes from "prop-types";
 
 function CustomTabPanel(props) {
@@ -38,7 +39,10 @@ function a11yProps(index) {
 
 export default function GroupComponent() {
   const [timerArrayList, setTimerArrayList] = useState([]);
+  const mqttNode = useRef(null);
   const dispatch = useDispatch();
+
+  const [text, setText] = useState("");
 
   const [value, setValue] = useState(0);
 
@@ -46,13 +50,25 @@ export default function GroupComponent() {
     setValue(newValue);
   };
 
-  // useEffect(() => {
-  //   console.log("group constructor");
+  useEffect(() => {
+    let client = mqttNode.current;
+    if (client == null) {
+      // client = mqtt.connect("ws://192.168.100.245:1884");
+      client = mqtt.connect("ws://localhost:1884");
+      client.on("connect", () => {
+        console.log("connected");
+        client.subscribe("face_recognition");
+      });
+      client.on("message", (topic, message) => {
+        setText(message.toString());
+      });
+    }
 
-  //   return () => {
-  //     console.log("group destructor");
-  //   };
-  // }, []);
+    return () => {
+      console.log("disconnected");
+      client.end();
+    };
+  }, []);
 
   function add(idx) {
     if (timerArrayList.length > 4) return;
@@ -93,7 +109,11 @@ export default function GroupComponent() {
         <Grid item xs={12}>
           {timerArrayList.map((obj, idx) => (
             <CustomTabPanel key={obj.id} value={value} index={idx}>
-              <TimerContainer key={obj.id} id={obj.id}></TimerContainer>
+              <TimerContainer
+                key={obj.id}
+                id={obj.id}
+                text={text}
+              ></TimerContainer>
             </CustomTabPanel>
           ))}
         </Grid>

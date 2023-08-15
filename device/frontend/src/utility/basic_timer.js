@@ -67,7 +67,7 @@ export default class BasicTimer {
 
     // state setter
     if (this.setIsRunning != null) this.setIsRunning(this.#isRunning);
-    console.log(`timer_start: ${this.#remainTime}`);
+    // console.log(`timer_start: ${this.#remainTime}`);
   }
 
   // 타이머 일시 정지하는 함수
@@ -77,7 +77,7 @@ export default class BasicTimer {
 
     // state setter
     if (this.setIsRunning != null) this.setIsRunning(this.#isRunning);
-    console.log(`timer_pause: ${this.#remainTime}`);
+    // console.log(`timer_pause: ${this.#remainTime}`);
   }
 
   // 타이머를 초기화하는 함수
@@ -94,7 +94,7 @@ export default class BasicTimer {
     if (this.setIsRunning != null) this.setIsRunning(this.#isRunning);
     if (this.setRemainTime != null) this.setRemainTime(this.#remainTime);
     if (this.setProgress != null) this.setProgress(this.getProgress());
-    console.log(`reset: ${this.#remainTime}`);
+    // console.log(`reset: ${this.#remainTime}`);
   }
 
   load(obj) {
