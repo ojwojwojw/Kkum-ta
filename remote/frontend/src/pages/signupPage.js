@@ -9,6 +9,7 @@ const SignupPage = () => {
   const [email, setUserEmail] = useState("");
   const [password, setUserPassword] = useState("");
   const navigate = useNavigate()
+  const [signupError , setSignupError] = useState(null);
 
   //회원가입 요청
   const submitSignUp = async () => {
@@ -18,7 +19,8 @@ const SignupPage = () => {
       "email" : email,
     };
     try{
-      const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/signup',userData ,{  //배포를 위해서라도 프록시 설정 해야함.
+      // const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/signup',userData ,{  //배포를 위해서라도 프록시 설정 해야함.//배포용
+      const res = await axios.post('http://localhost:8090/auth/signup',userData ,{  //개발용.
         headers: {
           'Content-Type' : 'application/x-www-form-urlencoded',
         },
@@ -29,7 +31,7 @@ const SignupPage = () => {
     catch(err){
      
       console.log(err)
-      console.log(userData)
+      setSignupError("회원가입에 실패하였습니다.")
     }
   }
 
@@ -41,33 +43,35 @@ const SignupPage = () => {
           <input
             className="signup-input"
             type="text"
-            placeholder="Username"
+            placeholder="아이디를 입력하세요."
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             className="signup-input"
             type="text"
-            placeholder="Email"
+            placeholder="이메일을 입력하세요."
             value={email}
             onChange={(e) => setUserEmail(e.target.value)}
           />
           <input
             className="signup-input"
             type="password"
-            placeholder="Password"
+            placeholder="비밀번호를 입력하세요."
             value={password}
             onChange={(e) => setUserPassword(e.target.value)}
           />
+          {signupError? <label style={{ color: 'red' }}>{signupError}</label> : null}
           <button 
             className="signup-button" 
             type="button"
             onClick={submitSignUp}>
-            Sign Up
+            회원가입
           </button>
         </form>
+        <br/>
         <div className="back-button">
-          <Link to="/">Back</Link>
+          <Link to="/">숨기기</Link>
         </div>
       </div>
     </div>

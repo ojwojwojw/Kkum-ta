@@ -2,28 +2,41 @@ import React from "react"
 import { useState } from "react"
 import axios from "axios"
 import "./findPasswordPage.css"
+import { Link } from "react-router-dom"
 
 const FindPasswordPage = () => {
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [verify, setVerify] = useState("")
     const [newPassword, setNewPassword] = useState("")
+    const [success1, setSuccess1] = useState(null)
+    const [success2, setSuccess2] = useState(null)
+    const [success3, setSuccess3] = useState(null)
+    const [message1, setMessage1] = useState(null)
+    const [message2, setMessage2] = useState(null)
+    const [message3, setMessage3] = useState(null)
+
 
     //비밀번호 찾기 코드 전송
     const sendCode = async () => {
         const data = { "id": username, "email": email }
         try {
-            const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/email', data, {
+            // const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/email', data, { //배포용
+            const res = await axios.post('http://localhost:8090/auth/email', data, { //개발용
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 withCredentials: true
             })
             console.log(res.data)
+            setSuccess1(true)
+            setMessage1("인증코드 전송에 성공하였습니다.")
         }
         catch (err) {
             console.log(err)
             console.log(data)
+            setSuccess1(false)
+            setMessage1("인증코드 전송에 실패하였습니다.")
         }
     }
 
@@ -31,17 +44,22 @@ const FindPasswordPage = () => {
     const veryfyCode = async () => {
         const data = { "email": email, "code": verify }
         try {
-            const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/verifycode', data, {
+            // const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/verifycode', data, { //배포용
+            const res = await axios.post('http://localhost:8090/auth/verifycode', data, { //개발용
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 withCredentials: true
             })
             console.log(res.data)
+            setSuccess2(true)
+            setMessage2("인증코드 증명에 성공하였습니다.")
         }
         catch (err) {
             console.log(err)
             console.log(data)
+            setSuccess2(false)
+            setMessage2("인증코드 증명에 실패하였습니다.")
         }
     }
 
@@ -51,17 +69,23 @@ const FindPasswordPage = () => {
         console.log(data)
         try {
             // console.log(data)
-            const res = await axios.put('https://i9c101.p.ssafy.io:8090/auth/changePW', data, {
+            // const res = await axios.put('https://i9c101.p.ssafy.io:8090/auth/changePW', data, { //배포용
+            const res = await axios.put('http://localhost:8090/auth/changePW', data, { //개발용
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 withCredentials: true
             })
             console.log(res.data)
+            setSuccess3(true)
+            setMessage3("비밀번호 수정에 성공하였습니다.")
+
         }
         catch (err) {
             console.log(err)
             console.log(data)
+            setSuccess3(false)
+            setMessage3("비밀번호 수정에 실패하였습니다.")
         }
     }
 
@@ -84,6 +108,8 @@ const FindPasswordPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
+                {success1 ? <label style={{ color: 'blue' }}>{message1}</label> : null}
+                {success1 ? null : <label style={{ color: 'red' }}>{message1}</label>}
                 <button className="find-password-button" onClick={sendCode}>
                     이메일 코드 전송
                 </button>
@@ -96,6 +122,8 @@ const FindPasswordPage = () => {
                     value={verify}
                     onChange={(e) => setVerify(e.target.value)}
                 />
+                {success2 ? <label style={{ color: 'blue' }}>{message2}</label> : null}
+                {success2 ? null : <label style={{ color: 'red' }}>{message2}</label>}
                 <button className="find-password-button" onClick={veryfyCode}>
                     증명하기
                 </button>
@@ -108,10 +136,17 @@ const FindPasswordPage = () => {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                 />
+                {success3 ? <label style={{ color: 'blue' }}>{message3}</label> : null}
+                {success3 ? null : <label style={{ color: 'red' }}>{message3}</label>}
                 <button className="find-password-button" onClick={changePassword}>
                     수정하기
                 </button>
+                <br />
+                <div className="back-button">
+                    <Link to="/">숨기기</Link>
+                </div>
             </div>
+
         </div>
     );
 
