@@ -68,6 +68,18 @@ compRouter.put("/:component_key", async (req, res) => {
     return res.status(200).json(update);
 });
 
+compRouter.put("/:component_key", async (req, res) => {
+    const ckey = req.params.component_key;
+    const maxIter = req.body.maxIter;
+
+    if (!ckey || !maxIter) {
+        return res.status(400).json({ status: "bad request" });
+    }
+    const update = await componentRepository.updateMaxIter(ckey, maxIter);
+
+    return res.status(200).json(update);
+});
+
 compRouter.delete("/:component_key", async (req, res) => {
     const ckey = req.params.component_key;
 
