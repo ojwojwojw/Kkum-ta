@@ -21,8 +21,8 @@ const FindPasswordPage = () => {
     const sendCode = async () => {
         const data = { "id": username, "email": email }
         try {
-            // const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/email', data, { //배포용
-            const res = await axios.post('http://localhost:8090/auth/email', data, { //개발용
+            const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/email', data, { //배포용
+            // const res = await axios.post('http://localhost:8090/auth/email', data, { //개발용
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
@@ -44,8 +44,8 @@ const FindPasswordPage = () => {
     const veryfyCode = async () => {
         const data = { "email": email, "code": verify }
         try {
-            // const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/verifycode', data, { //배포용
-            const res = await axios.post('http://localhost:8090/auth/verifycode', data, { //개발용
+            const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/verifycode', data, { //배포용
+            // const res = await axios.post('http://localhost:8090/auth/verifycode', data, { //개발용
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
@@ -69,8 +69,8 @@ const FindPasswordPage = () => {
         console.log(data)
         try {
             // console.log(data)
-            // const res = await axios.put('https://i9c101.p.ssafy.io:8090/auth/changePW', data, { //배포용
-            const res = await axios.put('http://localhost:8090/auth/changePW', data, { //개발용
+            const res = await axios.put('https://i9c101.p.ssafy.io:8090/auth/changePW', data, { //배포용
+            // const res = await axios.put('http://localhost:8090/auth/changePW', data, { //개발용
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },

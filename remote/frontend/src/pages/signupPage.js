@@ -19,8 +19,8 @@ const SignupPage = () => {
       "email" : email,
     };
     try{
-      // const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/signup',userData ,{  //배포를 위해서라도 프록시 설정 해야함.//배포용
-      const res = await axios.post('http://localhost:8090/auth/signup',userData ,{  //개발용.
+      const res = await axios.post('https://i9c101.p.ssafy.io:8090/auth/signup',userData ,{  //배포를 위해서라도 프록시 설정 해야함.//배포용
+      // const res = await axios.post('http://localhost:8090/auth/signup',userData ,{  //개발용.
         headers: {
           'Content-Type' : 'application/x-www-form-urlencoded',
         },

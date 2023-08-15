@@ -10,8 +10,8 @@ const RefreshTest = ({setAccessToken}) => {
         const data = { "id": userId, "provider": provider }
 
         try {
-            // const res = await axios.post('https://i9c101.p.ssafy.io:443/auth/refresh', data, { //배포용
-            const res = await axios.post('http://localhost:8090/auth/refresh', data, { //개발용
+            const res = await axios.post('https://i9c101.p.ssafy.io:443/auth/refresh', data, { //배포용
+            // const res = await axios.post('http://localhost:8090/auth/refresh', data, { //개발용
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
