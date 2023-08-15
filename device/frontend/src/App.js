@@ -25,6 +25,14 @@ function onClickOffButton() {
   });
 }
 
+function onClickBuzzer() {
+  const client = mqtt.connect("ws://localhost:1884");
+  client.on("connect", () => {
+    console.log("connected");
+    client.publish("buzzer", "beep");
+  });
+}
+
 function App() {
   return (
     <div className="App">
@@ -56,6 +64,7 @@ function App() {
       >
         <WifiIcon sx={{ fontSize: "10dvh" }} />
       </IconButton>
+      <button onClick={onClickBuzzer} style={{height: "80px"}}> 부저 울리자 </button>
       <GroupComponent />
     </div>
   );
