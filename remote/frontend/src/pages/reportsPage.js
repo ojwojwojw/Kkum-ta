@@ -42,6 +42,20 @@ export default function ReportPage() {
     </button>
   );
 
+  //날짜 포맷팅 함수
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  const formatDateExceptDay = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}`;
+  };
+
   //잔디를 그리기 위해 필요한 변수들
   const [grassArray, setGrassArray] = useState([]) //데이터 배열
   const months = Array.from({ length: 12 }, (_, i) => i + 1); // 1부터 12까지의 배열 생성
@@ -173,10 +187,11 @@ export default function ReportPage() {
   ////api 요청 관련
   //시간단위 그래프(한시간동안에 얼마나 공부) api 요청
   const hourCheck = async () => {
+    const formattedDate = formatDate(startDateForHour);
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${startDateForHour}&hour=${hour}`) //배포용
-      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${startDateForHour}&hour=${hour}`) //개발용
-
+      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //배포용
+      const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //개발용
+      console.log(res.data)
       const modifiedData = 1 - res.data
       Series1[0].data = [res.data];
       Series1[1].data = [modifiedData];
@@ -194,18 +209,21 @@ export default function ReportPage() {
       }]
       setHourSeries(Series1)
       setHourCircle(Circle1)
+      
     }
     catch (err) {
       console.log(err)
+      console.log(user_id,groupID,formattedDate,hour)
     }
   }
 
   //일간 그래프 api 요청
   const dailyCheck = async () => {
+    const formattedDate = formatDate(startDate);
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${startDate}`) //배포용
-      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${startDate}`)// 개발용
-
+      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}`) //배포용
+      const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}`)// 개발용
+      console.log(res.data)
       const modifiedData = res.data.map(value => 1 - value)
       Series24[0].data = res.data;
       Series24[1].data = modifiedData;
@@ -226,16 +244,17 @@ export default function ReportPage() {
 
     }
     catch (err) {
+      console.log(user_id,groupID,formattedDate)
       console.log(err)
     }
   }
   //월간 그래프 api 요청
 
   const monthCheck = async () => {
+    const formattedDate = formatDateExceptDay(startDate);
     try {
-      const temp = startMonth.getFullYear() + '-' + (startMonth.getMonth() + 1);
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${temp}`) //배포용
-      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${temp}`) //개발용
+      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //배포용
+      const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //개발용
 
       console.log(res.data)
       const modifiedData = res.data.map(value => 1 - value)
@@ -258,12 +277,13 @@ export default function ReportPage() {
 
     }
     catch (err) {
+      console.log(user_id,groupID,formattedDate)
       console.log(err)
 
     }
   }
 
-  //연관 조회 요청 api (잔디밭)
+  //연간 조회 요청 api (잔디밭)
   const yearCheck = async () => {
     try {
       const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${yearGroupID}/?year=${startYear}`) //배포용
@@ -568,12 +588,12 @@ export default function ReportPage() {
                 yearCheck(e.target.value); // 선택한 연도에 대한 yearCheck 함수 호출
               }}
             >
-              <MenuItem value={23} >2023</MenuItem>
-              <MenuItem value={22} >2022</MenuItem>
-              <MenuItem value={21} >2021</MenuItem>
-              <MenuItem value={20} >2020</MenuItem>
-              <MenuItem value={19} >2019</MenuItem>
-              <MenuItem value={18} >2018</MenuItem>
+              <MenuItem value={2023} >2023</MenuItem>
+              <MenuItem value={2022} >2022</MenuItem>
+              <MenuItem value={2021} >2021</MenuItem>
+              <MenuItem value={2020} >2020</MenuItem>
+              <MenuItem value={2019} >2019</MenuItem>
+              <MenuItem value={2018} >2018</MenuItem>
 
             </Select>
           </FormControl>
