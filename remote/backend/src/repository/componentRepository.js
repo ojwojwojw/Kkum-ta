@@ -17,8 +17,8 @@ class ComponentRepository extends Repository {
                 PRIMARY KEY (component_key) USING BTREE,
                 INDEX FK_component_tbl_group_tbl (group_key) USING BTREE,
                 INDEX FK_component_tbl_user_tbl (user_key) USING BTREE,
-                CONSTRAINT FK_component_tbl_group_tbl FOREIGN KEY (group_key) REFERENCES group_tbl (group_key) ON UPDATE NO ACTION ON DELETE NO ACTION,
-                CONSTRAINT FK_component_tbl_user_tbl FOREIGN KEY (user_key) REFERENCES user_tbl (user_key) ON UPDATE NO ACTION ON DELETE NO ACTION
+                CONSTRAINT FK_component_tbl_group_tbl FOREIGN KEY (group_key) REFERENCES group_tbl (group_key) ON UPDATE NO ACTION ON DELETE CASCADE,
+                CONSTRAINT FK_component_tbl_user_tbl FOREIGN KEY (user_key) REFERENCES user_tbl (user_key) ON UPDATE NO ACTION ON DELETE CASCADE
             )
             COLLATE='utf8mb4_general_ci'
             ENGINE=InnoDB
@@ -57,6 +57,15 @@ class ComponentRepository extends Repository {
         const [rows] = await this.query(sql, params);
         return rows;
     }
+    async findAllComponentByUserKeyAndGroup(user_key, group_key) {
+        const sql = `
+            SELECT component_key, init_time, maxIter, group_key
+            FROM component_tbl WHERE user_key = ? AND group_key = ?
+        `;
+        const params = [user_key, group_key];
+        const [rows] = await this.query(sql, params);
+        return rows;
+    }
     
     async findAllComponentByUserId(user_id) {
         const sql = `
@@ -67,6 +76,16 @@ class ComponentRepository extends Repository {
             WHERE id = ?;
         `;
         const params = [user_id];
+        const [rows] = await this.query(sql, params);
+        return rows;
+    }
+
+    async findAllComponentByUserKey(user_key) {
+        const sql = `
+            SELECT component_key, init_time, maxIter, group_key
+            FROM component_tbl WHERE user_key = ?
+        `;
+        const params = [user_key];
         const [rows] = await this.query(sql, params);
         return rows;
     }
@@ -85,24 +104,25 @@ class ComponentRepository extends Repository {
         return rows;
     }
 
-    async insertComponent(init_time, maxIter, group_key, user_id) {
+    async insertComponent(init_time, maxIter, group_key, user_key) {
         const sql = `
             INSERT INTO component_tbl(
                 init_time, 
                 maxIter,
                 group_key,
                 user_key
-            ) VALUES(?, ?, ?, (SELECT user_key FROM user_tbl WHERE user_tbl.id = ?))
+            ) VALUES(?, ?, ?, ?)
         `;
-        const params = [init_time, maxIter, group_key, user_id];
-        await this.query(sql, params);
+        const params = [init_time, maxIter, group_key, user_key];
+        const [rows] = await this.query(sql, params);
+        return rows.insertId;
     }
 
     async updateInitTime(ckey, init_time) {
         const sql = `UPDATE component_tbl SET init_time = ? WHERE component_key = ?`;
         const params = [init_time, ckey];
-        await this.query(sql, params);
-        return true;
+        const [rows] = await this.query(sql, params);
+        return rows;
     }
 
     async updateMaxIter(ckey, maxIter) {
