@@ -10,6 +10,7 @@ import { useDispatch , useSelector} from "react-redux";
 import { logoutState } from "../redux/authSlice";
 import RefreshTest from "./refreshTokenTest";
 
+
 export default function NavBar() {
   const newAccessToken = localStorage.getItem("accessToken") 
   const [accessToken, setAccessToken] = useState(newAccessToken)
@@ -114,11 +115,7 @@ export default function NavBar() {
             <Route exact path="/" Component={""} />
             <Route exact path="/login" Component={Login} />
             <Route exact path="/reports" Component={ReportPage} />
-            <Route exact path="/group1" Component={GroupPage} />
-            <Route exact path="/group2" Component={GroupPage} />
-            <Route exact path="/group3" Component={GroupPage} />
-            <Route exact path="/group4" Component={GroupPage} />
-            <Route exact path="/group5" Component={GroupPage} />
+            <Route exact path="/group/:key" Component={GroupPage} />
           </Routes>
         </Grid>
       </Grid>
