@@ -4,7 +4,7 @@ import "./login.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { loginState, logoutState } from "../redux/authSlice";
+import { loginState } from "../redux/authSlice";
 import FindPasswordPage from "../pages/findPasswordPage";
 import { Route, Routes } from "react-router-dom";
 import SignupPage from "../pages/signupPage";
@@ -25,6 +25,10 @@ export default function Login() {
     // const newAccessToken = localStorage.getItem("accessToken")   //로컬스토리지에서 액세스 토큰 가져오기
     // const [accessToken, setAccessToken] = useState(newAccessToken)
 
+    //오류 메시지 관련
+    const [loginError, setLoginError] = useState(null)
+
+
     //로그인 요청
     const submitSignIn = async () => {
         const userData = {
@@ -33,8 +37,8 @@ export default function Login() {
         };
         try {
             const res = await axios.post(
-                "https://i9c101.p.ssafy.io:8090/auth/signin", // 배포용
-                // "http://localhost:8090/auth/signin",     개발용
+                // "https://i9c101.p.ssafy.io:8090/auth/signin", // 배포용
+                "http://localhost:8090/auth/signin",     //개발용
                 userData,
                 {
                     //배포를 위해서라도 프록시 설정 해야함.
@@ -53,22 +57,22 @@ export default function Login() {
                     email: res.data.user.email,
                 })
             ); //redux에 유저데이터 저장
-
-            navigate("/");
+            navigate("/reports");
         } catch (err) {
             console.log("occur error while login.", err);
+            setLoginError("로그인에 실패하였습니다.")
             // console.log(userData)
         }
     };
 
     const googleURL = async () => {
         try {
-            const { url } = await (
-              await fetch("https://i9c101.p.ssafy.io:8090/auth/google/url")
-            ) // 배포용
             // const { url } = await (
-            //     await fetch("http://localhost:8090/auth/google/url")
-            // ) // 개발용
+            //     await fetch("https://i9c101.p.ssafy.io:8090/auth/google/url")
+            // ) // 배포용
+                const { url } = await (
+                    await fetch("http://localhost:8090/auth/google/url")
+                ) // 개발용
                 .json();
 
             console.log(url); // 응답으로 온 url
@@ -81,12 +85,12 @@ export default function Login() {
 
     const kakaoURL = async () => {
         try {
-            const { url } = await (
-              await fetch("https://i9c101.p.ssafy.io:8090/auth/kakao/url")
-            ) // 배포용
             // const { url } = await (
-            //     await fetch("http://localhost:8090/auth/kakao/url")
-            // ) // 개발용
+            //     await fetch("https://i9c101.p.ssafy.io:8090/auth/kakao/url")
+            // ) // 배포용
+                const { url } = await (
+                    await fetch("http://localhost:8090/auth/kakao/url")
+                ) // 개발용
                 .json();
 
             console.log(url); // 응답으로 온 url
@@ -99,12 +103,12 @@ export default function Login() {
 
     const naverURL = async () => {
         try {
-            const { url } = await (
-              await fetch("https://i9c101.p.ssafy.io:8090/auth/naver/url")
-            ) // 배포용
             // const { url } = await (
-            //     await fetch("http://localhost:8090/auth/naver/url")
-            // ) // 개발용
+            //     await fetch("https://i9c101.p.ssafy.io:8090/auth/naver/url")
+            // ) // 배포용
+                const { url } = await (
+                    await fetch("http://localhost:8090/auth/naver/url")
+                ) // 개발용
                 .json();
 
             console.log(url); // 응답으로 온 url
@@ -114,6 +118,16 @@ export default function Login() {
             console.error(error);
         }
     };
+
+    // //로그아웃 요청 (nav바로 이동)
+    // const submitSignout = async () => {
+
+    //엔터 입력관련
+    const activeEnter = (e) => {
+        if (e.key === "Enter") {
+            submitSignIn();
+        }
+    }
 
     // //로그아웃 요청 (nav바로 이동)
     // const submitSignout = async () => {
@@ -168,10 +182,12 @@ export default function Login() {
                                 type="text"
                                 placeholder="PASSWORD"
                                 value={password}
-                                onChange={(e) =>
-                                    setUserPassword(e.target.value)
-                                }
+                                onChange={(e) => setUserPassword(e.target.value)}
+                                onKeyDown={(e) => activeEnter(e)}
                             ></Input>
+                            <Grid>
+                                {loginError ? <label style={{ color: 'red' }}>{loginError}</label> : null}
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Grid item xs={12} className="btn-form">
@@ -209,12 +225,7 @@ export default function Login() {
                     <Grid item xs={12} className="btn-social-login">
                         <IconButton
                             variant="contained"
-                            sx={{
-                                minWidth: "50px",
-                                minHeight: "50px",
-                                m: "4px",
-                                p: "6px",
-                            }}
+                            sx={{ minWidth: "50px", minHeight: "50px", m: "4px", p: "6px" }}
                             className="Google-login"
                             edge={false}
                             onClick={googleURL}
