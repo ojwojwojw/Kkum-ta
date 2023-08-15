@@ -286,8 +286,8 @@ export default function ReportPage() {
   //연간 조회 요청 api (잔디밭)
   const yearCheck = async () => {
     try {
-      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${yearGroupID}/?year=${startYear}`) //배포용
-      const res = await axios.get(`http://localhost:8090/log/${user_id}/${yearGroupID}/?year=${startYear}`) //개발용
+      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${yearGroupID}/?year=${startYear}`) //배포용
+      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${yearGroupID}/?year=${startYear}`) //개발용
       console.log(res.data)
       setGrassArray(res.data)
     }
