@@ -3,6 +3,7 @@ import BasicStopwatch from "../../utility/basic_stopwatch";
 import { Button, Grid } from "@mui/material";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import axios from "axios";
 
 function StopwatchComponent({
   groupId,
@@ -11,6 +12,7 @@ function StopwatchComponent({
   storeTimerArray,
   logStopwatchStart,
   logStopwatchPause,
+  text,
 }) {
   const [curTime, setCurTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -18,14 +20,51 @@ function StopwatchComponent({
 
   const stopwatch = useMemo(() => new BasicStopwatch(), []);
 
+  // console.log("run?: ", isGroupRunning);
+  // console.log(text);
+
   useEffect(() => {
-    stopwatch.setCurTime = setCurTime;
+    stopwatch.setCutTime = setCurTime;
     stopwatch.setIsRunning = setIsRunning;
     return () => {
       stopwatch.setCurTime = null;
       stopwatch.setIsRunning = null;
     };
   }, [stopwatch]);
+
+  // useEffect(() => {
+  //   const fetchCurTime = async () => {
+  //     try {
+  //       const res = await axios.get(`stopwatch/${groupId}`);
+  //       const timeData = res.data.time;
+  //       setCurTime(timeData);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   return fetchCurTime;
+  // }, [groupId]);
+
+  // 1초마다 스탑워치 시간 갱신
+
+  useEffect(() => {
+    if (isGroupRunning === false) return;
+    const fetchCurTime = async () => {
+      try {
+        const res = await axios.get(`stopwatch/${groupId}`);
+        const timeData = res.data.time;
+        setCurTime(timeData);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const interval = setInterval(fetchCurTime, 300);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [groupId, isGroupRunning]);
 
   useEffect(() => {
     const groupRunning = storeTimerArray.some((timer) => timer.isRunning);
@@ -61,6 +100,27 @@ function StopwatchComponent({
     logStopwatchStart,
     logStopwatchPause,
     groupId,
+  ]);
+
+  useEffect(() => {
+    if (isGroupRunning === true && text !== null) {
+      if (text !== "detected") {
+        handlePause();
+        logStopwatchPause(groupId);
+      } else {
+        handleStart();
+        logStopwatchStart(groupId);
+      }
+    }
+  }, [
+    groupId,
+    handlePause,
+    handleStart,
+    logStopwatchPause,
+    logStopwatchStart,
+    isGroupRunning,
+    stopwatch,
+    text,
   ]);
 
   return (
