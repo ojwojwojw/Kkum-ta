@@ -95,7 +95,8 @@ class ComponentRepository extends Repository {
             ) VALUES(?, ?, ?, (SELECT user_key FROM user_tbl WHERE user_tbl.id = ?))
         `;
         const params = [init_time, maxIter, group_key, user_id];
-        await this.query(sql, params);
+        const [rows] = await this.query(sql, params);
+        return rows.insertId;
     }
 
     async updateInitTime(ckey, init_time) {
