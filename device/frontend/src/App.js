@@ -39,47 +39,47 @@ function App() {
       <IconButton
         sx={{
           position: "fixed",
-          height: "14dvh",
-          width: "7dvw",
-          top: "4dvh",
-          right: "4dvw",
+          height: "6dvw",
+          width: "6dvw",
+          top: "2dvw",
+          right: "2dvw",
           zIndex: 9999,
           color: "black",
         }}
         onClick={onClickOffButton}
       >
-        <PowerSettingsNewIcon sx={{ fontSize: "10dvh", color: "red" }} />
+        <PowerSettingsNewIcon sx={{ fontSize: "6dvw", color: "red" }} />
       </IconButton>
       <IconButton
         sx={{
           position: "fixed",
-          height: "14dvh",
-          width: "7dvw",
-          top: "4dvh",
-          right: "11dvw",
+          height: "6dvw",
+          width: "6dvw",
+          top: "2dvw",
+          right: "10dvw",
           zIndex: 9999,
           color: "black",
         }}
         onClick={onClickWIFIButton}
       >
-        <WifiIcon sx={{ fontSize: "10dvh" }} />
+        <WifiIcon sx={{ fontSize: "6dvw" }} />
       </IconButton>
       <IconButton
         sx={{
           position: "fixed",
-          height: "14dvh",
-          width: "7dvw",
-          top: "4dvh",
-          right: "19dvw",
+          height: "6dvw",
+          width: "6dvw",
+          top: "2dvw",
+          right: "18dvw",
           zIndex: 9999,
           color: "black",
         }}
         onClick={toggleSilent}
       >
         {!isSilent ? (
-          <NotificationsIcon sx={{ fontSize: "10dvh" }} />
+          <NotificationsIcon sx={{ fontSize: "6dvw" }} />
         ) : (
-          <NotificationsOffIcon sx={{ fontSize: "10dvh" }} />
+          <NotificationsOffIcon sx={{ fontSize: "6dvw" }} />
         )}
       </IconButton>
 

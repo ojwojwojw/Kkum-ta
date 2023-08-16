@@ -13,7 +13,6 @@ import SettingsIcon from "@mui/icons-material/Settings";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { useDispatch } from "react-redux";
 
 const style = {
   position: "absolute",
@@ -21,12 +20,12 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "40dvw",
-  height: "36dvh",
+  height: "18dvw",
   bgcolor: "background.paper",
   border: "1px solid #003366",
-  borderRadius: "20px",
+  borderRadius: "2dvw",
   boxShadow: 24,
-  p: "5dvh",
+  p: "3dvw",
 };
 
 export default function UpdateModal({
@@ -76,7 +75,7 @@ export default function UpdateModal({
           setSec(0);
         }}
       >
-        <SettingsIcon sx={{ fontSize: "7dvh" }} />
+        <SettingsIcon sx={{ fontSize: "4dvw" }} />
       </IconButton>
       <Modal
         aria-labelledby="transition-modal-title"
