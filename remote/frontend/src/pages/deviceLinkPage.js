@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { linkDevice } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Input } from "@mui/material";
+import { Box, Button, Grid, Input } from "@mui/material";
 import { border, borderBottom } from "@mui/system";
 
 const DeviceLinkPage = () => {
@@ -73,22 +73,28 @@ const DeviceLinkPage = () => {
   };
 
   return (
-    <Box
+    <Grid
+      container
       sx={{
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        bgcolor:"#fff",
-        borderRadius:"15px",
+        minWidth: "100dvw",
+        minHeight: "100dvh",
       }}
+      justifyContent={"center"}
+      alignItems={"center"}
     >
       <Input
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="디바이스 키를 입력해주세요."
-        sx={{ minWidth: "300px", p: "20px", fontSize:"20px"}}
+        sx={{
+          minWidth: "300px",
+          p: "20px",
+          fontSize: "20px",
+          bgcolor: "#fff",
+          borderRadius: "15px",
+        }}
         disableUnderline={"true"}
       />
       <Button
@@ -98,7 +104,7 @@ const DeviceLinkPage = () => {
         등록하기
       </Button>
       {/* <button onClick={IsDeviceLinked}>디바이스 등록여부 확인</button> */}
-    </Box>
+    </Grid>
   );
 };
 
