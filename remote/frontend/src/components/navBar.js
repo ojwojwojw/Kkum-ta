@@ -11,13 +11,14 @@ import { logoutState } from "../redux/authSlice";
 import RefreshTest from "./refreshTokenTest";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-
+import { useNavigate } from "react-router-dom";
 export default function NavBar() {
   const newAccessToken = localStorage.getItem("accessToken") 
   const [accessToken, setAccessToken] = useState(newAccessToken)
   const dispatch = useDispatch()
   const username = useSelector(state => state.auth.userName)
   const provider = useSelector(state => state.auth.provider)
+  const navigate = useNavigate()
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -31,7 +32,6 @@ export default function NavBar() {
 
   //로그아웃 요청
   const submitSignout = async () => {
-
     const userData = {
       "id": username,
       "provider": provider,
@@ -52,6 +52,10 @@ export default function NavBar() {
     catch (err) {
       console.log(err)
       console.log(username,provider,accessToken)
+      localStorage.removeItem("accessToken");  //로컬 스토리지 비우기
+      dispatch(logoutState())  //redux state 반영하기
+      navigate('/')
+      //redirect to '/'
     }
   }
 
