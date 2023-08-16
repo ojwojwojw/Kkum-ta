@@ -61,6 +61,7 @@ export default function BasicTimerComponent({
   );
 
   const [alarm, setAlarm] = useState(false);
+  const [isAlarmed, setIsAlarmed] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -79,7 +80,13 @@ export default function BasicTimerComponent({
 
   // 타이머 설정이 되어있고, 시간이 다 되었을 때 alarm의 상태를 변화
   useEffect(() => {
-    if (timer.getInitTime()[0] !== 0 && timer.getRemainTime() <= 0) {
+    if (
+      timer.getInitTime()[0] !== 0 &&
+      timer.getRemainTime() <= 0 &&
+      !isAlarmed
+    ) {
+      if (!isSilent) runBuzzer();
+      setIsAlarmed(true);
       setAlarm(true);
       if (!isSilent) runBuzzer();
     }
@@ -91,7 +98,7 @@ export default function BasicTimerComponent({
 
     setTimeout(() => {
       setAlarm(false);
-    }, 3000);
+    }, 2000);
   }, [alarm]);
 
   useEffect(() => {
@@ -130,6 +137,7 @@ export default function BasicTimerComponent({
 
   function resetInitTime() {
     timer.reset();
+    setIsAlarmed(false);
     dispatch(isRunningFalse(WatchId));
     // updateTimer(initTime * 1000); //최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop(); //api 요청으로 백엔드에 리셋 기록 남기기
