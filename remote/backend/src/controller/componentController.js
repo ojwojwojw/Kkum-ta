@@ -26,7 +26,6 @@ const compRouter = express.Router();
  *              user_key:
  *                  type: integer
  *                  example: 1
- *      
  */
 /**
  * @swagger
@@ -158,7 +157,23 @@ compRouter.get("/user/:user_id", async (req, res) => {
  *                      schema:
  *                          type: array
  *                          items:
- *                              $ref: '#/components/schemas/BasicTimerComponent'
+ *                              type: object
+ *                              properties:
+ *                                  component_key:
+ *                                      type: integer
+ *                                      example: 1
+ *                                  init_time:
+ *                                      type: integer
+ *                                      example: 60000
+ *                                  maxIter:
+ *                                      type: integer
+ *                                      example: 1
+ *                                  group_key:
+ *                                      type: integer
+ *                                      example: 1
+ *                                  id:
+ *                                      type: string
+ *                                      example: sh
  *  
  */
 compRouter.get("/user/:user_id/:group_id", async (req, res) => {
@@ -233,7 +248,7 @@ compRouter.post("/", async (req, res) => {
     const gkey = req.body.group_id;
     const initTiime = req.body.initTime;
     const iter = req.body.maxIter;
-    if (!uid || !gkey || !initTiime || !iter) {
+    if (!uid || !gkey || !initTiime || isNaN(parseInt(iter))) {
         return res.status(400).json({ status: "bad request" });
     }
     if(isNaN(parseInt(gkey)) || parseInt(gkey) < 1 || parseInt(gkey) > 4){
@@ -449,14 +464,16 @@ compRouter.delete("/:component_key", async (req, res) => {
  */
 compRouter.get("/device/:device_serial", async (req, res) => {
     const device_serial = req.params.device_serial;
-    const user_id = (await userRepository.getUserByDeviceSerial(device_serial)).user_key;
-    if(user_id === null){
+    const user = await userRepository.getUserByDeviceSerial(device_serial);
+    const user_id = user?.user_key;
+    if(!user_id){
         res.status(404).json({status:`cannot find user that uses the device serial(${device_serial})`});
+        return;
     }
     else{
         res.status(200).json(await componentRepository.findAllComponentByUserKey(user_id));
+        return;
     }
-    return;
 });
 /**
  * @swagger
