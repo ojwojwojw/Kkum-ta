@@ -56,7 +56,7 @@ export default function Login() {
                     email: res.data.user.email,
                 })
             ); //redux에 유저데이터 저장
-            navigate("/reports");
+            navigate("/devicelink");
         } catch (err) {
             console.log("occur error while login.", err);
             setLoginError("로그인에 실패하였습니다.");
@@ -108,7 +108,7 @@ export default function Login() {
             // const { url } = await (
             //     await fetch("http://localhost:8090/auth/naver/url")
             // ) // 개발용
-            //     .json();
+                .json();
 
             console.log(url); // 응답으로 온 url
             document.location.href = url;

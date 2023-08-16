@@ -9,6 +9,8 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutState } from "../redux/authSlice";
 import RefreshTest from "./refreshTokenTest";
+import MyPage from "../pages/myPage";
+import DeviceLinkPage from "../pages/deviceLinkPage";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
@@ -129,7 +131,9 @@ export default function NavBar() {
               "aria-labelledby": "user-button",
             }}
           >
-            <MenuItem onClick={handleClose}>MyPage</MenuItem>
+            <Link to ='/mypage'>
+              <MenuItem >MyPage</MenuItem>
+            </Link>
             <MenuItem onClick={submitSignout}>Logout</MenuItem>
           </Menu>
         </Grid>
@@ -148,6 +152,8 @@ export default function NavBar() {
             <Route exact path="/login" Component={Login} />
             <Route exact path="/reports" Component={ReportPage} />
             <Route exact path="/group/:key" Component={GroupPage} />
+            <Route exact path="/mypage" Component={MyPage} />
+            <Route exact path="/devicelink" Component={DeviceLinkPage} />
           </Routes>
         </Grid>
       </Grid>
