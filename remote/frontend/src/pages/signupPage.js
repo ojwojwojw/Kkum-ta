@@ -2,6 +2,7 @@ import React , {useState} from "react";
 import { Link ,useNavigate} from "react-router-dom";
 import "./signup.css";
 import axios from 'axios';
+import { Grid } from "@mui/material";
 
 
 const SignupPage = () => {
@@ -36,8 +37,8 @@ const SignupPage = () => {
   }
 
   return (
-    <div className="signup-container">
-      <div className="signup-form">
+    <Grid container className="signup-container">
+      <Grid className="signup-form">
         <h1>회원가입</h1>
         <form>
           <input
@@ -70,11 +71,11 @@ const SignupPage = () => {
           </button>
         </form>
         <br/>
-        <div className="back-button">
+        <Grid className="back-button">
           <Link to="/">취소</Link>
-        </div>
-      </div>
-    </div>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 

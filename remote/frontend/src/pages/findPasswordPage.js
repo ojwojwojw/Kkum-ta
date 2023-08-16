@@ -153,7 +153,7 @@ const FindPasswordPage = () => {
 }
 
 
-export default FindPasswordPage
+export default FindPasswordPage;
 
 
 
