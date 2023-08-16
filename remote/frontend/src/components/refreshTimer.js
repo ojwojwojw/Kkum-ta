@@ -41,14 +41,14 @@ function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest}) {
   }
 
   return (
-    <div>
-      자동 로그아웃 시간: {formatTime(timeLeft)}
+    <div style={{display:"flex", color:"#888", justifyContent:"center", alignContent:"center", fontSize:"18px"}}>
       <Button
         onClick={() => {
           refresh();
         }}
+        sx={{color:"#666", fontWeight:"bolder", fontFamily:"Nanum Gothic"}}
       >
-        연장하기
+        자동 로그아웃 시간: {formatTime(timeLeft)} 연장하기
       </Button>
     </div>
   );
