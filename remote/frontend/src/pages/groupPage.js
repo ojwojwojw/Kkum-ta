@@ -63,7 +63,7 @@ export default function GroupPage() {
 
     console.log(data)
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/timer`, data , config) //배포용
+      const res = await axios.post(`https://i9c101.p.ssafy.io:8090/timer`, data , config) //배포용
       // const res = await axios.post(`http://localhost:8090/timer`, data , config) //개발용
       console.log(res.data)
       load()
@@ -77,7 +77,7 @@ export default function GroupPage() {
   const deleteTimer = async (timer_id) => {
     try {
       console.log(timer_id)
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/${timer_id}`) //배포용
+      const res = await axios.delete(`https://i9c101.p.ssafy.io:8090/${timer_id}`) //배포용
       // const res = await axios.delete(`http://localhost:8090/timer/${timer_id}`) //개발용
       console.log(res.data)
       load()
@@ -98,7 +98,7 @@ export default function GroupPage() {
     
     try {
       console.log(timer_id)
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/${timer_id}`,data ,config) //배포용
+      const res = await axios.put(`https://i9c101.p.ssafy.io:8090/${timer_id}`, data, config) //배포용
       // const res = await axios.put(`http://localhost:8090/timer/${timer_id}`,data ,config) //개발용
       console.log(res.data)
       load()
