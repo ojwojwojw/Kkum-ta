@@ -40,7 +40,7 @@
 }
 
 .navbar {
-  background-color: #a8df61;
+  background: linear-gradient(to bottom, #b3d9ff, #66b2ff);
   color: black;
 }
 
