@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -23,12 +23,17 @@ import { BarChart, PieChart } from "@mui/x-charts";
 import axios from "axios";
 
 export default function ReportPage() {
-  const [handle, setHandle] = useState("day");
+  const [handle, setHandle] = useState("week");
   const [view, setView] = React.useState("list");
 
   const handleChange = (event, nextView) => {
     setView(nextView);
   };
+
+  //2023년 조회 데이터가 바로 뜨게끔 
+  useEffect(()=>{
+    yearCheck(2023)
+  },[])
 
   //api 요청시 필요한 데이터
   const user_id = useSelector((state) => state.auth.userName);
@@ -325,14 +330,14 @@ export default function ReportPage() {
               exclusive
               onChange={handleChange}
             >
-              <ToggleButton
+              {/* <ToggleButton
                 value="day"
                 aria-label="day"
                 onClick={() => setHandle("day")}
               >
                 시간단위 : {Math.round(hourCircle[0].data[0].value * 60)}분 /
                 60분
-              </ToggleButton>
+              </ToggleButton> */}
               <ToggleButton
                 value="week"
                 aria-label="week"
@@ -384,6 +389,7 @@ export default function ReportPage() {
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
                     customInput={<ExampleCustomInput />}
+                    dateFormat="yyyy-MM-dd"
                   />
                   {/* 조회할 시간 입력 */}
                   <FormControl>
@@ -470,9 +476,14 @@ export default function ReportPage() {
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
                     customInput={<ExampleCustomInput />}
+                    dateFormat="yyyy-MM-dd"
                   />
                   {/* api요청보내는버튼 */}
-                  <button onClick={dailyCheck} className="apiReqBtn">
+                  <button onClick={()=>{
+                    dailyCheck();
+                    monthCheck();
+                  }} 
+                  className="apiReqBtn">
                     데이터 불러오기
                   </button>
                 </div>
@@ -509,9 +520,15 @@ export default function ReportPage() {
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
                     customInput={<ExampleCustomInput />}
+                    dateFormat="yyyy-MM-dd"
                   />
                   {/* api요청보내는버튼 */}
-                  <button onClick={monthCheck} className="apiReqBtn">
+                  {/* <button onClick={monthCheck} className="apiReqBtn"> */}
+                  <button onClick={()=>{
+                    dailyCheck();
+                    monthCheck();
+                  }} 
+                  className="apiReqBtn">
                     데이터 불러오기
                   </button>
                 </div>

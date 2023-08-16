@@ -62,7 +62,7 @@ export default function NavBar() {
         className="navbar"
         justifyContent={"center"}
         alignItems={"center"}
-        height={"50px"}
+        height={"60px"}
         zIndex={100}
       >
         <Grid item xs={1}>

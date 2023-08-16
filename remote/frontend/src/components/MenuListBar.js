@@ -24,7 +24,7 @@ export default function MenuListBar() {
     <Grid item xs={2} className="side-bar" zIndex={999}>
       <List
         sx={{
-          top: "50px",
+          top: "60px",
           left: 0,
           position: "fixed",
           width: "200px",
