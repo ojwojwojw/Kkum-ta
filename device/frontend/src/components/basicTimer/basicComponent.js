@@ -66,8 +66,8 @@ export default function BasicTimerComponent({
   const dispatch = useDispatch();
 
   function runBuzzer() {
-    const client = mqtt.connect("ws://localhost:1884");
-    // const client = mqtt.connect("ws://192.168.100.245:1884");
+    // const client = mqtt.connect("ws://localhost:1884");
+    const client = mqtt.connect("ws://192.168.100.245:1884");
     client.on("connect", () => {
       console.log("connected");
       client.publish("buzzer", "beep");
@@ -88,9 +88,9 @@ export default function BasicTimerComponent({
       if (!isSilent) runBuzzer();
       setIsAlarmed(true);
       setAlarm(true);
-      if (!isSilent) runBuzzer();
+      console.log("알람");
     }
-  }, [timer, isSilent]);
+  }, [timer.getRemainTime()]);
 
   // 알람이 울리고 3초 뒤 알람 상태 false로 변경
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function BasicTimerComponent({
     timer.getIsRunning()
       ? dispatch(isRunningTrue(WatchId))
       : dispatch(isRunningFalse(WatchId));
-  }, [timer, dispatch, WatchId]);
+  }, [timer.getIsRunning(), WatchId]);
 
   useEffect(() => {
     // console.log(remainTime);
