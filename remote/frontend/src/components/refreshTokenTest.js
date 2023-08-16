@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import RefreshTimer from "./refreshTimer";
-import { Button, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 
 const RefreshTest = ({ setAccessToken }) => {
   const provider = useSelector((state) => state.auth.provider);
@@ -17,7 +17,7 @@ const RefreshTest = ({ setAccessToken }) => {
         //배포용
         "https://i9c101.p.ssafy.io:443/auth/refresh",
         //개발용
-        // "http://localhost:8090/auth/refresh",  
+        // "http://localhost:8090/auth/refresh",
         data,
         {
           headers: {
