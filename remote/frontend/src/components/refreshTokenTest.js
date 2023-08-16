@@ -26,9 +26,11 @@ const RefreshTest = ({ setAccessToken }) => {
           withCredentials: true,
         }
       );
-      console.log(res.data);
+      console.log("auth/refresh post:", res.data);
       localStorage.removeItem("accessToken"); //로컬 스토리지 비우기
+      console.log("removed accessToken");
       localStorage.setItem("accessToken", res.data.accessToken); //로컬스토리지에 토큰 저장
+      console.log("set accessToken");
       setAccessToken(res.data.accessToken);
       setResetTimer(true);
     } catch (err) {

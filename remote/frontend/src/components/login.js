@@ -178,7 +178,7 @@ export default function Login() {
                         <Grid item xs={12}>
                             <Input
                                 className="login-input"
-                                type="text"
+                                type="password"
                                 placeholder="PASSWORD"
                                 value={password}
                                 onChange={(e) =>
