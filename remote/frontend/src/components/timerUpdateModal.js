@@ -172,7 +172,7 @@ export default function TimerUpdateModal({
                 color="success"
                 onClick={() => {
                   setInput(input);
-                  updateTimer(input, WatchId);
+                  update(input, WatchId);
                   handleClose();
                   // setTimeout(load(), 1000);
                 }}

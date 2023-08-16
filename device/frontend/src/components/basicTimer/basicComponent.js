@@ -45,6 +45,7 @@ const StyledTimerBackground = styled(Grid)`
 `;
 
 export default function BasicTimerComponent({
+  groupId,
   timer,
   idx,
   type,
@@ -61,12 +62,13 @@ export default function BasicTimerComponent({
   );
 
   const [alarm, setAlarm] = useState(false);
+  const [isAlarmed, setIsAlarmed] = useState(true);
 
   const dispatch = useDispatch();
 
   function runBuzzer() {
-    const client = mqtt.connect("ws://localhost:1884");
-    // const client = mqtt.connect("ws://192.168.100.245:1884");
+    // const client = mqtt.connect("ws://localhost:1884");
+    const client = mqtt.connect("ws://192.168.100.245:1884");
     client.on("connect", () => {
       console.log("connected");
       client.publish("buzzer", "beep");
@@ -79,18 +81,25 @@ export default function BasicTimerComponent({
 
   // 타이머 설정이 되어있고, 시간이 다 되었을 때 alarm의 상태를 변화
   useEffect(() => {
-    if (timer.getInitTime()[0] !== 0 && timer.getRemainTime() <= 0) {
+    if (
+      timer.getInitTime()[0] !== 0 &&
+      timer.getRemainTime() <= 0 &&
+      !isAlarmed
+    ) {
+      if (!isSilent) runBuzzer();
+      setIsAlarmed(true);
       setAlarm(true);
+      console.log("알람");
     }
   }, [timer.getRemainTime()]);
 
   // 알람이 울리고 3초 뒤 알람 상태 false로 변경
   useEffect(() => {
     if (alarm === false) return;
+
     setTimeout(() => {
-      if (!isSilent) runBuzzer();
       setAlarm(false);
-    }, 3000);
+    }, 2000);
   }, [alarm]);
 
   useEffect(() => {
@@ -117,6 +126,7 @@ export default function BasicTimerComponent({
   function toggle() {
     isRunning ? timer.pause() : timer.start();
     isRunning ? logPause() : logStart(); // api 요청으로 백엔드에 시작/중지 로그 남기기
+    isRunning ? setIsAlarmed(true) : setIsAlarmed(false);
     isRunning
       ? dispatch(isRunningFalse(WatchId))
       : dispatch(isRunningTrue(WatchId));
@@ -129,6 +139,7 @@ export default function BasicTimerComponent({
 
   function resetInitTime() {
     timer.reset();
+    setIsAlarmed(false);
     dispatch(isRunningFalse(WatchId));
     // updateTimer(initTime * 1000); //최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop(); //api 요청으로 백엔드에 리셋 기록 남기기

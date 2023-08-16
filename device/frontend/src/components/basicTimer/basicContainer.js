@@ -19,6 +19,8 @@ export default function TimerContainer({ id, text, isSilent }) {
 
   const [isGroupRunning, setIsGroupRunning] = useState(false);
 
+  useEffect(() => allPause(), [id]);
+
   useEffect(() => {
     // console.log("timer container constructor");
     // 0.1초 뒤에 load 함수 호출을 지연시킵니다.
@@ -197,6 +199,7 @@ export default function TimerContainer({ id, text, isSilent }) {
                 initTime={obj.initTime}
                 load={load}
                 isSilent={isSilent}
+                groupId={id}
               />
             );
           })}

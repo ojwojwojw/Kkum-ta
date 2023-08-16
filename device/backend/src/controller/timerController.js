@@ -80,7 +80,7 @@ timerRouter.get("/", async (req, res) => {
     return res.status(400).json({status:`invalid parameter: group_id(${req.query.group_id}`});
   }
   const group_id = parseInt(req.query.group_id);
-  if(group_id){
+  if(!isNaN(group_id)){
     res.status(200).json(timerService.getByGroup(parseInt(group_id)));
     return;
   }

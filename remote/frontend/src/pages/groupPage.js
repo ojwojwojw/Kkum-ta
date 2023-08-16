@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Box, Grid, Button } from "@mui/material";
-import { IconButton, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import { useParams } from "react-router-dom";
 import BasicTimer from "../components/basicTimer";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchData } from "../redux/timerSlice";
-import { fontWeight } from "@mui/system";
 
 export default function GroupPage() {
   const { key } = useParams(); //그룹 번호를 라우팅 parmas로 받아옴
@@ -27,7 +26,9 @@ export default function GroupPage() {
   //로그인한 유저의 특정 그룹의 타이머 정보 조회
   const load = async () => {
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/timer/user/${userName}/${key}`) //배포용
+      const res = await axios.get(
+        `https://i9c101.p.ssafy.io:8090/timer/user/${userName}/${key}`
+      ); //배포용
       // const res = await axios.get(
       //   `http://localhost:8090/timer/user/${userName}/${key}`
       // ); //개발용
@@ -55,7 +56,11 @@ export default function GroupPage() {
 
     console.log(data);
     try {
-      const res = await axios.post(`https://i9c101.p.ssafy.io:8090/timer`, data , config) //배포용
+      const res = await axios.post(
+        `https://i9c101.p.ssafy.io:8090/timer`,
+        data,
+        config
+      ); //배포용
       // const res = await axios.post(`http://localhost:8090/timer`, data, config); //개발용
       console.log(res.data);
       load();
@@ -68,7 +73,9 @@ export default function GroupPage() {
   const deleteTimer = async (timer_id) => {
     try {
       console.log(timer_id);
-      const res = await axios.delete(`https://i9c101.p.ssafy.io:8090/timer/${timer_id}`) //배포용
+      const res = await axios.delete(
+        `https://i9c101.p.ssafy.io:8090/timer/${timer_id}`
+      ); //배포용
       // const res = await axios.delete(`http://localhost:8090/timer/${timer_id}`); //개발용
       console.log(res.data);
       load();
@@ -88,7 +95,11 @@ export default function GroupPage() {
 
     try {
       console.log(timer_id);
-      const res = await axios.put(`https://i9c101.p.ssafy.io:8090/timer/${timer_id}`,data ,config) //배포용
+      const res = await axios.put(
+        `https://i9c101.p.ssafy.io:8090/timer/${timer_id}`,
+        data,
+        config
+      ); //배포용
       // const res = await axios.put(
       //   `http://localhost:8090/timer/${timer_id}`,
       //   data,
@@ -103,19 +114,15 @@ export default function GroupPage() {
 
   return (
     <Box>
-<<<<<<< Updated upstream
-      <Grid container position={"fixed"} left={"230px"} top={"80px"} width={"180px"} fontSize={"40px"} fontWeight={"600"}>
-=======
       <Grid
         container
         position={"fixed"}
         left={"230px"}
         top={"80px"}
         width={"180px"}
-        fontSize={"3dvw"}
+        fontSize={"40px"}
         fontWeight={"600"}
       >
->>>>>>> Stashed changes
         {key}번 그룹
       </Grid>
       <Stack
@@ -148,7 +155,7 @@ export default function GroupPage() {
             sx={{
               bgcolor: "#003366",
               width: "50dvw",
-              height: "7dvh",
+              height: "3dvw",
               m: "6px",
               borderRadius: "10px",
               color: "white",
