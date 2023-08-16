@@ -11,16 +11,16 @@ import { logoutState } from "../redux/authSlice";
 import RefreshTest from "./refreshTokenTest";
 import MyPage from "../pages/myPage";
 import DeviceLinkPage from "../pages/deviceLinkPage";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useNavigate } from "react-router-dom";
 
 export default function NavBar() {
-  const newAccessToken = localStorage.getItem("accessToken") 
+  const newAccessToken = localStorage.getItem("accessToken");
   const [accessToken, setAccessToken] = useState(newAccessToken);
   const dispatch = useDispatch();
-  const username = useSelector(state => state.auth.userName);
-  const provider = useSelector(state => state.auth.provider);
+  const username = useSelector((state) => state.auth.userName);
+  const provider = useSelector((state) => state.auth.provider);
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -56,15 +56,15 @@ export default function NavBar() {
       console.log(res.data);
       dispatch(logoutState()); //redux state 반영하기
       setTimeout(localStorage.removeItem("accessToken"), 100); //로컬 스토리지 비우기
-      } catch (err) {
-      console.log(err)
-      console.log(username,provider,accessToken)
-      localStorage.removeItem("accessToken");  //로컬 스토리지 비우기
-      dispatch(logoutState())  //redux state 반영하기
-      navigate('/')
+    } catch (err) {
+      console.log(err);
+      console.log(username, provider, accessToken);
+      localStorage.removeItem("accessToken"); //로컬 스토리지 비우기
+      dispatch(logoutState()); //redux state 반영하기
+      navigate("/");
       //redirect to '/'
     }
-  }
+  };
 
   return (
     <Box>
@@ -74,10 +74,10 @@ export default function NavBar() {
         className="navbar"
         justifyContent={"center"}
         alignItems={"center"}
-        height={"60px"}
+        height={"80px"}
         zIndex={100}
       >
-        <Grid item xs={2}>
+        <Grid item xs={1.5}>
           <Link to="/">
             <div
               style={{
@@ -88,12 +88,12 @@ export default function NavBar() {
               }}
             >
               <img
-                style={{ width: "45px", margin: "0px 8px 0px" }}
+                style={{ width: "3.2dvw", margin: "0 0.3dvw 0 0" }}
                 src="/images/kkumta-logo.png"
               ></img>
               <div
                 style={{
-                  fontSize: "30px",
+                  fontSize: "1.8dvw",
                   color: "#003366",
                   fontFamily: "Nanum Gothic",
                   fontWeight: "bolder",
@@ -105,10 +105,15 @@ export default function NavBar() {
             </div>
           </Link>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={8.8}>
           <RefreshTest setAccessToken={setAccessToken} />
         </Grid>
-        <Grid item xs={1}>
+        <Grid item xs={1.5} style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}>
           {/* 개발의 편의성을 위해 놓아뒀던 login 버튼 */}
           {/* <Link to="/login" Component={Login}>
             Login
@@ -120,7 +125,7 @@ export default function NavBar() {
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
             disableRipple={true}
-            sx={{ color: "black", fontSize: "20px", fontWeight: 600 }}
+            sx={{ color: "black", fontSize: "1.2dvw", fontWeight: 600 }}
           >
             <Grid style={{ display: "flex", alignItems: "center" }}>
               {" "}
@@ -137,8 +142,8 @@ export default function NavBar() {
               "aria-labelledby": "user-button",
             }}
           >
-            <Link to ='/mypage'>
-              <MenuItem >MyPage</MenuItem>
+            <Link to="/mypage">
+              <MenuItem>MyPage</MenuItem>
             </Link>
             <MenuItem onClick={submitSignout}>Logout</MenuItem>
           </Menu>

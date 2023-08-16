@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { linkDevice } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
+import { Box, Button, Input } from "@mui/material";
+import { border, borderBottom } from "@mui/system";
 
 const DeviceLinkPage = () => {
   const user_id = useSelector((state) => state.auth.userName);
@@ -11,7 +13,7 @@ const DeviceLinkPage = () => {
   const dispatch = useDispatch();
   const newData = localStorage.getItem("accessToken");
   const [tokenData, setTokenData] = useState(newData);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   //자동으로 디바이스 등록여부 확인하는 함수 실행
   useEffect(() => {
@@ -32,8 +34,12 @@ const DeviceLinkPage = () => {
     };
 
     try {
-      const res = await axios.patch(`https://i9c101.p.ssafy.io:8090/dev/user/${user_id}`,data ,config) //배포용
-    //   const res = await axios.patch(`http://localhost:8090/dev/user/${user_id}`, data, config ); //
+      const res = await axios.patch(
+        `https://i9c101.p.ssafy.io:8090/dev/user/${user_id}`,
+        data,
+        config
+      ); //배포용
+      //   const res = await axios.patch(`http://localhost:8090/dev/user/${user_id}`, data, config ); //
       console.log(res.data);
       dispatch(linkDevice(true)); //redux에 반영
       navigate("/reports"); // navigate 실행
@@ -51,8 +57,11 @@ const DeviceLinkPage = () => {
       },
     };
     try {
-      const res = await axios.patch(`https://i9c101.p.ssafy.io:8090/dev/user/${user_id}` ,config) //배포용
-    //   const res = await axios.get(`http://localhost:8090/dev/user/${user_id}`, config); //
+      const res = await axios.patch(
+        `https://i9c101.p.ssafy.io:8090/dev/user/${user_id}`,
+        config
+      ); //배포용
+      //   const res = await axios.get(`http://localhost:8090/dev/user/${user_id}`, config); //
       console.log(res.data);
       dispatch(linkDevice(true)); //redux에 반영
       navigate("/reports"); // navigate 실행
@@ -64,17 +73,32 @@ const DeviceLinkPage = () => {
   };
 
   return (
-    <div>
-        <br/><br/><br/>
-      <input
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        bgcolor:"#fff",
+        borderRadius:"15px",
+      }}
+    >
+      <Input
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="디바이스 키를 입력해주세요."
+        sx={{ minWidth: "300px", p: "20px", fontSize:"20px"}}
+        disableUnderline={"true"}
       />
-      <button onClick={linkToDevice}>등록하기</button>
+      <Button
+        sx={{ p: "20px", fontSize: "20px", fontWeight: 600, color: "black" }}
+        onClick={linkToDevice}
+      >
+        등록하기
+      </Button>
       {/* <button onClick={IsDeviceLinked}>디바이스 등록여부 확인</button> */}
-    </div>
+    </Box>
   );
 };
 

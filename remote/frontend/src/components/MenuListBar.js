@@ -26,10 +26,10 @@ export default function MenuListBar() {
       {isDeviceLinked && (
         <List
           sx={{
-            top: "60px",
+            top: "80px",
             left: 0,
             position: "fixed",
-            width: "200px",
+            width: "280px",
             minHeight: "100dvh",
             bgcolor: "background.paper",
             justifyContent: "center",
