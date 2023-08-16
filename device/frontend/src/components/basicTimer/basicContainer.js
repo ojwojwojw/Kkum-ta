@@ -197,6 +197,7 @@ export default function TimerContainer({ id, text, isSilent }) {
                 initTime={obj.initTime}
                 load={load}
                 isSilent={isSilent}
+                groupId={id}
               />
             );
           })}
