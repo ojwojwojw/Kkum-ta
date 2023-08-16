@@ -45,6 +45,7 @@ const StyledTimerBackground = styled(Grid)`
 `;
 
 export default function BasicTimerComponent({
+  groupId,
   timer,
   idx,
   type,
@@ -61,7 +62,7 @@ export default function BasicTimerComponent({
   );
 
   const [alarm, setAlarm] = useState(false);
-  const [isAlarmed, setIsAlarmed] = useState(false);
+  const [isAlarmed, setIsAlarmed] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -125,6 +126,7 @@ export default function BasicTimerComponent({
   function toggle() {
     isRunning ? timer.pause() : timer.start();
     isRunning ? logPause() : logStart(); // api 요청으로 백엔드에 시작/중지 로그 남기기
+    isRunning ? setIsAlarmed(true) : setIsAlarmed(false);
     isRunning
       ? dispatch(isRunningFalse(WatchId))
       : dispatch(isRunningTrue(WatchId));
@@ -246,24 +248,28 @@ export default function BasicTimerComponent({
           </Button>
         </Grid>
         <Grid item>
-          <Stack>
-            <IconButton
-              aria-label="delete"
-              variant="text"
-              color="error"
-              onClick={deleteWatch} //remove는 프런트단에서만 삭제됨
-            >
-              {WatchId === 0 && <CloseIcon sx={{ fontSize: "7dvh" }} />}
-            </IconButton>
-            <UpdateModal
-              WatchId={WatchId}
-              updateTimer={updateTimer}
-              input={input}
-              setInput={setInput}
-              reload={reload}
-              // timer = {timer}
-            />
-          </Stack>
+          {groupId === 0 && (
+            <>
+              <Stack>
+                <IconButton
+                  aria-label="delete"
+                  variant="text"
+                  color="error"
+                  onClick={deleteWatch} //remove는 프런트단에서만 삭제됨
+                >
+                  <CloseIcon sx={{ fontSize: "7dvh" }} />
+                </IconButton>
+                <UpdateModal
+                  WatchId={WatchId}
+                  updateTimer={updateTimer}
+                  input={input}
+                  setInput={setInput}
+                  reload={reload}
+                  // timer = {timer}
+                />
+              </Stack>
+            </>
+          )}
         </Grid>
       </Grid>
     </StyledTimerContainer>
