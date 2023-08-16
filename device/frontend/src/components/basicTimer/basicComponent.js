@@ -18,6 +18,8 @@ import { isRunningTrue, isRunningFalse } from "../../redux/timerSlice";
 
 import UpdateModal from "./UpdateModal";
 
+import * as mqtt from "mqtt";
+
 // function useConstructor(callBack = () => {}) {
 //   const flag = useRef(false);
 //   if (flag.current) return;
@@ -49,6 +51,7 @@ export default function BasicTimerComponent({
   WatchId,
   initTime,
   load,
+  isSilent,
 }) {
   const [input, setInput] = useState(0);
   const [remainTime, setRemainTime] = useState(timer.getRemainTime());
@@ -60,6 +63,15 @@ export default function BasicTimerComponent({
   const [alarm, setAlarm] = useState(false);
 
   const dispatch = useDispatch();
+
+  function runBuzzer() {
+    const client = mqtt.connect("ws://localhost:1884");
+    // const client = mqtt.connect("ws://192.168.100.245:1884");
+    client.on("connect", () => {
+      console.log("connected");
+      client.publish("buzzer", "beep");
+    });
+  }
 
   useEffect(() => {
     setRemainTime(timer.getRemainTime());
@@ -74,7 +86,9 @@ export default function BasicTimerComponent({
 
   // 알람이 울리고 3초 뒤 알람 상태 false로 변경
   useEffect(() => {
+    if (alarm === false) return;
     setTimeout(() => {
+      if (!isSilent) runBuzzer();
       setAlarm(false);
     }, 3000);
   }, [alarm]);
@@ -189,7 +203,7 @@ export default function BasicTimerComponent({
 
   return (
     <StyledTimerContainer
-      className={!alarm?"watch timer":"watch timer alarming"}
+      className={!alarm ? "watch timer" : "watch timer alarming"}
     >
       <StyledTimerBackground className="progress-bar" progress={progress} />
       <Grid container justifyContent={"center"} alignContent={"center"}>
