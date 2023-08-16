@@ -12,13 +12,14 @@ import axios from "axios";
 import { useSelector ,useDispatch } from "react-redux";
 import { fetchData } from "../redux/timerSlice";
 import UpdateModal from "./updateModal";
+import "./groupPage.css";
 
 export default function GroupPage() {
   const {key} = useParams() //그룹 번호를 라우팅 parmas로 받아옴
   const timerArray = useSelector(state =>state.timer.timerArray) //해당그룹페이지의 타이머 관리용 array
   const userName = useSelector(state => state.auth.userName) // 로그인한 유저 아이디
   const dispatch = useDispatch() //디스패치 선언
-  const [input, setInput] = useState(0) //타이머 시간 입력하는 용도
+  // const [input, setInput] = useState(0) //타이머 시간 입력하는 용도
 
   //랜더링 관련
   useEffect(()=>{
@@ -98,7 +99,7 @@ export default function GroupPage() {
     try {
       console.log(timer_id)
       const res = await axios.get(`https://i9c101.p.ssafy.io:8090/${timer_id}`,data ,config) //배포용
-      // const res = await axios.delete(`http://localhost:8090/timer/${timer_id}`,data ,config) //개발용
+      // const res = await axios.put(`http://localhost:8090/timer/${timer_id}`,data ,config) //개발용
       console.log(res.data)
       load()
     }
@@ -115,8 +116,14 @@ export default function GroupPage() {
         {timerArray.length > 0 ? (    
           // timerArray가 비어있을땐 map을 쓰면 에러가납니다
           timerArray.map((item) => (
+            
             <div key={item.id}>
-              <p>Component Key: {item.component_key}</p>
+              <BasicTimer 
+              time = {item.init_time} 
+              WatchId={item.component_key}
+              updateTimer={updateTimer}
+              reload={load} />
+              {/* <p>Component Key: {item.component_key}</p>
               <p>Init Time: {item.init_time}</p>
               <p>Max Iter: {item.maxIter}</p>
               <p>Group Key: {item.group_key}</p>
@@ -128,7 +135,7 @@ export default function GroupPage() {
               input={input}
               setInput={setInput}
               reload={load}
-              />
+              /> */}
               <hr />
             </div>
           ))
