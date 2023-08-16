@@ -190,16 +190,17 @@ logRouter.get("/:user_id/:group_id", async (req, res) => {
     if(isNaN(parseInt(hour)) || hour < 0 || hour > 23){
       res.status(400).json({status:`Invalid hour(${hour})`});
     }
-    else if(!(/^\d{4}-\d{2}-\d{2}$/.test(date)) || isNaN(new Date(date).getTime())){
-      res.status(400).json({status:`invalid date(${date}), date should be in format of(YYYY-MM-DD)`});
+    else if((/^\d{4}-\d{2}-\d{2}$/.test(date)) && !isNaN(new Date(date).getTime())){
+      res.status(200).json(await logService.hour(user_key, group_id, date, parseInt(hour)));
+      return;
     }
     else{
-      res.status(200).json(await logService.hour(user_key, group_id, date, parseInt(hour)));
+      res.status(400).json({status:`invalid date(${date}), date should be in format of(YYYY-MM-DD)`});
+      return;
     }
-    return;
   }
   if (!hour && !!date && !month && !year) {
-    if(!(/^\d{4}-\d{2}-\d{2}$/.test(date)) && !isNaN(new Date(date).getTime())) {
+    if(/^\d{4}-\d{2}-\d{2}$/.test(date) && !isNaN(new Date(date).getTime())) {
       res.status(200).json(await logService.date(user_key, group_id, date));
       return;
     }else{

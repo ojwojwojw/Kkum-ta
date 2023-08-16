@@ -13,7 +13,7 @@ import {
 import { Grid, Box, Stack, Button } from "@mui/material";
 import StopwatchComponent from "./stopwatchComponent";
 
-export default function TimerContainer({ id, text }) {
+export default function TimerContainer({ id, text, isSilent }) {
   const dispatch = useDispatch();
   const storeTimerArray = useSelector((state) => state.timer.timerArray); //백엔드와 동기화 된 store의 timerArray를 해당 컴포넌트에 불러온다.
 
@@ -196,6 +196,7 @@ export default function TimerContainer({ id, text }) {
                 WatchId={obj.id}
                 initTime={obj.initTime}
                 load={load}
+                isSilent={isSilent}
               />
             );
           })}

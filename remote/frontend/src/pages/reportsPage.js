@@ -187,12 +187,10 @@ export default function ReportPage() {
   const hourCheck = async () => {
     const formattedDate = formatDate(startDateForHour);
     try {
-      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //배포용
-      const res = await axios.get(
-        `http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`
-      ); //개발용
-      console.log(res.data);
-      const modifiedData = 1 - res.data;
+      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //배포용
+      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //개발용
+      console.log(res.data)
+      const modifiedData = 1 - res.data
       Series1[0].data = [res.data];
       Series1[1].data = [modifiedData];
       Circle1[0].data = [
@@ -221,12 +219,10 @@ export default function ReportPage() {
   const dailyCheck = async () => {
     const formattedDate = formatDate(startDate);
     try {
-      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}`) //배포용
-      const res = await axios.get(
-        `http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}`
-      ); // 개발용
-      console.log(res.data);
-      const modifiedData = res.data.map((value) => 1 - value);
+      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}`) //배포용
+      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}`)// 개발용
+      console.log(res.data)
+      const modifiedData = res.data.map(value => 1 - value)
       Series24[0].data = res.data;
       Series24[1].data = modifiedData;
       Circle24[0].data = [
@@ -259,10 +255,8 @@ export default function ReportPage() {
   const monthCheck = async () => {
     const formattedDate = formatDateExceptDay(startDate);
     try {
-      // const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //배포용
-      const res = await axios.get(
-        `http://localhost:8090/log/${user_id}/${groupID}/?month=${formattedDate}`
-      ); //개발용
+      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //배포용
+      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //개발용
 
       console.log(res.data);
       const modifiedData = res.data.map((value) => 1 - value);

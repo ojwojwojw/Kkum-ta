@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import * as mqtt from "mqtt";
 
@@ -6,6 +6,8 @@ import GroupComponent from "./components/basicTimer/groupComponent";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import WifiIcon from "@mui/icons-material/Wifi";
 import { IconButton } from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsOffIcon from "@mui/icons-material/NotificationsOff";
 
 function onClickWIFIButton() {
   // const client = mqtt.connect("ws://192.168.100.245:1884");
@@ -25,15 +27,13 @@ function onClickOffButton() {
   });
 }
 
-function onClickBuzzer() {
-  const client = mqtt.connect("ws://localhost:1884");
-  client.on("connect", () => {
-    console.log("connected");
-    client.publish("buzzer", "beep");
-  });
-}
-
 function App() {
+  const [isSilent, setIsSilent] = useState(false);
+
+  function toggleSilent() {
+    isSilent ? setIsSilent(false) : setIsSilent(true);
+  }
+
   return (
     <div className="App">
       <IconButton
@@ -56,7 +56,7 @@ function App() {
           height: "14dvh",
           width: "7dvw",
           top: "4dvh",
-          right: "13dvw",
+          right: "11dvw",
           zIndex: 9999,
           color: "black",
         }}
@@ -64,8 +64,26 @@ function App() {
       >
         <WifiIcon sx={{ fontSize: "10dvh" }} />
       </IconButton>
-      <button onClick={onClickBuzzer} style={{height: "80px"}}> 부저 울리자 </button>
-      <GroupComponent />
+      <IconButton
+        sx={{
+          position: "fixed",
+          height: "14dvh",
+          width: "7dvw",
+          top: "4dvh",
+          right: "19dvw",
+          zIndex: 9999,
+          color: "black",
+        }}
+        onClick={toggleSilent}
+      >
+        {!isSilent ? (
+          <NotificationsIcon sx={{ fontSize: "10dvh" }} />
+        ) : (
+          <NotificationsOffIcon sx={{ fontSize: "10dvh" }} />
+        )}
+      </IconButton>
+
+      <GroupComponent isSilent={isSilent} />
     </div>
   );
 }
