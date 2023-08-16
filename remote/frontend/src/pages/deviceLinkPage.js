@@ -51,8 +51,7 @@ const DeviceLinkPage = () => {
       },
     };
     try {
-      const res = await axios.patch(`https://i9c101.p.ssafy.io:8090/dev/user/${user_id}` ,config) //배포용
-    //   const res = await axios.get(`http://localhost:8090/dev/user/${user_id}`, config); //
+      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/dev/user/${user_id}` ,config) //배포용
       console.log(res.data);
       dispatch(linkDevice(true)); //redux에 반영
       navigate("/reports"); // navigate 실행
