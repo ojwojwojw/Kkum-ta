@@ -81,14 +81,15 @@ export default function BasicTimerComponent({
   useEffect(() => {
     if (timer.getInitTime()[0] !== 0 && timer.getRemainTime() <= 0) {
       setAlarm(true);
+      if (!isSilent) runBuzzer();
     }
-  }, [timer.getRemainTime()]);
+  }, [timer, isSilent]);
 
   // 알람이 울리고 3초 뒤 알람 상태 false로 변경
   useEffect(() => {
     if (alarm === false) return;
+
     setTimeout(() => {
-      if (!isSilent) runBuzzer();
       setAlarm(false);
     }, 3000);
   }, [alarm]);
@@ -98,7 +99,7 @@ export default function BasicTimerComponent({
     timer.getIsRunning()
       ? dispatch(isRunningTrue(WatchId))
       : dispatch(isRunningFalse(WatchId));
-  }, [timer.getIsRunning(), WatchId]);
+  }, [timer, dispatch, WatchId]);
 
   useEffect(() => {
     // console.log(remainTime);
@@ -244,7 +245,7 @@ export default function BasicTimerComponent({
               color="error"
               onClick={deleteWatch} //remove는 프런트단에서만 삭제됨
             >
-              <CloseIcon sx={{ fontSize: "7dvh" }} />
+              {WatchId === 0 && <CloseIcon sx={{ fontSize: "7dvh" }} />}
             </IconButton>
             <UpdateModal
               WatchId={WatchId}
