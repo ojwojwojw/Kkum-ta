@@ -37,7 +37,7 @@ function a11yProps(index) {
   };
 }
 
-export default function GroupComponent() {
+export default function GroupComponent({ isSilent }) {
   const [timerArrayList, setTimerArrayList] = useState([]);
   const mqttNode = useRef(null);
   const dispatch = useDispatch();
@@ -113,6 +113,7 @@ export default function GroupComponent() {
                 key={obj.id}
                 id={obj.id}
                 text={text}
+                isSilent={isSilent}
               ></TimerContainer>
             </CustomTabPanel>
           ))}
