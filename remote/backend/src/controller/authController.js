@@ -458,7 +458,7 @@ authRouter.post("/refresh", async (req, res) => {
     req.body.id,
     req.body.provider
   );
-  console.log({err: refresh.err})
+  console.log({ err: refresh.err });
   if (!refresh.result) {
     if (refresh.err == "jwt expired") {
       return res.status(401).json({ status: "unauthorized" });
@@ -545,6 +545,9 @@ authRouter.post("/signout", isLoggedIn, async (req, res) => {
   const user = await userRepository.getUserByRefreshToken(
     req.cookies.refreshToken
   );
+  if (!user) {
+    return res.status(400).json({ status: "bad request" });
+  }
   userRepository.updateRefreshToken(user.id, user.provider, "");
   res.clearCookie("refreshToken");
   res.clearCookie("connect.sid");
