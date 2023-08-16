@@ -90,7 +90,7 @@ export default function Login() {
             // const { url } = await (
             //     await fetch("http://localhost:8090/auth/kakao/url")
             // ) // 개발용
-            //     .json();
+                .json();
 
             console.log(url); // 응답으로 온 url
             document.location.href = url;

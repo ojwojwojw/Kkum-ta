@@ -4,29 +4,36 @@ import { Box, Grid, IconButton } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import TimerUpdateModal from "./timerUpdateModal";
 
-export default function BasicTimer() {
-  const [time, setTime] = useState(0);
+export default function BasicTimer({ WatchId,
+  updateTimer,
+  reload }) {
 
   const [hour, setHour] = useState(0);
   const [min, setMin] = useState(0);
   const [sec, setSec] = useState(0);
 
+  const [input, setInput] = useState(0);
+
+  function update() {
+    updateTimer(input,WatchId)
+  }
+
   useEffect(() => {
     const hours =
-      Math.floor(time / 3600000) > 0 ? Math.floor(time / 3600000) : 0;
+      Math.floor(input / 3600000) > 0 ? Math.floor(input / 3600000) : 0;
     const minutes =
-      Math.floor((time % 3600000) / 60000) > 0
-        ? Math.floor((time % 3600000) / 60000)
+      Math.floor((input % 3600000) / 60000) > 0
+        ? Math.floor((input % 3600000) / 60000)
         : 0;
     const seconds =
-      Math.floor((time % 60000) / 1000) > 0
-        ? Math.floor((time % 60000) / 1000)
+      Math.floor((input % 60000) / 1000) > 0
+        ? Math.floor((input % 60000) / 1000)
         : 0;
 
     setHour(hours);
     setMin(minutes);
     setSec(seconds);
-  }, [time]);
+  }, [input]);
 
   return (
     <Box>
@@ -48,7 +55,11 @@ export default function BasicTimer() {
           {String(sec).padStart(2, "0")}
         </Grid>
         <Grid item xs={2}>
-          <TimerUpdateModal time={time} setTime={setTime}/>
+          <TimerUpdateModal WatchId={WatchId}
+            updateTimer={update}
+            input={input}
+            setInput={setInput}
+            reload={reload} />
         </Grid>
       </Grid>
     </Box>

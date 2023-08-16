@@ -1,0 +1,20 @@
+.time-container {
+    position: relative;
+    padding-top: 0;
+    top: 25dvh;
+    left: 0px;
+    width: 770px;
+    height: 470px;
+    /* border: 6px solid; */
+  }
+  
+  .btn-controller {
+    right: 15px;
+  }
+  
+
+  
+  .btn-create-timer > .MuiButtonBase-root.MuiButton-root:hover {
+    background-color: #376f94ea;
+  }
+  

@@ -29,13 +29,17 @@ const style = {
 };
 
 export default function TimerUpdateModal({
-    time, setTime
+    WatchId,
+    updateTimer,
+    input,
+    setInput,
+    reload
+
 }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   
-  const [input, setInput] = useState(time);
   const [hour, setHour] = useState(0);
   const [min, setMin] = useState(0);
   const [sec, setSec] = useState(0);
@@ -48,6 +52,10 @@ export default function TimerUpdateModal({
     String(i).padStart(2, "0")
   );
   let arr60 = Array.from({ length: 60 }, (v, i) => String(i).padStart(2, "0"));
+
+  function update() {
+    updateTimer(input, WatchId);
+  }
 
   // function load() {
   //   reload();
@@ -164,7 +172,8 @@ export default function TimerUpdateModal({
                 variant="contained"
                 color="success"
                 onClick={() => {
-                  setTime(input);
+                  setInput(input);
+                  updateTimer(input,WatchId);
                   handleClose();
                   // setTimeout(load(), 1000);
                 }}
