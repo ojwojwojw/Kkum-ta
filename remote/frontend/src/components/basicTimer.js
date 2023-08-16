@@ -7,7 +7,9 @@ import { Stack } from "@mui/system";
 
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function BasicTimer({ WatchId,
+export default function BasicTimer({ 
+  time,
+  WatchId,
   updateTimer,
   deleteTimer,
   reload }) {
@@ -17,6 +19,10 @@ export default function BasicTimer({ WatchId,
   const [sec, setSec] = useState(0);
 
   const [input, setInput] = useState(0);
+
+  useEffect(()=>{
+    setInput(time);
+  },[])
 
   function update() {
     updateTimer(input,WatchId)

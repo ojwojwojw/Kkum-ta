@@ -575,7 +575,7 @@ export default function ReportPage() {
           justifyContent={"center"}
           alignItems={"center"}
         >
-          <FormControl>
+          <FormControl sx={{marginRight: "10px"}}>
             <InputLabel id="demo-simple-select-label"></InputLabel>
             <Select
               labelId="demo-simple-select-label"
