@@ -108,20 +108,6 @@ export default function MenuListBar() {
               </ListItemIcon>
               <ListItemText primary="GROUP 4" />
             </ListItemButton>
-            <ListItemButton
-              component={Link}
-              to={`group/${5}`}
-              sx={{
-                pl: 4,
-                bgcolor: "#fafafa",
-                borderBottom: "2px solid #cacaca",
-              }}
-            >
-              <ListItemIcon>
-                <AccessTimeIcon />
-              </ListItemIcon>
-              <ListItemText primary="GROUP 5" />
-            </ListItemButton>
           </List>
         </Collapse>
       </List>
