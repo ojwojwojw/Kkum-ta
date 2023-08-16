@@ -106,16 +106,16 @@ app.use("/timer", componenetController);
 app.use("/group", groupController);
 app.use("/user", userController)
 
-// const privateKey = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/privkey.pem", "utf8");
-// const certificate = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/cert.pem", "utf8");
-// const ca = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/chain.pem", "utf8");
-// const credentials = {
-//   key: privateKey,
-//   cert: certificate,
-//   ca: ca
-// }
-// const httpsServer = https.createServer(credentials, app);
+const privateKey = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/privkey.pem", "utf8");
+const certificate = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/cert.pem", "utf8");
+const ca = fs.readFileSync("/etc/letsencrypt/live/i9c101.p.ssafy.io/chain.pem", "utf8");
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: ca
+}
+const httpsServer = https.createServer(credentials, app);
 
-// httpsServer.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
+httpsServer.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
 
-app.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
+// app.listen(PORT, () => console.log(`Server listens on port ${PORT}`));
