@@ -9,7 +9,8 @@ import axios from 'axios'
 import { useDispatch , useSelector} from "react-redux";
 import { logoutState } from "../redux/authSlice";
 import RefreshTest from "./refreshTokenTest";
-
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 export default function NavBar() {
   const newAccessToken = localStorage.getItem("accessToken") 
@@ -65,14 +66,18 @@ export default function NavBar() {
         height={"60px"}
         zIndex={100}
       >
-        <Grid item xs={1}>
-          <Link to="/">LOGO</Link>
+        <Grid item xs={2}>
+          <Link to="/">
+            <div style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"flex-start"}}>
+              <img style={{width:"45px", margin:"0px 8px 0px"}} src="/images/kkumta-logo.png"></img>
+              <div style={{fontSize:"30px", color:"#003366", fontFamily:"Nanum Gothic", fontWeight:"bolder"}} className="icon-description">꿈타</div>
+            </div>
+            </Link>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={9}>
           <RefreshTest
           setAccessToken = {setAccessToken}
           />
-          반갑습니다 {username}님.
         </Grid>
         <Grid item xs={1}>
           {/* 개발의 편의성을 위해 놓아뒀던 login 버튼 */}
@@ -85,8 +90,10 @@ export default function NavBar() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
+            disableRipple={true}
+            sx={{color:"black", fontSize:"20px", fontWeight:600}}
           >
-          <Grid> {username} </Grid>
+          <Grid style={{display:"flex", alignItems:"center"}}> <div>{username}</div>{!anchorEl?<ExpandMoreIcon/>:<ExpandLessIcon/>}</Grid>
           </Button>
           <Menu
             id="user-menu"
