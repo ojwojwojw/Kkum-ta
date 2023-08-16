@@ -7,6 +7,7 @@ const initialState = {
   provider: null,
   email: null,
   isAuthenticated: false,
+  isDeviceLinked: false,
 };
 
 export const authSlice = createSlice({
@@ -24,10 +25,14 @@ export const authSlice = createSlice({
       state.provider = null;
       state.email = null;
       state.isAuthenticated = !state.isAuthenticated;
+      state.isDeviceLinked = false;
+    },
+    linkDevice: (state,action) => {
+      state.isDeviceLinked= action.payload
     },
   },
 });
 
-export const { loginState, logoutState } = authSlice.actions;
+export const { loginState, logoutState ,linkDevice } = authSlice.actions;
 
 export default authSlice.reducer;
