@@ -38,9 +38,7 @@ export default function ReportPage() {
   const [yearGroupID, setYearGroupID] = useState(0);
 
   //데이트 피커 전용 변수
-  const [startDateForHour, setStartDateForHour] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
-  const [startMonth, setStartMonth] = useState(new Date());
   const ExampleCustomInput = ({ value, onClick }) => (
     <button className="example-custom-input" onClick={onClick}>
       {value}
@@ -185,7 +183,7 @@ export default function ReportPage() {
   ////api 요청 관련
   //시간단위 그래프(한시간동안에 얼마나 공부) api 요청
   const hourCheck = async () => {
-    const formattedDate = formatDate(startDateForHour);
+    const formattedDate = formatDate(startDate);
     try {
       const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //배포용
       // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //개발용
@@ -253,7 +251,7 @@ export default function ReportPage() {
   //월간 그래프 api 요청
 
   const monthCheck = async () => {
-    const formattedDate = formatDateExceptDay(startMonth);
+    const formattedDate = formatDateExceptDay(startDate);
     try {
       const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //배포용
       // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //개발용
@@ -383,8 +381,8 @@ export default function ReportPage() {
                   </FormControl>
                   {/* 날짜 선택하는 데이트 피커 */}
                   <DatePicker
-                    selected={startDateForHour}
-                    onChange={(date) => setStartDateForHour(date)}
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
                     customInput={<ExampleCustomInput />}
                   />
                   {/* 조회할 시간 입력 */}
@@ -508,8 +506,8 @@ export default function ReportPage() {
                   </FormControl>
                   {/* 월 선택하는 데이트 피커 */}
                   <DatePicker
-                    selected={startMonth}
-                    onChange={(date) => setStartMonth(date)}
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
                     customInput={<ExampleCustomInput />}
                   />
                   {/* api요청보내는버튼 */}
