@@ -11,15 +11,17 @@ import { logoutState } from "../redux/authSlice";
 import RefreshTest from "./refreshTokenTest";
 import MyPage from "../pages/myPage";
 import DeviceLinkPage from "../pages/deviceLinkPage";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { useNavigate } from "react-router-dom";
 
 export default function NavBar() {
-  const newAccessToken = localStorage.getItem("accessToken");
+  const newAccessToken = localStorage.getItem("accessToken") 
   const [accessToken, setAccessToken] = useState(newAccessToken);
   const dispatch = useDispatch();
-  const username = useSelector((state) => state.auth.userName);
-  const provider = useSelector((state) => state.auth.provider);
+  const username = useSelector(state => state.auth.userName);
+  const provider = useSelector(state => state.auth.provider);
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -54,11 +56,15 @@ export default function NavBar() {
       console.log(res.data);
       dispatch(logoutState()); //redux state 반영하기
       setTimeout(localStorage.removeItem("accessToken"), 100); //로컬 스토리지 비우기
-    } catch (err) {
-      console.log(err);
-      console.log(username, provider, accessToken);
+      } catch (err) {
+      console.log(err)
+      console.log(username,provider,accessToken)
+      localStorage.removeItem("accessToken");  //로컬 스토리지 비우기
+      dispatch(logoutState())  //redux state 반영하기
+      navigate('/')
+      //redirect to '/'
     }
-  };
+  }
 
   return (
     <Box>
