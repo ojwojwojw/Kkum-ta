@@ -69,9 +69,7 @@ export default function TimerUpdateModal({
     <div>
       <IconButton
         sx={{
-          borderRadius: 4,
           color: "gray",
-          pb: 0,
         }}
         onClick={() => {
           handleOpen();
@@ -80,7 +78,7 @@ export default function TimerUpdateModal({
           setSec(0);
         }}
       >
-        <SettingsIcon sx={{ fontSize: "7dvh" }} />
+        <SettingsIcon sx={{ fontSize: "25px", m:0, p:0, width:"40px", height:"40px"}} />
       </IconButton>
       <Modal
         aria-labelledby="transition-modal-title"
