@@ -61,6 +61,7 @@ export default function BasicTimerComponent({
   );
 
   const [alarm, setAlarm] = useState(false);
+  const [isAlarmed, setIsAlarmed] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -79,18 +80,25 @@ export default function BasicTimerComponent({
 
   // 타이머 설정이 되어있고, 시간이 다 되었을 때 alarm의 상태를 변화
   useEffect(() => {
-    if (timer.getInitTime()[0] !== 0 && timer.getRemainTime() <= 0) {
+    if (
+      timer.getInitTime()[0] !== 0 &&
+      timer.getRemainTime() <= 0 &&
+      !isAlarmed
+    ) {
+      if (!isSilent) runBuzzer();
+      setIsAlarmed(true);
       setAlarm(true);
+      if (!isSilent) runBuzzer();
     }
-  }, [timer.getRemainTime()]);
+  }, [timer, isSilent]);
 
   // 알람이 울리고 3초 뒤 알람 상태 false로 변경
   useEffect(() => {
     if (alarm === false) return;
+
     setTimeout(() => {
-      if (!isSilent) runBuzzer();
       setAlarm(false);
-    }, 3000);
+    }, 2000);
   }, [alarm]);
 
   useEffect(() => {
@@ -98,7 +106,7 @@ export default function BasicTimerComponent({
     timer.getIsRunning()
       ? dispatch(isRunningTrue(WatchId))
       : dispatch(isRunningFalse(WatchId));
-  }, [timer.getIsRunning(), WatchId]);
+  }, [timer, dispatch, WatchId]);
 
   useEffect(() => {
     // console.log(remainTime);
@@ -129,6 +137,7 @@ export default function BasicTimerComponent({
 
   function resetInitTime() {
     timer.reset();
+    setIsAlarmed(false);
     dispatch(isRunningFalse(WatchId));
     // updateTimer(initTime * 1000); //최초 한번만 api 요청으로 백엔드의 해당 타이머 데이터에 remainTime 수정해주기
     logStop(); //api 요청으로 백엔드에 리셋 기록 남기기
@@ -244,7 +253,7 @@ export default function BasicTimerComponent({
               color="error"
               onClick={deleteWatch} //remove는 프런트단에서만 삭제됨
             >
-              <CloseIcon sx={{ fontSize: "7dvh" }} />
+              {WatchId === 0 && <CloseIcon sx={{ fontSize: "7dvh" }} />}
             </IconButton>
             <UpdateModal
               WatchId={WatchId}
