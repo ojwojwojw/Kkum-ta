@@ -3,9 +3,11 @@ import authReducer from './authSlice'
 import storage from 'redux-persist/lib/storage'
 import {persistReducer} from 'redux-persist'
 import thunk from 'redux-thunk'
+import timerSlice from './timerSlice'
 
 const reducers = combineReducers({
-    auth : authReducer
+    auth : authReducer,
+    timer : timerSlice
 })
 
 const persistConfig = {

@@ -54,7 +54,7 @@ export default function MenuListBar() {
           <List component="div" disablePadding>
             <ListItemButton
               component={Link}
-              to="/group1"
+              to={`group/${1}`}
               sx={{
                 pl: 4,
                 bgcolor: "#fafafa",
@@ -68,7 +68,7 @@ export default function MenuListBar() {
             </ListItemButton>
             <ListItemButton
               component={Link}
-              to="/group2"
+              to={`group/${2}`}
               sx={{
                 pl: 4,
                 bgcolor: "#fafafa",
@@ -82,7 +82,7 @@ export default function MenuListBar() {
             </ListItemButton>
             <ListItemButton
               component={Link}
-              to="/group3"
+              to={`group/${3}`}
               sx={{
                 pl: 4,
                 bgcolor: "#fafafa",
@@ -96,7 +96,7 @@ export default function MenuListBar() {
             </ListItemButton>
             <ListItemButton
               component={Link}
-              to="/group4"
+              to={`group/${4}`}
               sx={{
                 pl: 4,
                 bgcolor: "#fafafa",
@@ -110,7 +110,7 @@ export default function MenuListBar() {
             </ListItemButton>
             <ListItemButton
               component={Link}
-              to="/group5"
+              to={`group/${5}`}
               sx={{
                 pl: 4,
                 bgcolor: "#fafafa",
