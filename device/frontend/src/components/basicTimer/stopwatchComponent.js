@@ -102,26 +102,26 @@ function StopwatchComponent({
     groupId,
   ]);
 
-  // useEffect(() => {
-  //   if (isGroupRunning === true && text !== null) {
-  //     if (text !== "detected") {
-  //       handlePause();
-  //       logStopwatchPause(groupId);
-  //     } else {
-  //       handleStart();
-  //       logStopwatchStart(groupId);
-  //     }
-  //   }
-  // }, [
-  //   groupId,
-  //   handlePause,
-  //   handleStart,
-  //   logStopwatchPause,
-  //   logStopwatchStart,
-  //   isGroupRunning,
-  //   stopwatch,
-  //   text,
-  // ]);
+  useEffect(() => {
+    if (isGroupRunning === true && text !== null) {
+      if (text !== "detected") {
+        handlePause();
+        logStopwatchPause(groupId);
+      } else {
+        handleStart();
+        logStopwatchStart(groupId);
+      }
+    }
+  }, [
+    groupId,
+    handlePause,
+    handleStart,
+    logStopwatchPause,
+    logStopwatchStart,
+    isGroupRunning,
+    stopwatch,
+    text,
+  ]);
 
   return (
     <div>
