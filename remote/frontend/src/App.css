@@ -1,7 +1,38 @@
+*{
+  font-family: "Nanum Gothic";
+  font-weight: normal;
+}
+
 .App {
   min-height: 570px;
   text-align: center;
 }
+
+@font-face {
+  font-family: "Nanum Gothic";
+  src: url("./fonts/NanumGothicLight.ttf") format("font-truetype");
+  font-weight: lighter;
+}
+
+@font-face {
+  font-family: "Nanum Gothic";
+  src: url("./fonts/NanumGothic.ttf") format("font-truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Nanum Gothic";
+  src: url("./fonts/NanumGothicBold.ttf") format("font-truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Nanum Gothic";
+  src: url("./fonts/NanumGothicExtraBold.ttf") format("font-truetype");
+  font-weight: bolder;
+}
+
+
 
 .App-logo {
   height: 40vmin;
