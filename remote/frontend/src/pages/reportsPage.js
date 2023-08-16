@@ -253,7 +253,7 @@ export default function ReportPage() {
   //월간 그래프 api 요청
 
   const monthCheck = async () => {
-    const formattedDate = formatDateExceptDay(startDate);
+    const formattedDate = formatDateExceptDay(startMonth);
     try {
       const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //배포용
       // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //개발용
