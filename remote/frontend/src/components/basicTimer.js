@@ -4,21 +4,28 @@ import { Box, Button, Grid, IconButton } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import TimerUpdateModal from "./timerUpdateModal";
 import { Stack } from "@mui/system";
-
-import CloseIcon from "@mui/icons-material/Close";
+import { useSelector } from "react-redux";
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function BasicTimer({
   WatchId,
   updateTimer,
   deleteTimer,
-  reload,
-}) {
+  reload }) {
+  const timerArray = useSelector(state => state.timer.timerArray)
+
+
+  // useEffect(()=>{
+  //   setInput(5000)
+  // },[timerArray])
+
+
   const [hour, setHour] = useState(0);
   const [min, setMin] = useState(0);
   const [sec, setSec] = useState(0);
 
   const [input, setInput] = useState(0);
-
+  
   function update() {
     updateTimer(input, WatchId);
   }
