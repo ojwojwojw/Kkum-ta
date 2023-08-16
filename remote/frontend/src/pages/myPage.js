@@ -3,7 +3,7 @@ import { useSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { linkDevice } from "../redux/authSlice";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
     const user_id = useSelector(state => state.auth.userName)
@@ -11,7 +11,7 @@ const MyPage = () => {
     const dispatch = useDispatch()
     const newData = localStorage.getItem("accessToken") 
     const [tokenData, setTokenData] = useState(newData)
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
     // const isDeviceLinked = useEffect(state => state.auth.IsDeviceLinked)
 
     //자동으로 디바이스 등록여부 확인하는 함수 실행
@@ -37,6 +37,8 @@ const MyPage = () => {
           const res = await axios.patch(`https://i9c101.p.ssafy.io:8090/dev/user/${user_id}` ,data ,config) //배포용
         //   const res = await axios.patch(`http://localhost:8090/dev/user/${user_id}` ,data ,config) //개발용
           console.log(res.data)
+          dispatch(linkDevice(true))  //redux에 반영
+          navigate('/reports')
         }
         catch (err) {
           console.log(err)
