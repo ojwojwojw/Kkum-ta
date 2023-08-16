@@ -143,7 +143,7 @@ const FindPasswordPage = () => {
                 </button>
                 <br />
                 <div className="back-button">
-                    <Link to="/">숨기기</Link>
+                    <Link to="/">취소</Link>
                 </div>
             </div>
 

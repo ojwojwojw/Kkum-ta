@@ -11,6 +11,8 @@ import SignupPage from "../pages/signupPage";
 import KakaoCallback from "./kakaoCallback";
 import GoogleCallback from "./googleCallback";
 import NaverCallback from "./naverCallback";
+import Typography from '@mui/material/Typography';
+
 
 //일단 loginPage에서 테스트 하는 기능들
 // import AccessTest from "./accessTokenTest";
@@ -153,30 +155,71 @@ export default function Login() {
 
     return (
         <Box
-            display={"flex"}
-            justifyContent={"center"}
-            alignItems={"center"}
             minHeight={"100dvh"}
+            minWidth={"100dvw"}
+            className="login-page"
         >
+            <Grid
+                className="app-info"
+                sx={{
+                    position: "absolute",
+                    top: "48%",
+                    left: "70%",
+                    transform: "translate(-50%, -50%)",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "left"
+                }}
+            >
+                <Typography variant="h2" sx={{
+                    fontSize: "40px",
+                    fontFamily:"Nanum Gothic",
+                    fontWeight: "bold",
+                    color: "#000",
+                    minWidth: "500px"
+                }}>
+                    꿈을 이뤄주는 타이머
+                </Typography>
+                <Typography variant="h1" sx={{
+                    fontSize: "70px",
+                    fontFamily: "Nanum Gothic",
+                    fontWeight: "bolder",
+                    paddingLeft: "40px",
+                    paddingTop: "20px",
+                    color: "#020716",
+                    minWidth: "500px"
+                }}>
+                    꿈타.
+                </Typography>
+            </Grid>
             <Grid
                 container
                 className="login-form"
-                justifyContent={"center"}
-                alignItems={"center"}
+                sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "35%",
+                    transform: "translate(-50%, -50%)",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}
             >
                 <Stack>
                     <Grid item xs={12} className="input-form">
                         <Grid item xs={12}>
                             <Input
+                            minWit
                                 className="login-input"
                                 type="text"
                                 placeholder="ID"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
+                                sx={{minWidth:"300px", minHeight:"40px", marginBottom:"20px", fontSize:"18px"}}
                             ></Input>
                         </Grid>
                         <Grid item xs={12}>
                             <Input
+                            minWit
                                 className="login-input"
                                 type="password"
                                 placeholder="PASSWORD"
@@ -185,6 +228,7 @@ export default function Login() {
                                     setUserPassword(e.target.value)
                                 }
                                 onKeyDown={(e) => activeEnter(e)}
+                                sx={{minWidth:"300px", minHeight:"40px", marginBottom:"20px", fontSize:"18px"}}
                             ></Input>
                             <Grid>
                                 {loginError ? (
@@ -200,31 +244,33 @@ export default function Login() {
                             <Button
                                 variant="contained"
                                 color="success"
-                                sx={{ minWidth: "200px", m: "4px", p: "6px" }}
+                                sx={{ width: "100%", m: "4px", p: "8px", mb:"14px", fontSize:"20px" }}
                                 onClick={submitSignIn}
                             >
                                 로그인
                             </Button>
                         </Grid>
                         <Grid item>
-                            <Button
-                                component={Link}
-                                to="/signup"
-                                variant="contained"
-                                sx={{ minWidth: "200px", m: "4px", p: "6px" }}
-                            >
-                                회원가입
-                            </Button>
+                            <Link to="/signup">
+                                <Button
+                                    to="/signup"
+                                    variant="contained"
+                                    sx={{ width: "100%", m: "4px", p: "8px", mb:"14px", fontSize:"20px" }}
+                                >
+                                    회원가입
+                                </Button>
+                            </Link>
                         </Grid>
                         <Grid item>
-                            <Button
-                                component={Link}
-                                to="/findpassword"
-                                variant="contained"
-                                sx={{ minWidth: "200px", m: "4px", p: "6px" }}
-                            >
-                                비밀번호 찾기
-                            </Button>
+                            <Link to="/findpassword">
+                                <Button
+                                    to="/findpassword"
+                                    variant="contained"
+                                    sx={{ width: "100%", m: "4px", p: "8px", mb:"14px", fontSize:"20px" }}
+                                >
+                                    비밀번호 찾기
+                                </Button>
+                            </Link>
                         </Grid>
                     </Grid>
                     <Grid item xs={12} className="btn-social-login">
@@ -294,19 +340,6 @@ export default function Login() {
                     </Grid>
                 </Stack>
             </Grid>
-            <Routes>
-                <Route exact path="/" Component={""} />
-                <Route exact path="/login" Component={""} />
-                <Route exact path="/signup" Component={SignupPage} />
-                <Route
-                    exact
-                    path="/findpassword"
-                    Component={FindPasswordPage}
-                />
-                <Route path="callback/kakao" element={<KakaoCallback />} />
-                <Route path="callback/google" element={<GoogleCallback />} />
-                <Route path="callback/naver" element={<NaverCallback />} />
-            </Routes>
         </Box>
     );
 }
