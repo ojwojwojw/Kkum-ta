@@ -25,6 +25,9 @@ class serverRepository {
     }
 
     async getComponent(user_id, group_key) {
+        if(!user_id || !group_key) {
+            return {status: "request error: unvalid params"};
+        }
         const data = await axios.get(this.base + "/timer/user/" + user_id + "/" + group_key);
 
         return data.data;
