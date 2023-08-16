@@ -103,12 +103,24 @@ export default function GroupPage() {
 
   return (
     <Box>
+<<<<<<< Updated upstream
       <Grid container position={"fixed"} left={"230px"} top={"80px"} width={"180px"} fontSize={"40px"} fontWeight={"600"}>
+=======
+      <Grid
+        container
+        position={"fixed"}
+        left={"230px"}
+        top={"80px"}
+        width={"180px"}
+        fontSize={"3dvw"}
+        fontWeight={"600"}
+      >
+>>>>>>> Stashed changes
         {key}번 그룹
       </Grid>
       <Stack
         container
-        m={"20px"}
+        m={"1dvw"}
         justifyContent={"center"}
         alignItems={"center"}
       >

@@ -29,17 +29,16 @@ const style = {
 };
 
 export default function TimerUpdateModal({
-    WatchId,
-    updateTimer,
-    input,
-    setInput,
-    reload
-
+  WatchId,
+  updateTimer,
+  input,
+  setInput,
+  reload,
 }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
   const [hour, setHour] = useState(0);
   const [min, setMin] = useState(0);
   const [sec, setSec] = useState(0);
@@ -78,7 +77,9 @@ export default function TimerUpdateModal({
           setSec(0);
         }}
       >
-        <SettingsIcon sx={{ fontSize: "25px", m:0, p:0, width:"40px", height:"40px"}} />
+        <SettingsIcon
+          sx={{ fontSize: "25px", m: 0, p: 0, width: "3dvw", height: "3dvw" }}
+        />
       </IconButton>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -171,7 +172,7 @@ export default function TimerUpdateModal({
                 color="success"
                 onClick={() => {
                   setInput(input);
-                  updateTimer(input,WatchId);
+                  updateTimer(input, WatchId);
                   handleClose();
                   // setTimeout(load(), 1000);
                 }}
