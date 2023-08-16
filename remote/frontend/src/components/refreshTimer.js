@@ -1,6 +1,7 @@
+import { Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
-function RefreshTimer({ resetTimer, setResetTimer }) {
+function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest}) {
   const initialTime = 30 * 60 * 1000; // 30분을 밀리초로 변환
   const [timeLeft, setTimeLeft] = useState(initialTime);
 
@@ -30,12 +31,25 @@ function RefreshTimer({ resetTimer, setResetTimer }) {
   const formatTime = (ms) => {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
-    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
   };
+
+  function refresh() {
+    refreshTokenTest()
+  }
 
   return (
     <div>
-      {formatTime(timeLeft)}
+      자동 로그아웃 시간: {formatTime(timeLeft)}
+      <Button
+        onClick={() => {
+          refresh();
+        }}
+      >
+        연장하기
+      </Button>
     </div>
   );
 }
