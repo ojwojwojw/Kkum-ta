@@ -73,7 +73,7 @@ export default function ReportPage() {
   //일간 조회
 
   const groupColor = ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"];
-  const studyColor = ["#FF0000", "#00FF00"];
+  const studyColor = ["#118ab2", "#073b4c"];
   const Series24 = [
     {
       data: new Array(24).fill(0),
