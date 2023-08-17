@@ -72,7 +72,7 @@ export default function ReportPage() {
   //요청 받아서 랜더링을 위해 갈아 끼울 리스트들 // 관련 state 변수들
   //일간 조회
 
-  const groupColor = ["#003366", "#CCCCCC", "#000000", "#eaea66", "#ff2233"];
+  const groupColor = ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"];
   const Series24 = [
     {
       data: new Array(24).fill(0),
