@@ -44,6 +44,11 @@ export default function TimerContainer({ id, text, isSilent }) {
     }
   }, [storeTimerArray, isGroupRunning, setIsGroupRunning]);
 
+  async function synchroTimer() {
+    const res = await axios.get("synchro")
+    console.log(res);
+  }
+
   function allStart() {
     storeTimerArray.forEach((item) => {
       item.timer.start();
@@ -243,6 +248,22 @@ export default function TimerContainer({ id, text, isSilent }) {
           >
             <Stack xs={2}>
               <Grid item>
+              <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    right: "2dvw",
+                    minWidth: "18dvw",
+                    minHeight: "7dvw",
+                    fontSize: "2.2dvw",
+                    fontWeight: "bold",
+                    borderRadius: "1.2dvw",
+                    m: "0.8dvw",
+                  }}
+                  onClick={() => synchroTimer()}
+                >
+                  서버 동기화
+                </Button>
                 <Button
                   variant="contained"
                   color="success"
