@@ -79,7 +79,7 @@ const DeviceLinkPage = () => {
         display: "flex",
         minWidth: "100dvw",
         minHeight: "100dvh",
-        paddingRight: "40%" ,//디바이스키 입력창 가운데 정렬
+        paddingRight: "30%" ,//디바이스키 입력창 가운데 정렬
         paddingBottom: "15%" ,//디바이스키 입력창 가운데 정렬
       }}
       justifyContent={"center"}
