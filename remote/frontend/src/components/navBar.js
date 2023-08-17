@@ -166,7 +166,7 @@ export default function NavBar() {
         <MenuListBar />
         <Grid item xs={10}>
           <Routes>
-            <Route exact path="/" Component={Login} />
+            <Route exact path="/" Component={ReportPage} />
             <Route exact path="/reports" Component={ReportPage} />
             <Route exact path="/group/:key" Component={GroupPage} />
             <Route exact path="/mypage" Component={MyPage} />
