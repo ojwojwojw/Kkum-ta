@@ -37,10 +37,8 @@ export default function ReportPage() {
 
   //api 요청시 필요한 데이터
   const user_id = useSelector((state) => state.auth.userName);
-  const [groupID, setGroupID] = useState("");
   const [hour, setHour] = useState("");
   const [startYear, setStartYear] = useState(2023);
-  const [yearGroupID, setYearGroupID] = useState(0);
 
   //데이트 피커 전용 변수
   const [startDate, setStartDate] = useState(new Date());
@@ -73,45 +71,9 @@ export default function ReportPage() {
   };
 
   //요청 받아서 랜더링을 위해 갈아 끼울 리스트들 // 관련 state 변수들
-  //시간단위 조회
-  const Series1 = [
-    {
-      data: new Array(1).fill(0),
-      stack: "A",
-      label: "공부",
-      color: "#003366",
-    },
-    {
-      data: new Array(1).fill(0),
-      stack: "A",
-      label: "휴식",
-      color: "#eaea66",
-    },
-  ];
-
-  const Circle1 = [
-    {
-      data: [
-        {
-          id: 0,
-          value: 0,
-          label: "공부 시간",
-          color: "#003366",
-        },
-        {
-          id: 1,
-          value: 1,
-          label: "휴식 시간",
-          color: "#eaea66",
-        },
-      ],
-    },
-  ];
-  const [hourSeries, setHourSeries] = useState(Series1);
-  const [hourCircle, setHourCircle] = useState(Circle1);
-
   //일간 조회
 
+  const groupColor = ["#003366", "#CCCCCC", "#000000", "#eaea66", "#ff2233"];
   const Series24 = [
     {
       data: new Array(24).fill(0),
@@ -186,70 +148,38 @@ export default function ReportPage() {
   const [monthlyCircle, setMonthlyCircle] = useState(Circle31);
 
   ////api 요청 관련
-  //시간단위 그래프(한시간동안에 얼마나 공부) api 요청
-  const hourCheck = async () => {
-    const formattedDate = formatDate(startDate);
-    try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //배포용
-      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //개발용
-      console.log(res.data)
-      const modifiedData = 1 - res.data
-      Series1[0].data = [res.data];
-      Series1[1].data = [modifiedData];
-      Circle1[0].data = [
-        {
-          id: 0,
-          value: res.data,
-          label: "공부 시간",
-          color: "#003366",
-        },
-        {
-          id: 1,
-          value: modifiedData,
-          label: "휴식 시간",
-          color: "#eaea66",
-        },
-      ];
-      setHourSeries(Series1);
-      setHourCircle(Circle1);
-    } catch (err) {
-      console.log(err);
-      console.log(user_id, groupID, formattedDate, hour);
-    }
-  };
-
   //일간 그래프 api 요청
   const dailyCheck = async () => {
     const formattedDate = formatDate(startDate);
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}`) //배포용
-      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}`)// 개발용
-      console.log(res.data)
-      const modifiedData = res.data.map(value => 1 - value)
-      Series24[0].data = res.data;
-      Series24[1].data = modifiedData;
-      Circle24[0].data = [
-        {
-          id: 0,
-          value: res.data.reduce((acc, cur) => {
-            return acc + cur;
-          }, 0),
-          label: "공부 시간",
-          color: "#003366",
-        },
-        {
-          id: 1,
-          value: modifiedData.reduce((acc, cur) => {
-            return acc + cur;
-          }, 0),
-          label: "휴식 시간",
-          color: "#eaea66",
-        },
-      ];
+      const recvData = [];
+      for(let groupID=0;groupID<5;groupID++){
+        const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}`) //배포용
+        recvData.push(res.data);
+      }
+      console.log(recvData);
+      const Series24 = recvData.map((item, index)=>{
+        return ({
+          data: item,
+          stack: "A",
+          label: `그룹 ${index}`,
+          color: groupColor[index]
+        });
+      });
+      const Circle24 = [{}]
+      Circle24[0].data = recvData.map((item, index)=>{
+        return (
+          {
+            id: index,
+            value: item.reduce((acc, cur)=>{return acc + cur}, 0),
+            label: `그룹 ${index}`,
+            color: groupColor[index]
+          }
+        );
+      });
       setDailySeries(Series24);
       setDailyCircle(Circle24);
     } catch (err) {
-      console.log(user_id, groupID, formattedDate);
       console.log(err);
     }
   };
@@ -258,35 +188,33 @@ export default function ReportPage() {
   const monthCheck = async () => {
     const formattedDate = formatDateExceptDay(startDate);
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //배포용
-      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //개발용
-
-      console.log(res.data);
-      const modifiedData = res.data.map((value) => 1 - value);
-      Series31[0].data = res.data;
-      Series31[1].data = modifiedData;
-      Circle31[0].data = [
-        {
-          id: 0,
-          value: res.data.reduce((acc, cur) => {
-            return acc + cur;
-          }, 0),
-          label: "공부 시간",
-          color: "#003366",
-        },
-        {
-          id: 1,
-          value: modifiedData.reduce((acc, cur) => {
-            return acc + cur;
-          }, 0),
-          label: "휴식 시간",
-          color: "#eaea66",
-        },
-      ];
+      const recvData = [];
+      for(let groupID=0;groupID<5;groupID++){
+        const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //배포용
+        recvData.push(res.data);
+      }
+      const Series31 = recvData.map((item, index)=>{
+        return ({
+          data: item,
+          stack: "A",
+          label: `그룹 ${index}`,
+          color: groupColor[index]
+        });
+      });
+      const Circle31 = [{}]
+      Circle31[0].data = recvData.map((item, index)=>{
+        return (
+          {
+            id: index,
+            value: item.reduce((acc, cur)=>{return acc + cur}, 0),
+            label: `그룹 ${index}`,
+            color: groupColor[index]
+          }
+        );
+      });
       setMonthlySeries(Series31);
       setMonthlyCircle(Circle31);
     } catch (err) {
-      console.log(user_id, groupID, formattedDate);
       console.log(err);
     }
   };
@@ -294,16 +222,15 @@ export default function ReportPage() {
   //연간 조회 요청 api (잔디밭)
   const yearCheck = async (targetYear) => {
     try {
-      console.log(`GET https://i9c101.p.ssafy.io:8090/log/${user_id}/${yearGroupID}/?year=${targetYear}`);
-      const res = await axios.get(
-        `https://i9c101.p.ssafy.io:8090/log/${user_id}/${yearGroupID}/?year=${targetYear}`
-      ); //배포용
-      // const res = await axios.get(`http://localhost:8090/log/${user_id}/${yearGroupID}/?year=${targetYear}`) //개발용
-      console.log(res.data);
-      setGrassArray(res.data);
+      const recvData = [];
+      for(let groupID=0;groupID<5;groupID++){
+        const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?year=${targetYear}`); //배포용
+        recvData.push(res.data);
+      }
+      const zipData = recvData[0].map((_, index)=> recvData.reduce((acc, curr)=>acc + curr[index], 0));
+      setGrassArray(zipData);
     } catch (err) {
       console.log(err);
-      console.log(user_id, yearGroupID, targetYear);
     }
   };
 
@@ -330,14 +257,6 @@ export default function ReportPage() {
               exclusive
               onChange={handleChange}
             >
-              {/* <ToggleButton
-                value="day"
-                aria-label="day"
-                onClick={() => setHandle("day")}
-              >
-                시간단위 : {Math.round(hourCircle[0].data[0].value * 60)}분 /
-                60분
-              </ToggleButton> */}
               <ToggleButton
                 value="week"
                 aria-label="week"
@@ -360,117 +279,9 @@ export default function ReportPage() {
           <Grid item xs={7}>
             {/* 버튼에 따른 그래프(barChart) */}
 
-            {handle === "day" && (
-              <Grid>
-                <div className="inputContainer">
-                  {/* 그룹 번호 입력 */}
-                  <FormControl className="custom-form-control">
-                    <InputLabel id="demo-simple-select-label"></InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={groupID}
-                      label="Age"
-                      onChange={(e) => setGroupID(e.target.value)}
-                      displayEmpty
-                    >
-                      <MenuItem value="">
-                        <em>그룹을 선택해주세요.</em>
-                      </MenuItem>
-                      <MenuItem value={0}>그룹1</MenuItem>
-                      <MenuItem value={1}>그룹2</MenuItem>
-                      <MenuItem value={2}>그룹3</MenuItem>
-                      <MenuItem value={3}>그룹4</MenuItem>
-                      <MenuItem value={4}>그룹5</MenuItem>
-                    </Select>
-                  </FormControl>
-                  {/* 날짜 선택하는 데이트 피커 */}
-                  <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    customInput={<ExampleCustomInput />}
-                    dateFormat="yyyy-MM-dd"
-                  />
-                  {/* 조회할 시간 입력 */}
-                  <FormControl>
-                    <InputLabel id="demo-simple-select-label"></InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={hour}
-                      label="Age"
-                      onChange={(e) => setHour(e.target.value)}
-                      displayEmpty
-                    >
-                      <MenuItem value="">
-                        <em>시간대를 선택해주세요.</em>
-                      </MenuItem>
-                      <MenuItem value={0}>0시</MenuItem>
-                      <MenuItem value={1}>1시</MenuItem>
-                      <MenuItem value={2}>2시</MenuItem>
-                      <MenuItem value={3}>3시</MenuItem>
-                      <MenuItem value={4}>4시</MenuItem>
-                      <MenuItem value={5}>5시</MenuItem>
-                      <MenuItem value={6}>6시</MenuItem>
-                      <MenuItem value={7}>7시</MenuItem>
-                      <MenuItem value={8}>8시</MenuItem>
-                      <MenuItem value={9}>9시</MenuItem>
-                      <MenuItem value={10}>10시</MenuItem>
-                      <MenuItem value={11}>11시</MenuItem>
-                      <MenuItem value={12}>12시</MenuItem>
-                      <MenuItem value={13}>13시</MenuItem>
-                      <MenuItem value={14}>14시</MenuItem>
-                      <MenuItem value={15}>15시</MenuItem>
-                      <MenuItem value={16}>16시</MenuItem>
-                      <MenuItem value={17}>17시</MenuItem>
-                      <MenuItem value={18}>18시</MenuItem>
-                      <MenuItem value={19}>19시</MenuItem>
-                      <MenuItem value={20}>20시</MenuItem>
-                      <MenuItem value={21}>21시</MenuItem>
-                      <MenuItem value={22}>22시</MenuItem>
-                      <MenuItem value={23}>23시</MenuItem>
-                    </Select>
-                  </FormControl>
-
-                  {/* api요청보내는버튼 */}
-                  <button onClick={hourCheck} className="apiReqBtn">
-                    데이터 불러오기
-                  </button>
-                </div>
-
-                <BarChart
-                  series={hourSeries}
-                  width={700}
-                  height={250}
-                  layout="horizontal"
-                />
-              </Grid>
-            )}
-
             {handle === "week" && (
               <Grid>
                 <div className="inputContainer">
-                  {/* 그룹 번호 입력 */}
-                  <FormControl>
-                    <InputLabel id="demo-simple-select-label"></InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={groupID}
-                      label="Age"
-                      onChange={(e) => setGroupID(e.target.value)}
-                      displayEmpty
-                    >
-                      <MenuItem value="">
-                        <em>그룹을 선택해주세요.</em>
-                      </MenuItem>
-                      <MenuItem value={0}>그룹1</MenuItem>
-                      <MenuItem value={1}>그룹2</MenuItem>
-                      <MenuItem value={2}>그룹3</MenuItem>
-                      <MenuItem value={3}>그룹4</MenuItem>
-                      <MenuItem value={4}>그룹5</MenuItem>
-                    </Select>
-                  </FormControl>
                   {/* 날짜 선택하는 데이트 피커 */}
                   <DatePicker
                     selected={startDate}
@@ -494,27 +305,6 @@ export default function ReportPage() {
             {handle === "month" && (
               <Grid>
                 <div className="inputContainer">
-                  {/* 그룹 번호 입력 */}
-                  <FormControl>
-                    <InputLabel id="demo-simple-select-label"></InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={groupID}
-                      label="Age"
-                      onChange={(e) => setGroupID(e.target.value)}
-                      displayEmpty
-                    >
-                      <MenuItem value="">
-                        <em>그룹을 선택해주세요.</em>
-                      </MenuItem>
-                      <MenuItem value={0}>그룹1</MenuItem>
-                      <MenuItem value={1}>그룹2</MenuItem>
-                      <MenuItem value={2}>그룹3</MenuItem>
-                      <MenuItem value={3}>그룹4</MenuItem>
-                      <MenuItem value={4}>그룹5</MenuItem>
-                    </Select>
-                  </FormControl>
                   {/* 월 선택하는 데이트 피커 */}
                   <DatePicker
                     selected={startDate}
@@ -542,11 +332,6 @@ export default function ReportPage() {
 
           <Grid item xs={3}>
             {/* 버튼에 따른 그래프(PieChart) */}
-            {handle === "day" && (
-              <Grid>
-                <PieChart series={hourCircle} width={250} height={200} />
-              </Grid>
-            )}
             {handle === "week" && (
               <Grid>
                 <PieChart series={dailyCircle} width={250} height={200} />
