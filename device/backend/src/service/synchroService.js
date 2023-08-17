@@ -10,13 +10,10 @@ class SynchroService {
 
     async synchronizeDeviceAndServer() {
         const serial = await this.deviceService.getDeviceSerial();
-        console.log(serial);
         const userInfo = await this.serverRepo.getUserId(serial);
         const id = userInfo?.id;
-        console.log(id);
         if(id) {
             const groupData = await this.serverRepo.getGroup(id);
-            console.log(groupData);
             groupData.map(async (group) => {
                 if (group.group_key !== 0) {
                     await this.groupFromDeviceRepo.rename(
@@ -31,7 +28,6 @@ class SynchroService {
                         id,
                         group.group_key
                     );
-                    console.log(timerData);
                     if (timerData.length !== 0) {
                         timerData.map((timer) => {
                             this.timerFromDeviceRepo.insert(

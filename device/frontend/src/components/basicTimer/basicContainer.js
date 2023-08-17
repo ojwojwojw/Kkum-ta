@@ -47,6 +47,7 @@ export default function TimerContainer({ id, text, isSilent }) {
   async function synchroTimer() {
     const res = await axios.get("synchro")
     console.log(res);
+    load();
   }
 
   function allStart() {
