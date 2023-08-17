@@ -89,8 +89,8 @@ class  LogRepository extends Repository{
         const [rows] = await this.query(sql, params);
         console.log("monthly:",rows);
         const result = new Array(new Date(year, month, 0).getDate()).fill(0);
-        rows.map(item=>{result[item.day - 1] = item.portion / 24});
-        return rows;
+        rows.forEach(item=>{result[item.day - 1] = item.portion / 24});
+        return result;
     }
     isLeapYear(year){
         return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
@@ -108,10 +108,9 @@ class  LogRepository extends Repository{
         ;`;
         const params = [user_key, group_key, year];
         const [rows] = await this.query(sql, params);
-        console.log("yearly:", rows);
         const result = new Array(this.isLeapYear(year)?366:365).fill(0);
-        rows.map(item=>{result[item.date]=item.portion / 24});
-        return rows;
+        rows.forEach(item=>{result[item.date]=item.portion / 24});
+        return result;
     }
 }
 
