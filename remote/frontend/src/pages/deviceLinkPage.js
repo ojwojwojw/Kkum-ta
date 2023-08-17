@@ -79,6 +79,8 @@ const DeviceLinkPage = () => {
         display: "flex",
         minWidth: "100dvw",
         minHeight: "100dvh",
+        paddingRight: "40%" ,//디바이스키 입력창 가운데 정렬
+        paddingBottom: "15%" ,//디바이스키 입력창 가운데 정렬
       }}
       justifyContent={"center"}
       alignItems={"center"}
@@ -89,6 +91,7 @@ const DeviceLinkPage = () => {
         onChange={(e) => setInput(e.target.value)}
         placeholder="디바이스 키를 입력해주세요."
         sx={{
+          marginRight : "10px",
           minWidth: "300px",
           p: "20px",
           fontSize: "20px",
@@ -98,7 +101,13 @@ const DeviceLinkPage = () => {
         disableUnderline={"true"}
       />
       <Button
-        sx={{ p: "20px", fontSize: "20px", fontWeight: 600, color: "black" }}
+        sx={{ p: "20px", 
+              fontSize: "20px", 
+              fontWeight: 600, 
+              color: "white" ,
+              bgcolor: "#003366",
+              borderRadius: "10px", 
+            }}
         onClick={linkToDevice}
       >
         등록하기
