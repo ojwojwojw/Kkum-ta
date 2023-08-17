@@ -66,7 +66,7 @@ export default function MenuListBar() {
                 <ListItemIcon>
                   <AccessTimeIcon />
                 </ListItemIcon>
-                <ListItemText primary="GROUP 1" />
+                <ListItemText primary="GROUP 2" />
               </ListItemButton>
               <ListItemButton
                 component={Link}
@@ -80,7 +80,7 @@ export default function MenuListBar() {
                 <ListItemIcon>
                   <AccessTimeIcon />
                 </ListItemIcon>
-                <ListItemText primary="GROUP 2" />
+                <ListItemText primary="GROUP 3" />
               </ListItemButton>
               <ListItemButton
                 component={Link}
@@ -94,7 +94,7 @@ export default function MenuListBar() {
                 <ListItemIcon>
                   <AccessTimeIcon />
                 </ListItemIcon>
-                <ListItemText primary="GROUP 3" />
+                <ListItemText primary="GROUP 4" />
               </ListItemButton>
               <ListItemButton
                 component={Link}
@@ -108,7 +108,7 @@ export default function MenuListBar() {
                 <ListItemIcon>
                   <AccessTimeIcon />
                 </ListItemIcon>
-                <ListItemText primary="GROUP 4" />
+                <ListItemText primary="GROUP 5" />
               </ListItemButton>
             </List>
           </Collapse>
