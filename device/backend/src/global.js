@@ -131,7 +131,7 @@ class Global {
                 await Global.getServerRepository(),
                 await Global.getDeviceService(),
                 await Global.getGroupRepository(),
-                await Global.getTimerRepository()
+                await Global.getTimerService()
             )
         }
         return Global.#synchroService;
