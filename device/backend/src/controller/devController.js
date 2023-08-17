@@ -8,7 +8,7 @@ const devRouter = express.Router();
 /**
  * @swagger
  * paths:
- *  /dev:
+ *  /device:
  *      get:
  *          summary: "디바이스 번호를 가져온다."
  *          description: "디바이스에 디바이스 시리얼 번호가 있다면 그 값을 반환하고, 그렇지 않다면 원격 서버에 요청"

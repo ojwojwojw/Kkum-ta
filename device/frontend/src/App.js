@@ -39,7 +39,7 @@ function App() {
   const modalOpen = async () => {
     try{
       console.log("modalOpen")
-      const res = await axios.get("dev");
+      const res = await axios.get("device");
       console.log("modalOpen, res=", res);
       setDevKey(res.data.id);
       setDeviceModalOpen(true);
