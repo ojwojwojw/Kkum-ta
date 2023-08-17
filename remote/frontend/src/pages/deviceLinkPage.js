@@ -57,7 +57,7 @@ const DeviceLinkPage = () => {
       },
     };
     try {
-      const res = await axios.patch(
+      const res = await axios.get(
         `https://i9c101.p.ssafy.io:8090/dev/user/${user_id}`,
         config
       ); //배포용
