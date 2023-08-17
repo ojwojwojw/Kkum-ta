@@ -123,9 +123,9 @@ export default function GroupPage() {
         fontSize={"40px"}
         fontWeight={"600"}
       >
-        {key}번 그룹
-      </Grid>
-      <Stack
+        {/* {key}번 그룹 */}
+      </Grid >
+      <Stack sx={{marginTop : "32px"}} //약간의 마진 추가.
         container
         m={"1dvw"}
         justifyContent={"center"}
