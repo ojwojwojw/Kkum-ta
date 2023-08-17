@@ -30,10 +30,10 @@ export default function ReportPage() {
     setView(nextView);
   };
 
-  //2023년 조회 데이터가 바로 뜨게끔 
-  useEffect(()=>{
-    yearCheck(2023)
-  },[])
+  //2023년 조회 데이터가 바로 뜨게끔
+  useEffect(() => {
+    yearCheck(2023);
+  }, []);
 
   //api 요청시 필요한 데이터
   const user_id = useSelector((state) => state.auth.userName);
@@ -190,10 +190,12 @@ export default function ReportPage() {
   const hourCheck = async () => {
     const formattedDate = formatDate(startDate);
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //배포용
+      const res = await axios.get(
+        `https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`
+      ); //배포용
       // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}&hour=${hour}`) //개발용
-      console.log(res.data)
-      const modifiedData = 1 - res.data
+      console.log(res.data);
+      const modifiedData = 1 - res.data;
       Series1[0].data = [res.data];
       Series1[1].data = [modifiedData];
       Circle1[0].data = [
@@ -222,10 +224,12 @@ export default function ReportPage() {
   const dailyCheck = async () => {
     const formattedDate = formatDate(startDate);
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}`) //배포용
+      const res = await axios.get(
+        `https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}`
+      ); //배포용
       // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}`)// 개발용
-      console.log(res.data)
-      const modifiedData = res.data.map(value => 1 - value)
+      console.log(res.data);
+      const modifiedData = res.data.map((value) => 1 - value);
       Series24[0].data = res.data;
       Series24[1].data = modifiedData;
       Circle24[0].data = [
@@ -258,7 +262,9 @@ export default function ReportPage() {
   const monthCheck = async () => {
     const formattedDate = formatDateExceptDay(startDate);
     try {
-      const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //배포용
+      const res = await axios.get(
+        `https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`
+      ); //배포용
       // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //개발용
 
       console.log(res.data);
@@ -294,7 +300,9 @@ export default function ReportPage() {
   //연간 조회 요청 api (잔디밭)
   const yearCheck = async (targetYear) => {
     try {
-      console.log(`GET https://i9c101.p.ssafy.io:8090/log/${user_id}/${yearGroupID}/?year=${targetYear}`);
+      console.log(
+        `GET https://i9c101.p.ssafy.io:8090/log/${user_id}/${yearGroupID}/?year=${targetYear}`
+      );
       const res = await axios.get(
         `https://i9c101.p.ssafy.io:8090/log/${user_id}/${yearGroupID}/?year=${targetYear}`
       ); //배포용
@@ -314,7 +322,7 @@ export default function ReportPage() {
       <Grid container>
         <Grid
           container
-          border={"4px solid #acacac"}
+          border={"4px solid #036"}
           borderRadius={"10px"}
           minHeight={"220px"}
           m={"10px"}
@@ -479,11 +487,13 @@ export default function ReportPage() {
                     dateFormat="yyyy-MM-dd"
                   />
                   {/* api요청보내는버튼 */}
-                  <button onClick={()=>{
-                    dailyCheck();
-                    monthCheck();
-                  }} 
-                  className="apiReqBtn">
+                  <button
+                    onClick={() => {
+                      dailyCheck();
+                      monthCheck();
+                    }}
+                    className="apiReqBtn"
+                  >
                     데이터 불러오기
                   </button>
                 </div>
@@ -524,11 +534,13 @@ export default function ReportPage() {
                   />
                   {/* api요청보내는버튼 */}
                   {/* <button onClick={monthCheck} className="apiReqBtn"> */}
-                  <button onClick={()=>{
-                    dailyCheck();
-                    monthCheck();
-                  }} 
-                  className="apiReqBtn">
+                  <button
+                    onClick={() => {
+                      dailyCheck();
+                      monthCheck();
+                    }}
+                    className="apiReqBtn"
+                  >
                     데이터 불러오기
                   </button>
                 </div>
@@ -566,7 +578,7 @@ export default function ReportPage() {
       <Grid container>
         <Grid
           container
-          border={"4px solid #acacac"}
+          border={"4px solid #036"}
           borderRadius={"10px"}
           minHeight={"220px"}
           m={"10px"}
@@ -610,8 +622,8 @@ export default function ReportPage() {
                 }, [])
                 .map((weekData, weekIdx) => {
                   return (
-                    <Stack direction={"column"} sx={{gap: "4px"}}>
-                      {weekData.map((dayData, dayIdx)=>{
+                    <Stack direction={"column"} sx={{ gap: "4px" }}>
+                      {weekData.map((dayData, dayIdx) => {
                         const dayIndex = weekIdx * 7 + dayIdx;
                         const dateNow = new Date(`${startYear}-01-01`);
                         dateNow.setDate(dateNow.getDate() + dayIndex);
@@ -623,31 +635,32 @@ export default function ReportPage() {
                           60 * (dayData * 24 - Math.floor(dayData * 24))
                         );
                         return (
-                          <Tooltip title={`${startYear}년 ${currentMonth}월 ${
-                            day ? day : 0
-                          }일 , 공부시간: ${hour ? hour : 0}시간 ${
-                            minute ? minute : 0
-                          }분`}>
+                          <Tooltip
+                            title={`${startYear}년 ${currentMonth}월 ${
+                              day ? day : 0
+                            }일 , 공부시간: ${hour ? hour : 0}시간 ${
+                              minute ? minute : 0
+                            }분`}
+                          >
                             <Grid
-                                key={`${currentMonth}-${day}`}
-                                sx={{
-                                  width: "13px",
-                                  height: "13px",
-                                  marginBottom: "1px",
-                                  border: "1px solid #1a1b1c",
-                                  borderRadius: "1px",
-                                  backgroundColor: color,
-                                  cursor: "pointer",
-                                  position: "relative", // 상대 위치 설정
-                                }}
-                              ></Grid>
+                              key={`${currentMonth}-${day}`}
+                              sx={{
+                                width: "13px",
+                                height: "13px",
+                                marginBottom: "1px",
+                                border: "1px solid #1a1b1c",
+                                borderRadius: "3px",
+                                backgroundColor: color,
+                                cursor: "pointer",
+                                position: "relative", // 상대 위치 설정
+                              }}
+                            ></Grid>
                           </Tooltip>
                         );
                       })}
                     </Stack>
                   );
-                })
-              }
+                })}
             </Stack>
           </Grid>
         </Grid>

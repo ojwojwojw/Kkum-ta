@@ -90,6 +90,7 @@ export default function NavBar() {
               <img
                 style={{ width: "3.2dvw", margin: "0 0.3dvw 0 0" }}
                 src="/images/kkumta-logo.png"
+                alt="kkumta-logo"
               ></img>
               <div
                 style={{
@@ -108,12 +109,16 @@ export default function NavBar() {
         <Grid item xs={8.8}>
           <RefreshTest setAccessToken={setAccessToken} />
         </Grid>
-        <Grid item xs={1.5} style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}>
+        <Grid
+          item
+          xs={1.5}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "flex-end",
+          }}
+        >
           {/* 개발의 편의성을 위해 놓아뒀던 login 버튼 */}
           {/* <Link to="/login" Component={Login}>
             Login
@@ -152,7 +157,7 @@ export default function NavBar() {
       <Grid
         container
         position={"absolute"}
-        top={"53px"}
+        top={"80px"}
         justifyContent={"center"}
         alignItems={"center"}
       >

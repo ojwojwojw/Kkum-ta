@@ -5,27 +5,26 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import TimerUpdateModal from "./timerUpdateModal";
 import { Stack } from "@mui/system";
 import { useSelector } from "react-redux";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function BasicTimer({
   WatchId,
   updateTimer,
   deleteTimer,
-  reload }) {
-  const timerArray = useSelector(state => state.timer.timerArray)
-
+  reload,
+}) {
+  const timerArray = useSelector((state) => state.timer.timerArray);
 
   // useEffect(()=>{
   //   setInput(5000)
   // },[timerArray])
-
 
   const [hour, setHour] = useState(0);
   const [min, setMin] = useState(0);
   const [sec, setSec] = useState(0);
 
   const [input, setInput] = useState(0);
-  
+
   function update() {
     updateTimer(input, WatchId);
   }
@@ -55,12 +54,14 @@ export default function BasicTimer({
     <Box>
       <Grid
         container
-        border={"6px solid #333"}
+        border={"6px solid #036"}
         sx={{
           width: "50dvw",
           height: "12dvw",
-          m: "6px",
+          m: "6px 0 6px",
+
           borderRadius: "10px",
+          bgcolor: "white",
         }}
         justifyContent={"center"}
         alignItems={"center"}
@@ -82,7 +83,7 @@ export default function BasicTimer({
               }}
               onClick={() => delTimer(WatchId)}
             >
-              <CloseIcon sx={{ fontSize: "3sdvw" }} />
+              <CloseIcon sx={{ fontSize: "3dvw" }} />
             </IconButton>
             <TimerUpdateModal
               WatchId={WatchId}
