@@ -166,7 +166,7 @@ export default function ReportPage() {
           return {
             data: item,
             stack: "A",
-            label: `그룹 ${index}`,
+            label: `그룹 ${index + 1}`,
             color: groupColor[index],
           };
         });
@@ -177,7 +177,7 @@ export default function ReportPage() {
             value: item.reduce((acc, cur) => {
               return acc + cur;
             }, 0),
-            label: `그룹 ${index}`,
+            label: `그룹 ${index + 1}`,
             color: groupColor[index],
           };
         });
@@ -240,7 +240,7 @@ export default function ReportPage() {
           return {
             data: item,
             stack: "A",
-            label: `그룹 ${index}`,
+            label: `그룹 ${index + 1}`,
             color: groupColor[index],
           };
         });
@@ -251,7 +251,7 @@ export default function ReportPage() {
             value: item.reduce((acc, cur) => {
               return acc + cur;
             }, 0),
-            label: `그룹 ${index}`,
+            label: `그룹 ${index + 1}`,
             color: groupColor[index],
           };
         });
