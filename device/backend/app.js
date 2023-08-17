@@ -58,7 +58,10 @@ app.use('/device', devController);
 const stopwatchController = require('./src/controller/stopwatchController');
 app.use('/stopwatch', stopwatchController);
 
-Global.getSynchroService();
-//sgs.synchronizeDeviceAndServer();
+const synchroController = require('./src/controller/synchroController');
+app.use('/synchro', synchroController);
+
+// Global.getSynchroService();
+// sgs.synchronizeDeviceAndServer();
 
 module.exports = app;
