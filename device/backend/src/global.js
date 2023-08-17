@@ -3,8 +3,6 @@ const GroupRepository = require("./repository/groupRepository");
 const StopwatchLogRepository = require("./repository/stopwatchLogRepository");
 const StudyHourlyRepository = require("./repository/studyHourlyRepository");
 const TimerRepository = require("./repository/timerRepository");
-const GroupFromServerRepository = require("./repository/groupFromServerRepository");
-const TimerFromServerRepository = require("./repository/timerFromServerRepository");
 const ServerRepository = require("./repository/serverRepository")
 
 const DeviceService = require("./service/deviceService");
@@ -12,6 +10,7 @@ const GroupService = require("./service/groupService");
 const TimerService = require("./service/timerService");
 const StopwatchLogService = require("./service/stopwatchLogService");
 const StopwatchLogSenderService = require("./service/stopwatchLogSenderService");
+const SynchroService = require('./service/synchroService');
 
 class Global {
     static #deviceRepository = null;
@@ -19,8 +18,6 @@ class Global {
     static #stopwatchLogRepository = null;
     static #studyHourlyRepository = null;
     static #timerRepository = null;
-    static #groupFromServerRepository = null;
-    static #timerFromServerRepository = null;
     static #serverRepository = null;
 
     static #deviceService = null;
@@ -28,6 +25,7 @@ class Global {
     static #timerService = null;
     static #stopwatchLogService = null;
     static #stopwatchLogSenderService = null;
+    static #synchroService = null;
 
     static async getDeviceRepository() {
         if (!Global.#deviceRepository) {
@@ -70,23 +68,7 @@ class Global {
         }
         return Global.#timerRepository;
     }
-
-    static async getGroupFromServerRepository() {
-        if (!Global.#groupFromServerRepository) {
-            Global.#groupFromServerRepository = new GroupFromServerRepository();
-            await Global.#groupFromServerRepository.init();
-        }
-        return Global.#groupFromServerRepository;
-    }
-
-    static async getTimerFromServerRepository() {
-        if (!Global.#timerFromServerRepository) {
-            Global.#timerFromServerRepository = new TimerFromServerRepository();
-            await Global.#timerFromServerRepository.init();
-        }
-        return Global.#timerFromServerRepository;
-    }
-
+    
     static async getServerRepository() {
         if (!Global.#serverRepository) {
             Global.#serverRepository = new ServerRepository();
@@ -141,6 +123,18 @@ class Global {
                 await Global.getDeviceService()
             );
         }
+    }
+
+    static async getSynchroService(){
+        if(!Global.#synchroService){
+            Global.#synchroService = new SynchroService(
+                await Global.getServerRepository(),
+                await Global.getDeviceService(),
+                await Global.getGroupRepository(),
+                await Global.getTimerRepository()
+            )
+        }
+        return Global.#synchroService;
     }
 }
 
