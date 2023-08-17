@@ -11,13 +11,19 @@ export default function BasicTimer({
   WatchId,
   updateTimer,
   deleteTimer,
-  reload }) {
+  reload,
+  time }) {
   const timerArray = useSelector(state => state.timer.timerArray)
 
 
   // useEffect(()=>{
   //   setInput(5000)
   // },[timerArray])
+
+  //타이머 랜더링 버그 fix
+  useEffect(()=>{
+    setInput(time);
+  },[timerArray])
 
 
   const [hour, setHour] = useState(0);
