@@ -7,9 +7,12 @@ class serverRepository {
     }
 
     async getUserId(serial) {
-        const data = await axios.get(this.base + "/user/serial/" + serial);
-
-        return data.data;
+        try{
+            const data = await axios.get(this.base + "/user/serial/" + serial);
+            return data.data;
+        } catch(e){
+            return null;
+        }
     }
     
     async getGroup(user_id) {

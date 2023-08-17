@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest}) {
   const initialTime = 30 * 60 * 1000; // 30분을 밀리초로 변환
@@ -18,6 +19,8 @@ function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest}) {
     const interval = setInterval(() => {
       if (timeLeft > 0) {
         setTimeLeft((prevTime) => prevTime - 1000);
+      } else if(timeLeft === 0) {
+        axios.post("https://i9c101.p.ssafy.io/auth/signout")
       } else {
         clearInterval(interval);
       }
