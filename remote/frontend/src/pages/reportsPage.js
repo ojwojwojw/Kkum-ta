@@ -30,15 +30,15 @@ export default function ReportPage() {
     setView(nextView);
   };
 
-  //2023년 조회 데이터가 바로 뜨게끔 
-  useEffect(()=>{
-    yearCheck(2023)
-  },[])
+  //2023년 조회 데이터가 바로 뜨게끔
+  useEffect(() => {
+    yearCheck(2023);
+  }, []);
 
   //api 요청시 필요한 데이터
   const user_id = useSelector((state) => state.auth.userName);
-  const [hour, setHour] = useState("");
   const [startYear, setStartYear] = useState(2023);
+  const [globalGroupID, setGroupID] = useState(-1);
 
   //데이트 피커 전용 변수
   const [startDate, setStartDate] = useState(new Date());
@@ -58,7 +58,6 @@ export default function ReportPage() {
   const formatDateExceptDay = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}`;
   };
 
@@ -151,71 +150,149 @@ export default function ReportPage() {
   //일간 그래프 api 요청
   const dailyCheck = async () => {
     const formattedDate = formatDate(startDate);
-    try {
-      const recvData = [];
-      for(let groupID=0;groupID<5;groupID++){
-        const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}`) //배포용
-        recvData.push(res.data);
-      }
-      console.log(recvData);
-      const Series24 = recvData.map((item, index)=>{
-        return ({
-          data: item,
-          stack: "A",
-          label: `그룹 ${index}`,
-          color: groupColor[index]
-        });
-      });
-      const Circle24 = [{}]
-      Circle24[0].data = recvData.map((item, index)=>{
-        return (
-          {
-            id: index,
-            value: item.reduce((acc, cur)=>{return acc + cur}, 0),
+    console.log("globalGroupID", globalGroupID);
+    if (globalGroupID === -1) {
+      try {
+        const recvData = [];
+        for (let groupID = 0; groupID < 5; groupID++) {
+          const res = await axios.get(
+            `https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?date=${formattedDate}`
+          ); //배포용
+          recvData.push(res.data);
+        }
+        console.log(recvData);
+        const Series24 = recvData.map((item, index) => {
+          return {
+            data: item,
+            stack: "A",
             label: `그룹 ${index}`,
-            color: groupColor[index]
-          }
-        );
-      });
-      setDailySeries(Series24);
-      setDailyCircle(Circle24);
-    } catch (err) {
-      console.log(err);
+            color: groupColor[index],
+          };
+        });
+        const Circle24 = [{}];
+        Circle24[0].data = recvData.map((item, index) => {
+          return {
+            id: index,
+            value: item.reduce((acc, cur) => {
+              return acc + cur;
+            }, 0),
+            label: `그룹 ${index}`,
+            color: groupColor[index],
+          };
+        });
+        setDailySeries(Series24);
+        setDailyCircle(Circle24);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const res = await axios.get(
+          `https://i9c101.p.ssafy.io:8090/log/${user_id}/${globalGroupID}/?date=${formattedDate}`
+        ); //배포용
+        // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}`)// 개발용
+        console.log(res.data);
+        const modifiedData = res.data.map((value) => 1 - value);
+        Series24[0].data = res.data;
+        Series24[1].data = modifiedData;
+        Circle24[0].data = [
+          {
+            id: 0,
+            value: res.data.reduce((acc, cur) => {
+              return acc + cur;
+            }, 0),
+            label: "공부 시간",
+            color: "#003366",
+          },
+          {
+            id: 1,
+            value: modifiedData.reduce((acc, cur) => {
+              return acc + cur;
+            }, 0),
+            label: "휴식 시간",
+            color: "#eaea66",
+          },
+        ];
+        setDailySeries(Series24);
+        setDailyCircle(Circle24);
+      } catch (err) {
+        console.log(user_id, globalGroupID, formattedDate);
+        console.log(err);
+      }
     }
   };
   //월간 그래프 api 요청
 
   const monthCheck = async () => {
     const formattedDate = formatDateExceptDay(startDate);
-    try {
-      const recvData = [];
-      for(let groupID=0;groupID<5;groupID++){
-        const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //배포용
-        recvData.push(res.data);
-      }
-      const Series31 = recvData.map((item, index)=>{
-        return ({
-          data: item,
-          stack: "A",
-          label: `그룹 ${index}`,
-          color: groupColor[index]
-        });
-      });
-      const Circle31 = [{}]
-      Circle31[0].data = recvData.map((item, index)=>{
-        return (
-          {
-            id: index,
-            value: item.reduce((acc, cur)=>{return acc + cur}, 0),
+    console.log("globalGroupID", globalGroupID);
+    if (globalGroupID === -1) {
+      try {
+        const recvData = [];
+        for (let groupID = 0; groupID < 5; groupID++) {
+          const res = await axios.get(
+            `https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?month=${formattedDate}`
+          ); //배포용
+          recvData.push(res.data);
+        }
+        const Series31 = recvData.map((item, index) => {
+          return {
+            data: item,
+            stack: "A",
             label: `그룹 ${index}`,
-            color: groupColor[index]
-          }
-        );
-      });
-      setMonthlySeries(Series31);
-      setMonthlyCircle(Circle31);
-    } catch (err) {
-      console.log(err);
+            color: groupColor[index],
+          };
+        });
+        const Circle31 = [{}];
+        Circle31[0].data = recvData.map((item, index) => {
+          return {
+            id: index,
+            value: item.reduce((acc, cur) => {
+              return acc + cur;
+            }, 0),
+            label: `그룹 ${index}`,
+            color: groupColor[index],
+          };
+        });
+        setMonthlySeries(Series31);
+        setMonthlyCircle(Circle31);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${globalGroupID}/?month=${formattedDate}`) //배포용
+        // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //개발용
+  
+        console.log(res.data);
+        const modifiedData = res.data.map((value) => 1 - value);
+        Series31[0].data = res.data;
+        Series31[1].data = modifiedData;
+        Circle31[0].data = [
+          {
+            id: 0,
+            value: res.data.reduce((acc, cur) => {
+              return acc + cur;
+            }, 0),
+            label: "공부 시간",
+            color: "#003366",
+          },
+          {
+            id: 1,
+            value: modifiedData.reduce((acc, cur) => {
+              return acc + cur;
+            }, 0),
+            label: "휴식 시간",
+            color: "#eaea66",
+          },
+        ];
+        setMonthlySeries(Series31);
+        setMonthlyCircle(Circle31);
+      } catch (err) {
+        console.log(user_id, globalGroupID, formattedDate);
+        console.log(err);
+      }
+  
     }
   };
 
@@ -223,11 +300,15 @@ export default function ReportPage() {
   const yearCheck = async (targetYear) => {
     try {
       const recvData = [];
-      for(let groupID=0;groupID<5;groupID++){
-        const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?year=${targetYear}`); //배포용
+      for (let groupID = 0; groupID < 5; groupID++) {
+        const res = await axios.get(
+          `https://i9c101.p.ssafy.io:8090/log/${user_id}/${groupID}/?year=${targetYear}`
+        ); //배포용
         recvData.push(res.data);
       }
-      const zipData = recvData[0].map((_, index)=> recvData.reduce((acc, curr)=>acc + curr[index], 0));
+      const zipData = recvData[0].map((_, index) =>
+        recvData.reduce((acc, curr) => acc + curr[index], 0)
+      );
       setGrassArray(zipData);
     } catch (err) {
       console.log(err);
@@ -282,6 +363,25 @@ export default function ReportPage() {
             {handle === "week" && (
               <Grid>
                 <div className="inputContainer">
+                  {/* 그룹 번호 입력 */}
+                  <FormControl className="custom-form-control">
+                    <InputLabel id="demo-simple-select-label"></InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={globalGroupID}
+                      label="Age"
+                      onChange={(e) => setGroupID(e.target.value)}
+                      displayEmpty
+                    >
+                      <MenuItem value={-1}>모아보기</MenuItem>
+                      <MenuItem value={0}>그룹1</MenuItem>
+                      <MenuItem value={1}>그룹2</MenuItem>
+                      <MenuItem value={2}>그룹3</MenuItem>
+                      <MenuItem value={3}>그룹4</MenuItem>
+                      <MenuItem value={4}>그룹5</MenuItem>
+                    </Select>
+                  </FormControl>
                   {/* 날짜 선택하는 데이트 피커 */}
                   <DatePicker
                     selected={startDate}
@@ -290,11 +390,13 @@ export default function ReportPage() {
                     dateFormat="yyyy-MM-dd"
                   />
                   {/* api요청보내는버튼 */}
-                  <button onClick={()=>{
-                    dailyCheck();
-                    monthCheck();
-                  }} 
-                  className="apiReqBtn">
+                  <button
+                    onClick={() => {
+                      dailyCheck();
+                      monthCheck();
+                    }}
+                    className="apiReqBtn"
+                  >
                     데이터 불러오기
                   </button>
                 </div>
@@ -305,6 +407,25 @@ export default function ReportPage() {
             {handle === "month" && (
               <Grid>
                 <div className="inputContainer">
+                  {/* 그룹 번호 입력 */}
+                  <FormControl className="custom-form-control">
+                    <InputLabel id="demo-simple-select-label"></InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={globalGroupID}
+                      label="Age"
+                      onChange={(e) => setGroupID(e.target.value)}
+                      displayEmpty
+                    >
+                      <MenuItem value={-1}>모아보기</MenuItem>
+                      <MenuItem value={0}>그룹1</MenuItem>
+                      <MenuItem value={1}>그룹2</MenuItem>
+                      <MenuItem value={2}>그룹3</MenuItem>
+                      <MenuItem value={3}>그룹4</MenuItem>
+                      <MenuItem value={4}>그룹5</MenuItem>
+                    </Select>
+                  </FormControl>
                   {/* 월 선택하는 데이트 피커 */}
                   <DatePicker
                     selected={startDate}
@@ -314,11 +435,13 @@ export default function ReportPage() {
                   />
                   {/* api요청보내는버튼 */}
                   {/* <button onClick={monthCheck} className="apiReqBtn"> */}
-                  <button onClick={()=>{
-                    dailyCheck();
-                    monthCheck();
-                  }} 
-                  className="apiReqBtn">
+                  <button
+                    onClick={() => {
+                      dailyCheck();
+                      monthCheck();
+                    }}
+                    className="apiReqBtn"
+                  >
                     데이터 불러오기
                   </button>
                 </div>
@@ -395,8 +518,8 @@ export default function ReportPage() {
                 }, [])
                 .map((weekData, weekIdx) => {
                   return (
-                    <Stack direction={"column"} sx={{gap: "4px"}}>
-                      {weekData.map((dayData, dayIdx)=>{
+                    <Stack direction={"column"} sx={{ gap: "4px" }}>
+                      {weekData.map((dayData, dayIdx) => {
                         const dayIndex = weekIdx * 7 + dayIdx;
                         const dateNow = new Date(`${startYear}-01-01`);
                         dateNow.setDate(dateNow.getDate() + dayIndex);
@@ -408,31 +531,32 @@ export default function ReportPage() {
                           60 * (dayData * 24 - Math.floor(dayData * 24))
                         );
                         return (
-                          <Tooltip title={`${startYear}년 ${currentMonth}월 ${
-                            day ? day : 0
-                          }일 , 공부시간: ${hour ? hour : 0}시간 ${
-                            minute ? minute : 0
-                          }분`}>
+                          <Tooltip
+                            title={`${startYear}년 ${currentMonth}월 ${
+                              day ? day : 0
+                            }일 , 공부시간: ${hour ? hour : 0}시간 ${
+                              minute ? minute : 0
+                            }분`}
+                          >
                             <Grid
-                                key={`${currentMonth}-${day}`}
-                                sx={{
-                                  width: "13px",
-                                  height: "13px",
-                                  marginBottom: "1px",
-                                  border: "1px solid #1a1b1c",
-                                  borderRadius: "1px",
-                                  backgroundColor: color,
-                                  cursor: "pointer",
-                                  position: "relative", // 상대 위치 설정
-                                }}
-                              ></Grid>
+                              key={`${currentMonth}-${day}`}
+                              sx={{
+                                width: "13px",
+                                height: "13px",
+                                marginBottom: "1px",
+                                border: "1px solid #1a1b1c",
+                                borderRadius: "1px",
+                                backgroundColor: color,
+                                cursor: "pointer",
+                                position: "relative", // 상대 위치 설정
+                              }}
+                            ></Grid>
                           </Tooltip>
                         );
                       })}
                     </Stack>
                   );
-                })
-              }
+                })}
             </Stack>
           </Grid>
         </Grid>
