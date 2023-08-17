@@ -73,18 +73,19 @@ export default function ReportPage() {
   //일간 조회
 
   const groupColor = ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"];
+  const studyColor = ["#FF0000", "#00FF00"];
   const Series24 = [
     {
       data: new Array(24).fill(0),
       stack: "A",
       label: "공부",
-      color: "#003366",
+      color: studyColor[0],
     },
     {
       data: new Array(24).fill(0),
       stack: "A",
       label: "휴식",
-      color: "#eaea66",
+      color: studyColor[1]
     },
   ];
 
@@ -95,13 +96,13 @@ export default function ReportPage() {
           id: 0,
           value: 0,
           label: "공부 시간",
-          color: "#003366",
+          color: studyColor[0],
         },
         {
           id: 1,
           value: 1,
           label: "휴식 시간",
-          color: "#eaea66",
+          color: studyColor[1],
         },
       ],
     },
@@ -115,13 +116,13 @@ export default function ReportPage() {
       data: new Array(32).fill(0),
       stack: "A",
       label: "공부",
-      color: "#003366",
+      color: studyColor[0],
     },
     {
       data: new Array(32).fill(0),
       stack: "A",
       label: "휴식",
-      color: "#eaea66",
+      color: studyColor[1],
     },
   ];
 
@@ -132,13 +133,13 @@ export default function ReportPage() {
           id: 0,
           value: 0,
           label: "공부 시간",
-          color: "#003366",
+          color: studyColor[0],
         },
         {
           id: 1,
           value: 1,
           label: "휴식 시간",
-          color: "#eaea66",
+          color: studyColor[1],
         },
       ],
     },
@@ -202,7 +203,7 @@ export default function ReportPage() {
               return acc + cur;
             }, 0),
             label: "공부 시간",
-            color: "#003366",
+            color: studyColor[0],
           },
           {
             id: 1,
@@ -210,7 +211,7 @@ export default function ReportPage() {
               return acc + cur;
             }, 0),
             label: "휴식 시간",
-            color: "#eaea66",
+            color: studyColor[1],
           },
         ];
         setDailySeries(Series24);
@@ -275,7 +276,7 @@ export default function ReportPage() {
               return acc + cur;
             }, 0),
             label: "공부 시간",
-            color: "#003366",
+            color: studyColor[0],
           },
           {
             id: 1,
@@ -283,7 +284,7 @@ export default function ReportPage() {
               return acc + cur;
             }, 0),
             label: "휴식 시간",
-            color: "#eaea66",
+            color: studyColor[1],
           },
         ];
         setMonthlySeries(Series31);
