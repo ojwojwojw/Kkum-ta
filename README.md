@@ -63,52 +63,53 @@
 - 주요기능 : 5개의 그룹에서 각각 10개의 타이머를 생성할 수 있고 웹에서 통계를 확인 할 수 있다.
 - 기대효과 : 스마트폰에 존재하는 타이머를 사용하지 않고도 효과적으로 공부시간 관리를 할 수 있다.
 
-(./readme_img/Untitled.png)
+![ ](./readme_img/Untitled.png)
 #### 1.2. 디바이스 화면 설명
 
 ##### 1.2.1. 그룹 이동
 
 - 해당하는 그룹의 버튼을 눌러서 다른 타이머 그룹으로 이동 할 수 있다.
 
-(./readme_img/Untitled 1.png)
+![ ](./readme_img/Untitled 1.png)
  
 
 ##### 1.2.2. 순수 공부시간 확인
 
 - 해당 그룹에서 타이머가 하나라도 동작한다면 그룹의 공부시간이 올라간다.
 
-(./readme_img/Untitled 2.png)
+![ ](./readme_img/Untitled 2.png)
 
 ##### 1.2.3. 타이머 동작 관련
 
 - 타이머는 서로 독립적으로 작동하며, 버튼을 통해 동작 시킬 수 있다.
 - 타이머는 한번에 멈추거나 초기화 하거나 정지시킬 수 있다.
 
-(./readme_img/Untitled 3.png)
-(./readme_img/Untitled 4.png)
+![ ](./readme_img/Untitled 3.png)
+
+![ ](./readme_img/Untitled 4.png)
 
 ##### 1.2.4. 타이머 생성 및 삭제 관련
 
 - CREATETIMER 버튼을 눌러 타이머를 생성한다.
 - X 버튼을 눌러 타이머를 삭제
     
-    (./readme_img/Untitled 5.png)
+    ![ ](./readme_img/Untitled 5.png)
     
-    (./readme_img/Untitled 6.png)
+    ![ ](./readme_img/Untitled 6.png)
     
 
 ##### 1.2.5. 타이머 시간 설정하기
 
 - 톱니바퀴 버튼을 누르면 시간을 설정할 수 있는 스와이퍼 창이 나타난다.
 
-    (./readme_img/Untitled 7.png)
-    (./readme_img/Untitled 8.png)
+    ![ ](./readme_img/Untitled 7.png)
+    ![ ](./readme_img/Untitled 8.png)
 
 ##### 1.2.6. 환경설정하기
 
 - 좌측 첫번째부터 Device 일련번호 확인, 부저알림 온오프, 와이파이 연결 , 전원 끄기
     
-    (./readme_img/Untitled 9.png)
+    ![ ](./readme_img/Untitled 9.png)
 
     
 
@@ -118,23 +119,23 @@
 
 - 네이버, 카카오 ,구글 소셜 로그인이 가능하다.
     
-    (./readme_img/Untitled 10.png)
+    ![ ](./readme_img/Untitled 10.png)
     
 
 #### 2.2 회원가입 페이지
 
 - 아이디,비밀번호,이메일을 입력해서 회원가입이 가능하다.
     
-    (./readme_img/Untitled 11.png)
+    ![ ](./readme_img/Untitled 11.png)
     
 
 #### 2.3 비밀번호 찾기 페이지
 
 - 메일 인증을 통해 비밀번호를 변경할 수 있다.
     
-    (./readme_img/Untitled 12.png)
+    ![ ](./readme_img/Untitled 12.png)
     
-    (./readme_img/Untitled 13.png)
+    ![ ](./readme_img/Untitled 13.png)
     
 
 #### 2.4. 웹 - 디바이스 연동 페이지
@@ -142,34 +143,34 @@
 - 디바이스에서 조회할 수 있는 일련번호를 입력해야 서비스 이용이 가능하다
 - 한번 등록하면 다시 입력하지 않아도 된다
 
-(./readme_img/Untitled 14.png)
+    ![ ](./readme_img/Untitled 14.png)
 
 #### 2.5 통계 페이지
 
 - 모든그룹 한번에 보기, 그룹별 조회, 하루단위 조회 월단위 조회를 지원한다.
 - 잔디그래프로 연단위 공부시간을 확인가능하고 커서를 올리면 공부시간 상세조회가 가능하다.
 
-(./readme_img/Untitled 15.png)
+    ![ ](./readme_img/Untitled 15.png)
 
 #### 2.6 타이머 설정 페이지
 
 - 2,3,4,5 타이머그룹에서의 타이머 세팅을 타이머 설정페이지에서 할 수 있다.
     
-    (./readme_img/Untitled 16.png)
+    ![ ](./readme_img/Untitled 16.png)
     
 
 #### 2.7 마이페이지
 
 - 마이페이지에서 디바이스 일련번호를 새로 등록하거나, 등록여부를 확인 할 수 있다.
     
-    (./readme_img/Untitled 17.png)
+    ![ ](./readme_img/Untitled 17.png)
     
 
 #### 2.8 자동로그아웃 연장
 
 - 자동로그아웃 버튼을 누르면 access 토큰을 재발행 해준다.
     
-    (./readme_img/Untitled 18.png)
+    ![ ](./readme_img/Untitled 18.png)
 
 
 ## 기술설명 
@@ -217,7 +218,7 @@
         - 디바이스 백엔드 db에 존재하는 타이머 데이터와, redux store, 타이머 인스턴스의 데이터를 동기화 하는데 어려움을 겪음 →  타이머 동작에 대한 랜더링 버그와, 타이머간 기능적 충돌이 있었음(ex. 재생버튼을 누르면 아래 타이머가 동작함)→ 디바이스 백엔드로 부터 가져온 타이머 데이터를 새로 생성한 타이머 인스턴스에 집어넣음. 다시 redux store에 접근해서 타이머 인스턴스 정보를 집어넣음 →  redux store에는 인스턴스를 바로 집어넣을수 없으므로 인스턴스의 private 변수들을 getter method로 반환받아서 redux에 입력함(데이터 동기화 성공). 랜더링 문제는 setTimeout 함수와 useEfeect hook으로  원하는 타이밍(예를들면 타이머 컨테이너가 랜더링되고 1ms이후에 load함수를 실행)api 요청을 보내는 식으로 해결함
         - Swiper 를 이용한 시간 입력 모달 창 구현
                     
-       (./readme_img/tec3.png)
+       ![ ](./readme_img/tec3.png)
                     
     - Device Key
         - AWS 서버에 요청
@@ -236,9 +237,9 @@
         - 파이썬 nmcli (network manager client) 모듈을 사용해서 wifi 연결
         - PyQt5 를 이용해서 wifi 설정창을 만들었다.
                 
-        (./readme_img/tec4.png)
+        ![ ](./readme_img/tec4.png)
             
-        (./readme_img/tec5.png)
+        ![ ](./readme_img/tec5.png)
     - Buzzer
         
         - 타이머 종료를 알리기 위해 부저를 장착했다.
@@ -250,7 +251,7 @@
         - 얼굴 감지 거리는 대략 1m 정도
         - 라즈베리파이 카메라와 openCV 를 이용하여 이미지를 얻었다.
                     
-        ![ezgif.com-video-to-gif.gif](%E1%84%8E%E1%85%AC%E1%84%8C%E1%85%A9%E1%86%BC%E1%84%87%E1%85%A1%E1%86%AF%E1%84%91%E1%85%AD%E1%84%80%E1%85%AE%E1%84%89%E1%85%A5%E1%86%BC%20bcc4626941914a4b8f0ef6c23ab66e3b/ezgif.com-video-to-gif.gif)
+        ![ ](./readme_img/ezgif.com-video-to-gif.gif)
                     
     - Mqtt
         - 프로세스 간 통신을 위해 MQTT 를 이용했다.
@@ -269,11 +270,11 @@
     - develop 등의 전체 공유 branch가 push 되거나 merge 될 경우 gitlab이 webhook 신호를 발생시켜 Jenkins가 자동으로 프로젝트 빌드 시작.
     - 전체 빌드 순서는 프로젝트 `device/frontend` `device/backend` `remote/frontend` `remote/backend` 순서대로 react/node build 및 docker image build → 각각의 image들을 raspberry pi 및 AWS에 탑재 → 컨테이너 실행
 
-    (./readme_img/tec6.png)
+    ![ ](./readme_img/tec6.png)
 
     - 무수한 빌드의 흔적
 
-    (./readme_img/tec7.png)
+    ![ ](./readme_img/tec7.png)
 
     - 빌드 결과를 MatterMost에 자동화 보고함으로써 팀원들 사이에서 build 오류를 즉각 공유 가능
             
