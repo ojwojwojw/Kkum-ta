@@ -114,59 +114,49 @@ export default function GroupPage() {
 
   return (
     <Box>
-      <Grid
-        container
-        position={"fixed"}
-        left={"230px"}
-        top={"80px"}
-        width={"180px"}
-        fontSize={"40px"}
-        fontWeight={"600"}
-      >
-        {/* {key}번 그룹 */}
-      </Grid >
-      <Stack sx={{marginTop : "32px"}} //약간의 마진 추가.
-        container
-        m={"1dvw"}
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
-        {/* 타이머를 순회하며 출력 */}
-        {timerArray.length > 0 ? (
-          // timerArray가 비어있을땐 map을 쓰면 에러가납니다
-          timerArray.map((item) => (
-            <Grid item key={item.id}>
-              <BasicTimer
-                time={item.init_time}
-                WatchId={item.component_key}
-                updateTimer={updateTimer}
-                reload={load}
-                deleteTimer={deleteTimer}
-              />
+      <Grid container width={"100dvw"}>
+        <Grid xs={3}></Grid>
+        <Grid xs={7}>
+          <Stack m={"1dvw"} justifyContent={"center"} alignItems={"center"}>
+            {/* 타이머를 순회하며 출력 */}
+            {timerArray.length > 0 ? (
+              // timerArray가 비어있을땐 map을 쓰면 에러가납니다
+              timerArray.map((item) => (
+                <Grid item xs={12} key={item.id}>
+                  <BasicTimer
+                    time={item.init_time}
+                    WatchId={item.component_key}
+                    updateTimer={updateTimer}
+                    reload={load}
+                    deleteTimer={deleteTimer}
+                  />
+                </Grid>
+              ))
+            ) : (
+              <p>타이머가 없습니다.</p>
+            )}
+            <Grid item>
+              {timerArray.length < 10 && (
+                <Button
+                  onClick={createTimer}
+                  sx={{
+                    bgcolor: "#003366",
+                    width: "50dvw",
+                    height: "3dvw",
+                    m: "6px",
+                    borderRadius: "10px",
+                    color: "white",
+                    fontSize: "3dvh",
+                    fontWeight: "600",
+                  }}
+                >
+                  타이머생성
+                </Button>
+              )}
             </Grid>
-          ))
-        ) : (
-          <p>타이머가 없습니다.</p>
-        )}
-        <Grid item>
-         {timerArray.length < 10 &&
-          <Button
-            onClick={createTimer}
-            sx={{
-              bgcolor: "#003366",
-              width: "50dvw",
-              height: "3dvw",
-              m: "6px",
-              borderRadius: "10px",
-              color: "white",
-              fontSize: "3dvh",
-              fontWeight: "600",
-            }}
-          >
-            타이머생성
-          </Button>}
+          </Stack>
         </Grid>
-      </Stack>
+      </Grid>
     </Box>
   );
 }

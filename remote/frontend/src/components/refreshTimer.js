@@ -19,10 +19,11 @@ function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest }) {
     const interval = setInterval(async () => {
       if (timeLeft > 0) {
         setTimeLeft((prevTime) => prevTime - 1000);
-      } else if(timeLeft === 0) {
+      } else if (timeLeft === 0) {
         const res = await axios.post(
           "https://i9c101.p.ssafy.io/auth/signout",
-          {})
+          {}
+        );
       } else {
         clearInterval(interval);
       }
@@ -52,14 +53,18 @@ function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest }) {
         color: "#888",
         justifyContent: "center",
         alignContent: "center",
-        
       }}
     >
       <Button
         onClick={() => {
           refresh();
         }}
-        sx={{ color: "#666", fontWeight: "bolder", fontFamily: "Nanum Gothic", fontSize: "1dvw", }}
+        sx={{
+          color: "#666",
+          fontWeight: "bolder",
+          fontFamily: "Nanum Gothic",
+          fontSize: "1dvw",
+        }}
       >
         자동 로그아웃 : {formatTime(timeLeft)} 연장하기
       </Button>
