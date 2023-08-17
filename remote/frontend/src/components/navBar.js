@@ -92,6 +92,7 @@ export default function NavBar() {
               <img
                 style={{ width: "3.2dvw", margin: "0 0.3dvw 0 0" }}
                 src="/images/kkumta-logo.png"
+                alt="kkumta-logo"
               ></img>
               <div
                 style={{
@@ -158,14 +159,14 @@ export default function NavBar() {
       <Grid
         container
         position={"absolute"}
-        top={"53px"}
+        top={"80px"}
         justifyContent={"center"}
         alignItems={"center"}
       >
         <MenuListBar />
         <Grid item xs={10}>
           <Routes>
-            <Route exact path="/" Component={ReportPage} />
+            <Route exact path="/" Component={Login} />
             <Route exact path="/reports" Component={ReportPage} />
             <Route exact path="/group/:key" Component={GroupPage} />
             <Route exact path="/mypage" Component={MyPage} />

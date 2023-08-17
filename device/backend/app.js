@@ -2,8 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
-
-const SynchroService = require("./src/service/synchroService")
+const Global = require('./src/global'); 
 
 const app = express();
 app.disable("x-powered-by");
@@ -59,7 +58,7 @@ app.use('/device', devController);
 const stopwatchController = require('./src/controller/stopwatchController');
 app.use('/stopwatch', stopwatchController);
 
-const sgs = new SynchroService();
+Global.getSynchroService();
 //sgs.synchronizeDeviceAndServer();
 
 module.exports = app;

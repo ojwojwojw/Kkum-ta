@@ -16,20 +16,20 @@ import { UseSelector, useSelector } from "react-redux/es/hooks/useSelector";
 
 export default function MenuListBar() {
   const [open, setOpen] = React.useState(false);
-  const isDeviceLinked = useSelector(state => state.auth.isDeviceLinked)
+  const isDeviceLinked = useSelector((state) => state.auth.isDeviceLinked);
   const handleClick = () => {
     setOpen(!open);
   };
 
   return (
-    <Grid item xs={2} className="side-bar" zIndex={999}>
+    <Grid item className="side-bar" zIndex={999}>
       {isDeviceLinked && (
         <List
           sx={{
             top: "80px",
             left: 0,
             position: "fixed",
-            width: "280px",
+            width: "18dvw",
             minHeight: "100dvh",
             bgcolor: "background.paper",
             justifyContent: "center",

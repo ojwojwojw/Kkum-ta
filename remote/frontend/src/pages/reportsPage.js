@@ -85,7 +85,7 @@ export default function ReportPage() {
       data: new Array(24).fill(0),
       stack: "A",
       label: "휴식",
-      color: studyColor[1]
+      color: studyColor[1],
     },
   ];
 
@@ -262,9 +262,11 @@ export default function ReportPage() {
       }
     } else {
       try {
-        const res = await axios.get(`https://i9c101.p.ssafy.io:8090/log/${user_id}/${globalGroupID}/?month=${formattedDate}`) //배포용
+        const res = await axios.get(
+          `https://i9c101.p.ssafy.io:8090/log/${user_id}/${globalGroupID}/?month=${formattedDate}`
+        ); //배포용
         // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //개발용
-  
+
         console.log(res.data);
         const modifiedData = res.data.map((value) => 1 - value);
         Series31[0].data = res.data;
@@ -293,7 +295,6 @@ export default function ReportPage() {
         console.log(user_id, globalGroupID, formattedDate);
         console.log(err);
       }
-  
     }
   };
 
@@ -319,7 +320,7 @@ export default function ReportPage() {
   //return (랜더링)
 
   return (
-    <Box m={"20px"}>
+    <Box marginTop={"1dvw"} marginLeft={"11dvw"} width={"80dvw"}>
       <Grid container>
         <Grid
           container

@@ -67,8 +67,8 @@ export default function BasicTimerComponent({
   const dispatch = useDispatch();
 
   function runBuzzer() {
-    // const client = mqtt.connect("ws://localhost:1884");
-    const client = mqtt.connect("ws://192.168.100.245:1884");
+    const client = mqtt.connect("ws://localhost:1884");
+    // const client = mqtt.connect("ws://192.168.100.245:1884");
     client.on("connect", () => {
       console.log("connected");
       client.publish("buzzer", "beep");

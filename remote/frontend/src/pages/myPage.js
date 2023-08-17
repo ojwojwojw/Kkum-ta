@@ -13,12 +13,15 @@ const MyPage = () => {
     const newData = localStorage.getItem("accessToken") 
     const [tokenData, setTokenData] = useState(newData)
     const navigate = useNavigate()
+    const [message, setMessage] = useState(null);
+    const [isSuccess, setIsSuccess] = useState(null);
+    //유저가 디바이스키 관련 응답에 대한 정보를 알 수 있게하는 변수들
     // const isDeviceLinked = useEffect(state => state.auth.IsDeviceLinked)
 
     //자동으로 디바이스 등록여부 확인하는 함수 실행
-    useEffect(()=>{
-        IsDeviceLinked();
-    },[])
+    // useEffect(()=>{
+    //     IsDeviceLinked();
+    // },[])
 
 
     //디바이스와 웹 연동
@@ -39,11 +42,13 @@ const MyPage = () => {
         //   const res = await axios.patch(`http://localhost:8090/dev/user/${user_id}` ,data ,config) //개발용
           console.log(res.data)
           dispatch(linkDevice(true))  //redux에 반영
-          navigate('/reports')
+          setIsSuccess(true)
+          setMessage("디바이스키가 등록되었습니다.")
         }
         catch (err) {
           console.log(err)
-
+          setIsSuccess(false)
+          setMessage("디바이스키 등록에 실패했습니다.")
         }
       }
 
@@ -60,13 +65,15 @@ const MyPage = () => {
         //   const res = await axios.get(`http://localhost:8090/dev/user/${user_id}`,config) //개발용
           console.log(res.data)
           dispatch(linkDevice(true))  //redux에 반영
-          
-          
+          setIsSuccess(true)
+          setMessage("디바이스와 연동된 계정입니다.")
 
         }
         catch (err) {
           console.log(err)
           dispatch(linkDevice(false))  //redux에 반영
+          setIsSuccess(false)
+          setMessage("디바이스와 연동되지 않은 계정입니다.")
           console.log(tokenData)
         }
       }
@@ -127,6 +134,14 @@ const MyPage = () => {
           >
               디바이스 등록여부 확인
           </Button>
+          {/* 디바이스 등록 관련 메시지 */}
+          {/* 가장 최근 메시지만 표시 */}
+          <Grid xs={12}>
+            {message && (
+              <label style={{ color: isSuccess ? "blue" : "red" }}>{message}</label>
+            )}
+          </Grid>
+          
         </Grid>
         
         

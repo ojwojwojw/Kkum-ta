@@ -8,6 +8,7 @@ class TimerRepository extends Repository{
         this.groupRepository = groupRepository;
     }
     async init(){
+        await this.groupRepository.init();
         const sql = `
         CREATE TABLE IF NOT EXISTS timer_tbl_${version} (
             timer_key INT(11) NOT NULL AUTO_INCREMENT,
