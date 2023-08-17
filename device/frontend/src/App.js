@@ -38,7 +38,7 @@ function App() {
   const [devKey, setDevKey] = useState("인터넷 연결을 확인하세요");
   const modalOpen = async () => {
     try {
-      const res = await axios.get("dev");
+      const res = await axios.get("device");
       setDevKey(res.data.id);
       setDeviceModalOpen(true);
     } catch (e) {

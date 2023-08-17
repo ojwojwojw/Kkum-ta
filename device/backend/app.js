@@ -54,12 +54,12 @@ const timerController = require("./src/controller/timerController");
 app.use('/timer', timerController);
 
 const devController = require('./src/controller/devController');
-app.use('/dev', devController);
+app.use('/device', devController);
 
 const stopwatchController = require('./src/controller/stopwatchController');
 app.use('/stopwatch', stopwatchController);
 
-// const sgs = new SynchroService();
-// sgs.synchronizeDeviceAndServer();
+const sgs = new SynchroService();
+//sgs.synchronizeDeviceAndServer();
 
 module.exports = app;

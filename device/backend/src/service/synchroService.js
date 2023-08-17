@@ -12,40 +12,46 @@ class SynchroService {
         this.deviceRepo = new deviceRepo();
         this.groupFromDeviceRepo = new groupRepo();
         this.timerFromDeviceRepo = new timerRepo();
+        this.synchronizeDeviceAndServer = async ()=>this.#synchronizeDeviceAndServer();
+        this.synchronizeDeviceAndServer();
     }
 
-    async synchronizeDeviceAndServer() {
+    async #synchronizeDeviceAndServer() {
         const serial = await this.deviceRepo.getDeviceSerial();
+        console.log(serial);
         const userInfo = await this.serverRepo.getUserId(serial);
         const id = userInfo.id;
+        console.log(id)
 
-        const groupData = await this.serverRepo.getGroup(id);
-
-        groupData.map(async (group) => {
-            if (group.group_key !== 0) {
-                await this.groupFromDeviceRepo.rename(
-                    group.group_key,
-                    group.name
-                );
-                await this.timerFromDeviceRepo.deleteAllByGroupKey(
-                    group.group_key
-                );
-
-                const timerData = await this.serverRepo.getComponent(
-                    id,
-                    group.group_key
-                );
-                if (timerData.length !== 0) {
-                    timerData.map((timer) => {
-                        this.timerFromDeviceRepo.insert(
-                            timer.group_key,
-                            timer.init_time,
-                            timer.maxIter
-                        );
-                    });
+        if(id !== null) {
+            const groupData = await this.serverRepo.getGroup(id);
+    
+            groupData.map(async (group) => {
+                if (group.group_key !== 0) {
+                    await this.groupFromDeviceRepo.rename(
+                        group.group_key,
+                        group.name
+                    );
+                    await this.timerFromDeviceRepo.deleteAllByGroupKey(
+                        group.group_key
+                    );
+    
+                    const timerData = await this.serverRepo.getComponent(
+                        id,
+                        group.group_key
+                    );
+                    if (timerData.length !== 0) {
+                        timerData.map((timer) => {
+                            this.timerFromDeviceRepo.insert(
+                                timer.group_key,
+                                [timer.init_time],
+                                timer.maxIter
+                            );
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }
 
