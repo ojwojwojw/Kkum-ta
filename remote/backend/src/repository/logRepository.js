@@ -77,7 +77,7 @@ class  LogRepository extends Repository{
             throw new Error(`month is not valid (month=${month})`);
         }
         const sql = `
-        SELECT DAY(date) AS day, avg(portion) AS portion
+        SELECT DAY(date) AS day, sum(portion) AS portion
         FROM log_tbl
         GROUP BY user_key, group_key, date
         HAVING user_key=? AND group_key=? AND YEAR(date)=? AND MONTH(date)=?
@@ -87,7 +87,7 @@ class  LogRepository extends Repository{
         const [rows] = await this.query(sql, params);
         console.log("monthly:",rows);
         const result = new Array(new Date(year, month, 0).getDate()).fill(0);
-        rows.map(item=>{result[item.day - 1] = item.portion;})
+        rows.map(item=>{result[item.day - 1] = item.portion / 24});
         return result;
     }
     isLeapYear(year){
@@ -98,7 +98,7 @@ class  LogRepository extends Repository{
             throw new Error(`year is not valid (year=${year})`);
         }
         const sql = `
-        SELECT DATEDIFF(DATE, MAKEDATE(YEAR(DATE), 1)) AS date, avg(portion) AS portion
+        SELECT DATEDIFF(DATE, MAKEDATE(YEAR(DATE), 1)) AS date, sum(portion) AS portion
         FROM log_tbl
         GROUP BY user_key, group_key, date
         HAVING user_key=? AND group_key=? AND YEAR(date)=?
@@ -108,7 +108,7 @@ class  LogRepository extends Repository{
         const [rows] = await this.query(sql, params);
         console.log("yearly:", rows);
         const result = new Array(this.isLeapYear(year)?366:365).fill(0);
-        rows.map(item=>{result[item.date]=item.portion;});
+        rows.map(item=>{result[item.date]=item.portion / 24});
         return result;
     }
 }
