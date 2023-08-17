@@ -151,7 +151,6 @@ export default function ReportPage() {
   //일간 그래프 api 요청
   const dailyCheck = async () => {
     const formattedDate = formatDate(startDate);
-    console.log("globalGroupID", globalGroupID);
     if (globalGroupID === -1) {
       try {
         const recvData = [];
@@ -161,7 +160,6 @@ export default function ReportPage() {
           ); //배포용
           recvData.push(res.data);
         }
-        console.log(recvData);
         const Series24 = recvData.map((item, index) => {
           return {
             data: item,
@@ -192,7 +190,6 @@ export default function ReportPage() {
           `https://i9c101.p.ssafy.io:8090/log/${user_id}/${globalGroupID}/?date=${formattedDate}`
         ); //배포용
         // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?date=${formattedDate}`)// 개발용
-        console.log(res.data);
         const modifiedData = res.data.map((value) => 1 - value);
         Series24[0].data = res.data;
         Series24[1].data = modifiedData;
@@ -226,7 +223,6 @@ export default function ReportPage() {
 
   const monthCheck = async () => {
     const formattedDate = formatDateExceptDay(startDate);
-    console.log("globalGroupID", globalGroupID);
     if (globalGroupID === -1) {
       try {
         const recvData = [];
@@ -267,7 +263,6 @@ export default function ReportPage() {
         ); //배포용
         // const res = await axios.get(`http://localhost:8090/log/${user_id}/${groupID}/?month=${formattedDate}`) //개발용
 
-        console.log(res.data);
         const modifiedData = res.data.map((value) => 1 - value);
         Series31[0].data = res.data;
         Series31[1].data = modifiedData;
@@ -448,7 +443,19 @@ export default function ReportPage() {
                   </button>
                 </div>
 
-                <BarChart series={monthlySeries} width={700} height={250} />
+                <BarChart
+                  xAxis={[
+                    {
+                      scaleType: "band",
+                      data: monthlySeries[0].data.map((_, index) => {
+                        return `${index + 1}`;
+                      }),
+                    },
+                  ]}
+                  series={monthlySeries}
+                  width={700}
+                  height={250}
+                />
               </Grid>
             )}
           </Grid>
