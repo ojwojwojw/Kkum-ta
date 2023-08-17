@@ -56,12 +56,14 @@ export default function NavBar() {
       console.log(res.data);
       dispatch(logoutState()); //redux state 반영하기
       setTimeout(localStorage.removeItem("accessToken"), 100); //로컬 스토리지 비우기
+      navigate("/");
+      //redirect to '/'
     } catch (err) {
       console.log(err);
       console.log(username, provider, accessToken);
       localStorage.removeItem("accessToken"); //로컬 스토리지 비우기
       dispatch(logoutState()); //redux state 반영하기
-      navigate("/");
+      // navigate('/') //이번버전은 여길 주석으로 막아놓음
       //redirect to '/'
     }
   };
