@@ -16,11 +16,13 @@ function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest}) {
 
   useEffect(() => {
     // 타이머 카운트 다운 로직
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       if (timeLeft > 0) {
         setTimeLeft((prevTime) => prevTime - 1000);
       } else if(timeLeft === 0) {
-        axios.post("https://i9c101.p.ssafy.io/auth/signout")
+        const res = await axios.post(
+          "https://i9c101.p.ssafy.io/auth/signout",
+          {})
       } else {
         clearInterval(interval);
       }
