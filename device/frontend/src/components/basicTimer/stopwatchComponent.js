@@ -129,16 +129,16 @@ function StopwatchComponent({
         container
         className={click % 20 === 0 && click !== 0 ? "img-bomb" : ""}
         position={"fixed"}
-        top={"100px"}
-        ml={"32px"}
+        top={"6dvw"}
+        ml={"1.8dvw"}
         width={"68.5dvw"}
-        height={"13dvh"}
+        height={"6dvw"}
         bgcolor={"#003366"}
         justifyContent={"center"}
         alignItems={"center"}
         color={"white"}
         zIndex={4}
-        fontSize={"4.3dvh"}
+        fontSize={"2dvw"}
         onClick={() => {
           setClick(click + 1);
         }}
@@ -155,9 +155,9 @@ function StopwatchComponent({
 
         <Button onClick={() => (isRunning ? handlePause() : handleStart())}>
           {isRunning ? (
-            <PauseIcon sx={{ fontSize: "5dvh", color: "white" }} />
+            <PauseIcon sx={{ fontSize: "2dvw", color: "white" }} />
           ) : (
-            <PlayArrowIcon sx={{ fontSize: "5dvh", color: "white" }} />
+            <PlayArrowIcon sx={{ fontSize: "2dvw", color: "white" }} />
           )}
         </Button>
       </Grid>

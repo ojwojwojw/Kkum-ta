@@ -78,7 +78,7 @@ export default function TimerUpdateModal({
         }}
       >
         <SettingsIcon
-          sx={{ fontSize: "25px", m: 0, p: 0, width: "40px", height: "40px" }}
+          sx={{ fontSize: "25px", m: 0, p: 0, width: "3dvw", height: "3dvw" }}
         />
       </IconButton>
       <Modal

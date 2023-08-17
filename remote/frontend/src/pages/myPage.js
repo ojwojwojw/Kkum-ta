@@ -72,7 +72,7 @@ const MyPage = () => {
 
   return(
     <div>
-        <h1>this is MyPage</h1>
+        <h1>{user_id}의 페이지</h1>
         <input 
             type="text"
             value={input}
