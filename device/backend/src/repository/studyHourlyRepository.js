@@ -38,7 +38,7 @@ class StudyHourlyRepository extends Repository{
         if(typeof(portion) !== "number" || portion < 0 || portion > 1 || Object.is(portion,NaN)){
             throw new Error(`portion is not valid(it should be between 0 and 1) (portion=${portion})`);
         }
-        const sql = "INSERT INTO study_hourly_tbl_"+`${version}`+" (`group_key`, `date`, `hour`, `portion`) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE portion = portion + ?;";
+        const sql = "INSERT INTO study_hourly_tbl_"+`${version}`+" (`group_key`, `date`, `hour`, `portion`) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE `portion` = `portion` + ?;";
         this.query(sql, [group_key, date, hour, portion, portion]);
     }
     async getHourlyStudytime(group_key, date, hour){
@@ -96,7 +96,7 @@ class StudyHourlyRepository extends Repository{
             throw new Error(`year is not valid (year=${year})`);
         }
         const sql = ""+
-        "SELECT DATEDIFF(DATE, MAKEDATE(YEAR(DATE), 1)) AS `date`, avg(portion) AS `portion` "
+        "SELECT DATEDIFF(DATE, MAKEDATE(YEAR(DATE), 1)) AS `date`, avg(portion) AS `portion` " +
         "FROM study_hourly_tbl_"+`${version} `+
         "GROUP BY `group_key`, `date` "+
         "HAVING `group_key`=? AND YEAR(`date`)=? "+
