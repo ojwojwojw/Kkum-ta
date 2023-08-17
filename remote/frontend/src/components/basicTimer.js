@@ -7,16 +7,23 @@ import { Stack } from "@mui/system";
 import { useSelector } from "react-redux";
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function BasicTimer({ WatchId,
+export default function BasicTimer({
+  WatchId,
   updateTimer,
   deleteTimer,
-  reload }) {
+  reload,
+  time }) {
   const timerArray = useSelector(state => state.timer.timerArray)
 
 
   // useEffect(()=>{
   //   setInput(5000)
   // },[timerArray])
+
+  //타이머 랜더링 버그 fix
+  useEffect(()=>{
+    setInput(time);
+  },[timerArray])
 
 
   const [hour, setHour] = useState(0);
@@ -26,11 +33,11 @@ export default function BasicTimer({ WatchId,
   const [input, setInput] = useState(0);
   
   function update() {
-    updateTimer(input,WatchId)
+    updateTimer(input, WatchId);
   }
 
   function delTimer() {
-    deleteTimer(WatchId)
+    deleteTimer(WatchId);
   }
 
   useEffect(() => {
@@ -57,26 +64,40 @@ export default function BasicTimer({ WatchId,
         border={"6px solid #333"}
         sx={{
           width: "50dvw",
-          height: "18dvh",
+          height: "12dvw",
           m: "6px",
           borderRadius: "10px",
         }}
         justifyContent={"center"}
         alignItems={"center"}
       >
-        <Grid item xs={10} sx={{fontSize:"11dvh"}}>
+        <Grid item xs={10} sx={{ fontSize: "6dvw" }}>
           {String(hour).padStart(2, "0")} : {String(min).padStart(2, "0")} :{" "}
           {String(sec).padStart(2, "0")}
         </Grid>
         <Grid item xs={2}>
           <Stack justifyContent={"center"} alignItems={"center"}>
-          <IconButton sx={{fontSize:"25px", color:"red", width:"40px", height:"40px" , p:0, m:0}} onClick={()=>delTimer(WatchId)}><CloseIcon/></IconButton>
-          <TimerUpdateModal WatchId={WatchId}
-            updateTimer={update}
-            input={input}
-            setInput={setInput}
-            reload={reload} />
-            </Stack>
+            <IconButton
+              sx={{
+                fontSize: "25px",
+                color: "red",
+                width: "4dvw",
+                height: "4dvw",
+                p: 0,
+                m: 0,
+              }}
+              onClick={() => delTimer(WatchId)}
+            >
+              <CloseIcon sx={{ fontSize: "3sdvw" }} />
+            </IconButton>
+            <TimerUpdateModal
+              WatchId={WatchId}
+              updateTimer={update}
+              input={input}
+              setInput={setInput}
+              reload={reload}
+            />
+          </Stack>
         </Grid>
       </Grid>
     </Box>

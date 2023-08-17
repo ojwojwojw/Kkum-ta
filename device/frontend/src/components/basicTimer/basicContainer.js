@@ -215,13 +215,13 @@ export default function TimerContainer({ id, text, isSilent }) {
               <Button
                 sx={{
                   width: "68dvw",
-                  height: "10dvh",
-                  ml: "30px",
+                  height: "5dvw",
+                  ml: "2dvw",
                   mb: 2,
                   borderRadius: 4,
                   bgcolor: "#376f94",
                   color: "white",
-                  fontSize: "6dvh",
+                  fontSize: "3dvw",
                   pb: 0,
                 }}
                 onClick={createTimer}
@@ -249,12 +249,11 @@ export default function TimerContainer({ id, text, isSilent }) {
                   sx={{
                     right: "2dvw",
                     minWidth: "18dvw",
-                    minHeight: "13dvh",
-                    fontSize: "3.5dvh",
+                    minHeight: "7dvw",
+                    fontSize: "2.2dvw",
                     fontWeight: "bold",
-                    borderRadius: "20px",
-                    m: "10px",
-                    mr: "25px",
+                    borderRadius: "1.2dvw",
+                    m: "0.8dvw",
                   }}
                   onClick={() => allStart()}
                 >
@@ -268,12 +267,11 @@ export default function TimerContainer({ id, text, isSilent }) {
                   sx={{
                     right: "2dvw",
                     minWidth: "18dvw",
-                    minHeight: "13dvh",
-                    fontSize: "3.5dvh",
+                    minHeight: "7dvw",
+                    fontSize: "2.2dvw",
                     fontWeight: "bold",
-                    borderRadius: "20px",
-                    m: "10px",
-                    mr: "25px",
+                    borderRadius: "1.2dvw",
+                    m: "0.8dvw",
                   }}
                   onClick={() => allPause()}
                 >
@@ -287,12 +285,11 @@ export default function TimerContainer({ id, text, isSilent }) {
                   sx={{
                     right: "2dvw",
                     minWidth: "18dvw",
-                    minHeight: "13dvh",
-                    fontSize: "3.5dvh",
+                    minHeight: "7dvw",
+                    fontSize: "2.2dvw",
                     fontWeight: "bold",
-                    borderRadius: "20px",
-                    m: "10px",
-                    mr: "25px",
+                    borderRadius: "1.2dvw",
+                    m: "0.8dvw",
                   }}
                   onClick={() => allReset()}
                 >

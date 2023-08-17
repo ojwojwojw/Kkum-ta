@@ -53,9 +53,9 @@
 
 .MuiTabs-root {
   position: fixed;
-  width: 100dvw;
-  padding-left: 30px;
-  padding-top: 30px;
+  width: 68.5dvw;
+  padding-left: 1.8dvw;
+  padding-top: 1.4dvw;
   padding-bottom: 0;
   padding-right: 0;
   z-index: 999;
@@ -64,13 +64,13 @@
 
 .MuiTabs-root .MuiTab-root {
   margin: 2px;
-  width: 13.4dvw;
-  height: 9.5dvh;
+  width: 13.5dvw;
+  height: 4.8dvw;
   background-color: #85b4e2;
   color: rgb(0, 0, 0);
-  font-size: 3dvh;
+  font-size: 1.5dvw;
   font-weight: 700;
-  border-radius: 10px;
+  border-radius: 1dvw;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -86,11 +86,11 @@
 }
 
 .swiper-wrapper {
-  font-size: 10dvh;
+  font-size: 5dvw;
 }
 
 .swiper-initialized {
-  height: 12dvh;
+  height: 6dvw;
 }
 
 .modal-box {

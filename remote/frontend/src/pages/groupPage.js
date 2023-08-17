@@ -127,7 +127,7 @@ export default function GroupPage() {
       </Grid>
       <Stack
         container
-        m={"20px"}
+        m={"1dvw"}
         justifyContent={"center"}
         alignItems={"center"}
       >
@@ -149,23 +149,22 @@ export default function GroupPage() {
           <p>타이머가 없습니다.</p>
         )}
         <Grid item>
-          {timerArray.length < 10 && (
-            <Button
-              onClick={createTimer}
-              sx={{
-                bgcolor: "#003366",
-                width: "50dvw",
-                height: "7dvh",
-                m: "6px",
-                borderRadius: "10px",
-                color: "white",
-                fontSize: "3dvh",
-                fontWeight: "600",
-              }}
-            >
-              타이머생성
-            </Button>
-          )}
+         {timerArray.length < 10 &&
+          <Button
+            onClick={createTimer}
+            sx={{
+              bgcolor: "#003366",
+              width: "50dvw",
+              height: "3dvw",
+              m: "6px",
+              borderRadius: "10px",
+              color: "white",
+              fontSize: "3dvh",
+              fontWeight: "600",
+            }}
+          >
+            타이머생성
+          </Button>}
         </Grid>
       </Stack>
     </Box>
