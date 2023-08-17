@@ -1,29 +1,21 @@
-const deviceService = require("./deviceService");
-const deviceRepo = require("../repository/deviceRepository");
-const serverRepo = require("../repository/serverRepository");
-const groupRepo = require("../repository/groupRepository");
-const timerRepo = require("../repository/timerRepository");
-const global = require("../global");
-
 class SynchroService {
     // server와 device의 group 및 component 관리 repo 가져오기
-    constructor() {
-        this.serverRepo = new serverRepo();
-        this.deviceRepo = new deviceRepo();
-        this.groupFromDeviceRepo = new groupRepo();
-        this.timerFromDeviceRepo = new timerRepo();
+    constructor(serverRepository, deviceService, groupRepository, timerRepository) {
+        this.serverRepo = serverRepository;
+        this.deviceService = deviceService;
+        this.groupFromDeviceRepo = groupRepository;
+        this.timerFromDeviceRepo = timerRepository;
         this.synchronizeDeviceAndServer = async ()=>this.#synchronizeDeviceAndServer();
         this.synchronizeDeviceAndServer();
     }
 
     async #synchronizeDeviceAndServer() {
-        const serial = await this.deviceRepo.getDeviceSerial();
+        const serial = await this.deviceService.getDeviceSerial();
         console.log(serial);
         const userInfo = await this.serverRepo.getUserId(serial);
-        const id = userInfo.id;
-        console.log(id)
-
-        if(id !== null) {
+        const id = userInfo?.id;
+        console.log(id);
+        if(id) {
             const groupData = await this.serverRepo.getGroup(id);
     
             groupData.map(async (group) => {

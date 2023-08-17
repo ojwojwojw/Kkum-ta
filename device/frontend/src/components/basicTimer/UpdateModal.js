@@ -157,13 +157,12 @@ export default function UpdateModal({
             >
               <Button
                 sx={{
-                  fontSize: "3.5dvh",
-                  top: "10dvh",
-                  right: "1dvw",
-                  p: "dvh",
-                  pr: "4dvh",
-                  pl: "4dvh",
-                  m: "1dvh",
+                  fontSize: "2dvw",
+                  top: "3dvw",
+                  p: "1.4dvw",
+                  pr: "3dvw",
+                  pl: "3dvw",
+                  m: "1dvw",
                 }}
                 variant="contained"
                 color="success"
@@ -177,13 +176,12 @@ export default function UpdateModal({
               </Button>
               <Button
                 sx={{
-                  fontSize: "3.5dvh",
-                  top: "10dvh",
-                  right: "1dvw",
-                  p: "dvh",
-                  pr: "4dvh",
-                  pl: "4dvh",
-                  m: "1dvh",
+                  fontSize: "2dvw",
+                  top: "3dvw",
+                  p: "1.4dvw",
+                  pr: "3dvw",
+                  pl: "3dvw",
+                  m: "1dvw",
                 }}
                 variant="contained"
                 color="error"
