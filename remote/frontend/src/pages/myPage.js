@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { linkDevice } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
+import { Box, Button, Grid, Input } from "@mui/material";
 
 const MyPage = () => {
     const user_id = useSelector(state => state.auth.userName)
@@ -71,21 +72,65 @@ const MyPage = () => {
       }
 
   return(
-    <div>
-        <h1>{user_id}의 페이지</h1>
-        <input 
-            type="text"
-            value={input}
-            onChange={(e)=>setInput(e.target.value)}
-            placeholder="디바이스 키를 입력해주세요."
-        />
-        <button onClick={linkToDevice}>
-            등록하기
-        </button>
-        <button onClick={IsDeviceLinked}>
-            디바이스 등록여부 확인
-        </button>
-    </div>
+    <Grid
+      container
+      sx={{
+        marginTop: "32px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "40vh",
+        paddingRight: "20%", // 디바이스키 입력창 가운데 정렬
+      }}
+    >
+        <Grid xs={12}>
+          <h1>{user_id}의 페이지</h1>
+        </Grid>
+        <Grid xs={12}>
+          <Input 
+              type="text"
+              value={input}
+              onChange={(e)=>setInput(e.target.value)}
+              placeholder="디바이스 키를 입력해주세요."
+              sx={{
+                marginRight :'10px',
+                minWidth: "300px",
+                p: "20px",
+                fontSize: "20px",
+                bgcolor: "#fff",
+                borderRadius: "15px",
+              }}
+              disableUnderline={"true"}
+          />
+          <Button
+              sx={{ p: "20px", 
+                    marginRight :'10px',
+                    fontSize: "20px", 
+                    fontWeight: 600, 
+                    color: "white" ,
+                    bgcolor: "#003366",
+                    borderRadius: "10px",
+                  }} 
+                    onClick={linkToDevice}
+          >
+              등록하기
+          </Button>
+          <Button
+            sx={{ p: "20px", 
+                  fontSize: "20px", 
+                  fontWeight: 600, 
+                  color: "white" ,
+                  bgcolor: "#003366",
+                  borderRadius: "10px",
+                }}  
+            onClick={IsDeviceLinked} 
+          >
+              디바이스 등록여부 확인
+          </Button>
+        </Grid>
+        
+        
+    </Grid>
   )
 };
 

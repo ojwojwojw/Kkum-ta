@@ -320,11 +320,11 @@ export default function ReportPage() {
   //return (랜더링)
 
   return (
-    <Box m={"20px"}>
+    <Box marginTop={"1dvw"} marginLeft={"11dvw"} width={"80dvw"}>
       <Grid container>
         <Grid
           container
-          border={"4px solid #036"}
+          border={"4px solid #acacac"}
           borderRadius={"10px"}
           minHeight={"220px"}
           m={"10px"}
@@ -476,7 +476,7 @@ export default function ReportPage() {
       <Grid container>
         <Grid
           container
-          border={"4px solid #036"}
+          border={"4px solid #acacac"}
           borderRadius={"10px"}
           minHeight={"220px"}
           m={"10px"}

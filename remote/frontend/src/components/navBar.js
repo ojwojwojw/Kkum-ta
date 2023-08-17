@@ -63,7 +63,7 @@ export default function NavBar() {
       console.log(username, provider, accessToken);
       localStorage.removeItem("accessToken"); //로컬 스토리지 비우기
       dispatch(logoutState()); //redux state 반영하기
-      // navigate('/') //이번버전은 여길 주석으로 막아놓음
+      // navigate('/') // local test시엔 catch로 이동했던 오류때문에 여기에 navigate를 사용. 주석으로 막음.
       //redirect to '/'
     }
   };
@@ -166,7 +166,7 @@ export default function NavBar() {
         <MenuListBar />
         <Grid item xs={10}>
           <Routes>
-            <Route exact path="/" Component={ReportPage} />
+            <Route exact path="/" Component={Login} />
             <Route exact path="/reports" Component={ReportPage} />
             <Route exact path="/group/:key" Component={GroupPage} />
             <Route exact path="/mypage" Component={MyPage} />
