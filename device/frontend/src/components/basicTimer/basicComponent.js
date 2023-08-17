@@ -218,7 +218,7 @@ export default function BasicTimerComponent({
     >
       <StyledTimerBackground className="progress-bar" progress={progress} />
       <Grid container justifyContent={"center"} alignContent={"center"}>
-        <Grid item xs={1} fontSize={"3dvh"}>
+        <Grid item xs={1} fontSize={"1dvw"}>
           <h2>{idx + 1}</h2>
         </Grid>
 
@@ -233,9 +233,9 @@ export default function BasicTimerComponent({
             onClick={() => toggle()}
           >
             {isRunning ? (
-              <PauseIcon sx={{ fontSize: "6.5dvh" }} />
+              <PauseIcon sx={{ fontSize: "3.5dvw" }} />
             ) : (
-              <PlayArrowIcon sx={{ fontSize: "6.5dvh" }} />
+              <PlayArrowIcon sx={{ fontSize: "3.5dvw" }} />
             )}
           </Button>
           <Button
@@ -244,32 +244,28 @@ export default function BasicTimerComponent({
             // 최대값이 99:59:59가 되도록 제한
             onClick={() => resetInitTime()}
           >
-            <RestartAltIcon sx={{ fontSize: "6.5dvh" }} />
+            <RestartAltIcon sx={{ fontSize: "3.5dvw" }} />
           </Button>
         </Grid>
         <Grid item>
-          {groupId === 0 && (
-            <>
-              <Stack>
-                <IconButton
-                  aria-label="delete"
-                  variant="text"
-                  color="error"
-                  onClick={deleteWatch} //remove는 프런트단에서만 삭제됨
-                >
-                  <CloseIcon sx={{ fontSize: "7dvh" }} />
-                </IconButton>
-                <UpdateModal
-                  WatchId={WatchId}
-                  updateTimer={updateTimer}
-                  input={input}
-                  setInput={setInput}
-                  reload={reload}
-                  // timer = {timer}
-                />
-              </Stack>
-            </>
-          )}
+          <Stack>
+            <IconButton
+              aria-label="delete"
+              variant="text"
+              color="error"
+              onClick={deleteWatch} //remove는 프런트단에서만 삭제됨
+            >
+              <CloseIcon sx={{ fontSize: "3.5dvw" }} />
+            </IconButton>
+            <UpdateModal
+              WatchId={WatchId}
+              updateTimer={updateTimer}
+              input={input}
+              setInput={setInput}
+              reload={reload}
+              // timer = {timer}
+            />
+          </Stack>
         </Grid>
       </Grid>
     </StyledTimerContainer>

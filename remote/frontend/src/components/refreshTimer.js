@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest}) {
+function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest }) {
   const initialTime = 30 * 60 * 1000; // 30분을 밀리초로 변환
   const [timeLeft, setTimeLeft] = useState(initialTime);
 
@@ -16,11 +16,13 @@ function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest}) {
 
   useEffect(() => {
     // 타이머 카운트 다운 로직
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       if (timeLeft > 0) {
         setTimeLeft((prevTime) => prevTime - 1000);
       } else if(timeLeft === 0) {
-        axios.post("https://i9c101.p.ssafy.io/auth/signout")
+        const res = await axios.post(
+          "https://i9c101.p.ssafy.io/auth/signout",
+          {})
       } else {
         clearInterval(interval);
       }
@@ -40,18 +42,26 @@ function RefreshTimer({ resetTimer, setResetTimer, refreshTokenTest}) {
   };
 
   function refresh() {
-    refreshTokenTest()
+    refreshTokenTest();
   }
 
   return (
-    <div style={{display:"flex", color:"#888", justifyContent:"center", alignContent:"center", fontSize:"18px"}}>
+    <div
+      style={{
+        display: "flex",
+        color: "#888",
+        justifyContent: "center",
+        alignContent: "center",
+        
+      }}
+    >
       <Button
         onClick={() => {
           refresh();
         }}
-        sx={{color:"#666", fontWeight:"bolder", fontFamily:"Nanum Gothic"}}
+        sx={{ color: "#666", fontWeight: "bolder", fontFamily: "Nanum Gothic", fontSize: "1dvw", }}
       >
-        자동 로그아웃 시간: {formatTime(timeLeft)} 연장하기
+        자동 로그아웃 : {formatTime(timeLeft)} 연장하기
       </Button>
     </div>
   );

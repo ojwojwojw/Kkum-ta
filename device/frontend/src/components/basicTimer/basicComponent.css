@@ -1,14 +1,14 @@
 .watch {
   display: flex;
-  left: 20px;
+  left: 1dvw;
   width: 67dvw;
-  height: 26dvh;
-  margin: 10px;
-  border-radius: 20px;
+  height: 12dvw;
+  margin: 1dvw;
+  border-radius: 1.5dvw;
 }
 
 .watch.timer {
-  border: 8px solid #376f94;
+  border: 0.6dvw solid #376f94;
 }
 
 .alarming{
@@ -33,20 +33,17 @@
 }
 
 .time {
-  font-size: 13.5dvh;
+  font-size: 6.7dvw;
   font-weight: 500;
 }
 
-.micro {
-  font-size: 2.25rem;
-}
 
 .timerButton > button {
-  margin: 10px;
-  padding: 10px;
-  height: 14dvh;
+  margin: 1dvw;
+  padding: 1dvw;
+  height: 8dvw;
   width: 8dvw;
-  border: 14px solid;
+  border: 0.8dvw solid;
   box-shadow: 2px 2px 3px gray;
   border-radius: 50%;
   text-align: center;
