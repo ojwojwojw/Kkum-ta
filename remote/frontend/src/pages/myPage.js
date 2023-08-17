@@ -81,6 +81,9 @@ const MyPage = () => {
   return(
     <Grid
       container
+      marginLeft={"16dvw"}
+      width={"80dvw"}
+      height={"50dvh"}
       sx={{
         marginTop: "32px",
         display: "flex",

@@ -6,12 +6,14 @@ class  LogRepository extends Repository{
     }
     async init(){
         const sql = `CREATE TABLE IF NOT EXISTS log_tbl (
+            log_key INT(11) NOT NULL,
             group_key INT(11) NOT NULL,
             date DATE NOT NULL,
             hour INT(11) NOT NULL,
             user_key INT(11) NULL DEFAULT NULL,
             portion FLOAT NULL DEFAULT NULL,
-            PRIMARY KEY (group_key, date, hour) USING BTREE,
+            PRIMARY KEY (log_key) USING BTREE,
+            UNIQUE INDEX group_key_date_hour_user_key (group_key, date, hour, user_key) USING BTREE,
             INDEX FK_log_group (group_key, user_key) USING BTREE,
             CONSTRAINT FK_log_group FOREIGN KEY (group_key, user_key) REFERENCES group_tbl (group_key, user_key) ON UPDATE NO ACTION ON DELETE CASCADE
         )
@@ -77,7 +79,7 @@ class  LogRepository extends Repository{
             throw new Error(`month is not valid (month=${month})`);
         }
         const sql = `
-        SELECT DAY(date) AS day, avg(portion) AS portion
+        SELECT DAY(date) AS day, SUM(portion) AS portion
         FROM log_tbl
         GROUP BY user_key, group_key, date
         HAVING user_key=? AND group_key=? AND YEAR(date)=? AND MONTH(date)=?
@@ -87,8 +89,8 @@ class  LogRepository extends Repository{
         const [rows] = await this.query(sql, params);
         console.log("monthly:",rows);
         const result = new Array(new Date(year, month, 0).getDate()).fill(0);
-        rows.map(item=>{result[item.day - 1] = item.portion;})
-        return result;
+        rows.map(item=>{result[item.day - 1] = item.portion / 24});
+        return rows;
     }
     isLeapYear(year){
         return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
@@ -98,7 +100,7 @@ class  LogRepository extends Repository{
             throw new Error(`year is not valid (year=${year})`);
         }
         const sql = `
-        SELECT DATEDIFF(DATE, MAKEDATE(YEAR(DATE), 1)) AS date, avg(portion) AS portion
+        SELECT DATEDIFF(DATE, MAKEDATE(YEAR(DATE), 1)) AS date, sum(portion) AS portion
         FROM log_tbl
         GROUP BY user_key, group_key, date
         HAVING user_key=? AND group_key=? AND YEAR(date)=?
@@ -108,8 +110,8 @@ class  LogRepository extends Repository{
         const [rows] = await this.query(sql, params);
         console.log("yearly:", rows);
         const result = new Array(this.isLeapYear(year)?366:365).fill(0);
-        rows.map(item=>{result[item.date]=item.portion;});
-        return result;
+        rows.map(item=>{result[item.date]=item.portion / 24});
+        return rows;
     }
 }
 
