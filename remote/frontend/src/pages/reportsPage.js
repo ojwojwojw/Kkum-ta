@@ -73,7 +73,7 @@ export default function ReportPage() {
   //일간 조회
 
   const groupColor = ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"];
-  const studyColor = ["#FF0000", "#00FF00"];
+  const studyColor = ["#118ab2", "#073b4c"];
   const Series24 = [
     {
       data: new Array(24).fill(0),
@@ -166,7 +166,7 @@ export default function ReportPage() {
           return {
             data: item,
             stack: "A",
-            label: `그룹 ${index}`,
+            label: `그룹 ${index + 1}`,
             color: groupColor[index],
           };
         });
@@ -177,7 +177,7 @@ export default function ReportPage() {
             value: item.reduce((acc, cur) => {
               return acc + cur;
             }, 0),
-            label: `그룹 ${index}`,
+            label: `그룹 ${index + 1}`,
             color: groupColor[index],
           };
         });
@@ -240,7 +240,7 @@ export default function ReportPage() {
           return {
             data: item,
             stack: "A",
-            label: `그룹 ${index}`,
+            label: `그룹 ${index + 1}`,
             color: groupColor[index],
           };
         });
@@ -251,7 +251,7 @@ export default function ReportPage() {
             value: item.reduce((acc, cur) => {
               return acc + cur;
             }, 0),
-            label: `그룹 ${index}`,
+            label: `그룹 ${index + 1}`,
             color: groupColor[index],
           };
         });
@@ -485,30 +485,32 @@ export default function ReportPage() {
           justifyContent={"center"}
           alignItems={"center"}
         >
-          <FormControl>
-            <InputLabel id="demo-simple-select-label"></InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={startYear}
-              label="Age"
-              onChange={(e) => {
-                console.log(e.target.value);
-                setStartYear(e.target.value);
-                yearCheck(e.target.value); // 선택한 연도에 대한 yearCheck 함수 호출
-              }}
-            >
-              <MenuItem value={2023}>2023</MenuItem>
-              <MenuItem value={2022}>2022</MenuItem>
-              <MenuItem value={2021}>2021</MenuItem>
-              <MenuItem value={2020}>2020</MenuItem>
-              <MenuItem value={2019}>2019</MenuItem>
-              <MenuItem value={2018}>2018</MenuItem>
-            </Select>
-          </FormControl>
+          <Grid item xs={2}>
+            <FormControl>
+              <InputLabel id="demo-simple-select-label"></InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={startYear}
+                label="Age"
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setStartYear(e.target.value);
+                  yearCheck(e.target.value); // 선택한 연도에 대한 yearCheck 함수 호출
+                }}
+              >
+                <MenuItem value={2023}>2023</MenuItem>
+                <MenuItem value={2022}>2022</MenuItem>
+                <MenuItem value={2021}>2021</MenuItem>
+                <MenuItem value={2020}>2020</MenuItem>
+                <MenuItem value={2019}>2019</MenuItem>
+                <MenuItem value={2018}>2018</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
 
           {/* grass 격자 그래프  */}
-          <Grid item mt="20px">
+          <Grid item xs={10} mt="20px">
             <Stack direction={"row"} sx={{ gap: "4px" }}>
               {grassArray
                 .reduce((acc, curr, index) => {
