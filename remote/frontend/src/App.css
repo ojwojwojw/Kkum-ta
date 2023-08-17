@@ -1,4 +1,4 @@
-*{
+* {
   font-family: "Nanum Gothic";
   font-weight: normal;
 }
@@ -31,8 +31,6 @@
   src: url("./fonts/NanumGothicExtraBold.ttf") format("font-truetype");
   font-weight: bolder;
 }
-
-
 
 .App-logo {
   height: 40vmin;
@@ -72,7 +70,6 @@ a:-webkit-any-link {
   color: #61dafb;
 }
 
-
 .swiper {
   width: 8dvw;
   text-align: center;
@@ -84,12 +81,4 @@ a:-webkit-any-link {
 
 .swiper-initialized {
   height: 12dvh;
-}
-
-.modal-box {
-  text-align: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
