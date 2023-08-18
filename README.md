@@ -239,7 +239,8 @@
                 
         ![ ](./readme_img/tec4.png)
             
-        ![ ](./readme_img/tec5.png)
+        ![ ](./readme_img/tec7.png)
+        
     - Buzzer
         
         - 타이머 종료를 알리기 위해 부저를 장착했다.
@@ -270,11 +271,11 @@
     - develop 등의 전체 공유 branch가 push 되거나 merge 될 경우 gitlab이 webhook 신호를 발생시켜 Jenkins가 자동으로 프로젝트 빌드 시작.
     - 전체 빌드 순서는 프로젝트 `device/frontend` `device/backend` `remote/frontend` `remote/backend` 순서대로 react/node build 및 docker image build → 각각의 image들을 raspberry pi 및 AWS에 탑재 → 컨테이너 실행
 
-    ![ ](./readme_img/tec6.png)
+    ![ ](./readme_img/tec5.png)
 
     - 무수한 빌드의 흔적
 
-    ![ ](./readme_img/tec7.png)
+    ![ ](./readme_img/tec6.png)
 
     - 빌드 결과를 MatterMost에 자동화 보고함으로써 팀원들 사이에서 build 오류를 즉각 공유 가능
             
