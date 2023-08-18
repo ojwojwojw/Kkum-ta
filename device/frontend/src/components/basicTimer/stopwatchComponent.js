@@ -32,18 +32,18 @@ function StopwatchComponent({
     };
   }, [stopwatch]);
 
-  // useEffect(() => {
-  //   const fetchCurTime = async () => {
-  //     try {
-  //       const res = await axios.get(`stopwatch/${groupId}`);
-  //       const timeData = res.data.time;
-  //       setCurTime(timeData);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   return fetchCurTime;
-  // }, [groupId]);
+  useEffect(() => {
+    const fetchCurTime = async () => {
+      try {
+        const res = await axios.get(`stopwatch/${groupId}`);
+        const timeData = res.data.time;
+        setCurTime(timeData);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    return fetchCurTime;
+  }, [groupId]);
 
   // 1초마다 스탑워치 시간 갱신
 
